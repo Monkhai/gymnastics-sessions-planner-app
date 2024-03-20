@@ -1,7 +1,7 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { Stack } from 'expo-router';
 import { useAuth } from '@/context/AuthProvidor';
+import { Stack } from 'expo-router';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 const _layout = () => {
   const { signOut } = useAuth();
@@ -9,9 +9,14 @@ const _layout = () => {
   return (
     <Stack>
       <Stack.Screen
-        name="index"
+        name="(top-tabs)"
         options={{
-          headerRight: () => <Button title="Sign Out" onPress={signOut} />,
+          title: 'Group Title',
+          headerRight: () => (
+            <TouchableOpacity onPress={signOut}>
+              <Text style={{ color: '#007AFF' }}>Sign Out</Text>
+            </TouchableOpacity>
+          ),
         }}
       />
     </Stack>

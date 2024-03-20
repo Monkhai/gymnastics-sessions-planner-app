@@ -25,7 +25,7 @@ const Login = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 24 }}>Login</Text>
 
       <TextInput style={[{ color: 'black' }, styles.textInput]} onChangeText={setEmail} value={email} placeholder="Email" />
