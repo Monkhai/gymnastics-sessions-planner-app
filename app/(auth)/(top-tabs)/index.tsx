@@ -2,7 +2,6 @@ import { useIsFocused } from '@react-navigation/native';
 import React, { useContext, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ScreenContext } from './_layout';
-
 const index = () => {
   const { setScreen } = useContext(ScreenContext);
 
