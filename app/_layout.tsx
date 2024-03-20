@@ -3,6 +3,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Slot, useRouter } from 'expo-router';
 import { useSegments } from 'expo-router';
 import { useEffect } from 'react';
+import { ThemeProvider } from '@react-navigation/native';
+import { useColorScheme } from 'react-native';
+import { DarkTheme, LightTheme } from '@/Constants/NavTheme';
 
 const InitialRoot = () => {
   const { session, initialized } = useAuth();
@@ -28,10 +31,13 @@ const InitialRoot = () => {
 };
 
 const RootLayout = () => {
+  const colorScheme = useColorScheme();
   return (
-    <AuthProvider>
-      <InitialRoot />
-    </AuthProvider>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : LightTheme}>
+      <AuthProvider>
+        <InitialRoot />
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

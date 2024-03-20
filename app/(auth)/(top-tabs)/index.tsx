@@ -1,7 +1,12 @@
+import BaseView from '@/Components/GeneralComponents/BaseView';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useContext, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import { ScreenContext } from './_layout';
+
+import List from '@/Components/Lists/List';
+import { ListItemType } from '@/Components/Lists/Types';
+
 const index = () => {
   const { setScreen } = useContext(ScreenContext);
 
@@ -13,13 +18,20 @@ const index = () => {
     }
   }, [isScreenFocused]);
 
+  const item: ListItemType = { id: 1, name: 'hello' };
+
+  const items: ListItemType[] = [
+    { id: 1, name: 'hello' },
+    { id: 2, name: 'world' },
+  ];
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>First Tab</Text>
-    </View>
+    <BottomSheetModalProvider>
+      <BaseView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <List items={items} />
+      </BaseView>
+    </BottomSheetModalProvider>
   );
 };
 
 export default index;
-
-const styles = StyleSheet.create({});

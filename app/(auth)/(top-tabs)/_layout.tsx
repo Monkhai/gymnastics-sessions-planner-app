@@ -1,12 +1,14 @@
+import Colors from '@/Constants/Colors';
+import { DarkTheme, LightTheme } from '@/Constants/NavTheme';
 import {
   MaterialTopTabNavigationEventMap,
   MaterialTopTabNavigationOptions,
   createMaterialTopTabNavigator,
 } from '@react-navigation/material-top-tabs';
-import { ParamListBase, TabNavigationState } from '@react-navigation/native';
+import { ParamListBase, TabNavigationState, ThemeProvider } from '@react-navigation/native';
 import { withLayoutContext } from 'expo-router';
-import React, { Dispatch, SetStateAction, createContext, useEffect } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { Dispatch, SetStateAction, createContext } from 'react';
+import { Pressable, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 
 const { Navigator } = createMaterialTopTabNavigator();
@@ -39,16 +41,16 @@ const _layout = () => {
       alert('details');
     }
   };
-
+  const colorScheme = useColorScheme();
   return (
     <ScreenContext.Provider value={{ screen, setScreen }}>
       <View style={{ flex: 1, alignItems: 'stretch' }}>
         <MaterialTopTabs
           screenOptions={{
-            tabBarActiveTintColor: '#007AFF',
-            tabBarInactiveTintColor: 'gray',
+            tabBarActiveTintColor: Colors[colorScheme ?? 'light'].blue,
+            tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].labels.secondary,
             tabBarIndicatorContainerStyle: { left: '5%', width: '80%' },
-            tabBarIndicatorStyle: { backgroundColor: '#007AFF', borderRadius: 5 },
+            tabBarIndicatorStyle: { backgroundColor: Colors[colorScheme ?? 'light'].blue, borderRadius: 5 },
             tabBarLabelStyle: { fontSize: 13, fontWeight: '500', textTransform: 'capitalize' },
           }}
         >
@@ -67,6 +69,7 @@ const _layout = () => {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 10,
+            zIndex: 1000,
           }}
           layout={LinearTransition}
         >
