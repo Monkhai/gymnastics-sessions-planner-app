@@ -12,7 +12,7 @@ const SettingsModalHeader = ({ handleClose, handleSave }: Props) => {
   return (
     <View style={styles.container}>
       <TextButton label="Close" onPress={handleClose} />
-      <EmphasizedBodyText>Settings</EmphasizedBodyText>
+      <EmphasizedBodyText>Edit</EmphasizedBodyText>
       <EmphasizedTextButton label="Save" onPress={handleSave} />
     </View>
   );
