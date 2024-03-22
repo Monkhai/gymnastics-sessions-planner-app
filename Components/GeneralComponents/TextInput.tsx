@@ -1,16 +1,16 @@
 import Colors from '@/Constants/Colors';
 import { borderRadius } from '@/Constants/RandomStyles';
-import React, { useMemo, useRef } from 'react';
+import { BottomSheetTextInput, useBottomSheetInternal } from '@gorhom/bottom-sheet';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { TextInput as RNTextInput, useColorScheme, StyleSheet } from 'react-native';
 
 interface Props {
-  textInputRef: React.RefObject<RNTextInput>;
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
 }
 
-const TextInput = ({ onChangeText, placeholder, textInputRef, value }: Props) => {
+const TextInput = ({ onChangeText, placeholder, value }: Props) => {
   const colorScheme = useColorScheme();
   //add a listener so that if anything that is not the text input is pressed, the text input will lose focus
 
@@ -30,13 +30,12 @@ const TextInput = ({ onChangeText, placeholder, textInputRef, value }: Props) =>
   );
 
   return (
-    <RNTextInput
+    <BottomSheetTextInput
       clearButtonMode="always"
       style={style}
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
-      ref={textInputRef}
       placeholderTextColor={Colors[colorScheme ?? 'light'].labels.secondary}
     />
   );

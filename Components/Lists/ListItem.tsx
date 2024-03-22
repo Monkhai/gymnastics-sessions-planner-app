@@ -1,8 +1,8 @@
 import Colors from '@/Constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { useMemo, useRef } from 'react';
-import { Animated as RNA, TextInput as RNTextInput, StyleSheet, useColorScheme } from 'react-native';
+import { Keyboard, Pressable, Animated as RNA, TextInput as RNTextInput, StyleSheet, useColorScheme } from 'react-native';
 import { GestureDetector, Swipeable } from 'react-native-gesture-handler';
 import Animated, { LinearTransition, SharedValue, SlideOutLeft, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { IconButton } from '../GeneralComponents/Buttons';
@@ -83,15 +83,12 @@ interface Props {
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
 const ListItem = ({ listItem, setItems, positions }: Props) => {
-  const colorScheme = useColorScheme();
-
   const swipeableButtonWidth = useSharedValue(60);
 
   const modalRef = useRef<BottomSheetModal>(null);
   const swipeableRef = useRef<Swipeable>(null);
 
   const [name, setName] = React.useState(listItem.name);
-  const textInputRef = useRef<RNTextInput>(null);
 
   const { pan, containerStyle, listItemStyle } = useListReorderEffect({ listItem, setItems, positions });
 
@@ -106,6 +103,14 @@ const ListItem = ({ listItem, setItems, positions }: Props) => {
   };
 
   const handleSaveSettings = () => {
+    setItems((prevItems) => {
+      return prevItems.map((item) => {
+        if (item.id === listItem.id) {
+          return { ...item, name };
+        }
+        return item;
+      });
+    });
     modalRef.current?.close();
   };
 
@@ -138,18 +143,12 @@ const ListItem = ({ listItem, setItems, positions }: Props) => {
             <BodyText>{listItem.name}</BodyText>
             <Ionicons name="chevron-forward" size={16} color={Colors.gray} />
           </Animated.View>
-
+          {/*  */}
           <HalfModal modalRef={modalRef}>
-            <SettingsModalHeader handleClose={() => modalRef.current?.close} handleSave={handleSaveSettings} />
-            <LabeledTextInput
-              label="Name"
-              value={name}
-              onChangeText={setName}
-              textInputRef={textInputRef}
-              placeholder="Enter a name"
-              listItemName={listItem.name}
-            />
+            <SettingsModalHeader handleClose={() => modalRef.current?.close()} handleSave={handleSaveSettings} />
+            <LabeledTextInput label="Name" value={name} onChangeText={setName} placeholder="Enter a name" listItemName={listItem.name} />
           </HalfModal>
+          {/*  */}
         </AnimatedSwipeable>
       </Animated.View>
     </GestureDetector>

@@ -1,7 +1,8 @@
 import Colors from '@/Constants/Colors';
+import { borderRadius } from '@/Constants/RandomStyles';
 import { BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import React, { RefObject } from 'react';
-import { Dimensions, useColorScheme } from 'react-native';
+import { Dimensions, Keyboard, Pressable, useColorScheme } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 interface Props {
@@ -11,17 +12,24 @@ interface Props {
 const HalfModal = ({ modalRef, children }: Props) => {
   const colorScheme = useColorScheme();
   const handleColor = colorScheme === 'dark' ? Colors.dark.separetor : Colors.light.separetor;
-  const bgColor = colorScheme === 'dark' ? Colors.dark.bg.base : Colors.light.bg.elevated;
-
+  const bgColor = colorScheme === 'dark' ? Colors.dark.materials.thickUnderlay : Colors.light.bg.elevated;
+  const overlayColor = colorScheme === 'dark' ? Colors.dark.materials.thinkOverlay : Colors.light.bg.elevated;
   return (
     <BottomSheetModal
+      keyboardBehavior="interactive"
       handleIndicatorStyle={{ backgroundColor: handleColor }}
-      backgroundStyle={{ backgroundColor: bgColor }}
+      handleStyle={{ backgroundColor: overlayColor, borderTopLeftRadius: borderRadius * 2, borderTopRightRadius: borderRadius * 2 }}
+      backgroundStyle={{ backgroundColor: bgColor, borderRadius: borderRadius * 2 }}
       backdropComponent={(p) => <CustomBackDrop props={p} modalRef={modalRef} />}
+      keyboardBlurBehavior="restore"
       snapPoints={['50%']}
       ref={modalRef}
     >
-      <BottomSheetView style={{ flex: 1, alignItems: 'center' }}>{children}</BottomSheetView>
+      <BottomSheetView style={{ flex: 1, alignItems: 'center', backgroundColor: overlayColor }}>
+        <Pressable onPress={Keyboard.dismiss} style={{ flex: 1, width: '100%', alignItems: 'center' }}>
+          {children}
+        </Pressable>
+      </BottomSheetView>
     </BottomSheetModal>
   );
 };
@@ -34,6 +42,7 @@ interface BackdropProps {
 }
 
 const CustomBackDrop = ({ props, modalRef }: BackdropProps) => {
+  const colorScheme = useColorScheme();
   const { animatedIndex } = props;
   const { width, height } = Dimensions.get('window');
   const style = useAnimatedStyle(() => {
@@ -45,7 +54,7 @@ const CustomBackDrop = ({ props, modalRef }: BackdropProps) => {
       left: 0,
       width: width,
       height: height,
-      backgroundColor: 'rgba(0,0,0,0.5)',
+      backgroundColor: Colors[colorScheme ?? 'light'].fills.backdrop,
       opacity,
     };
   });

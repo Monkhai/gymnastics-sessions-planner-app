@@ -18,6 +18,7 @@ export default {
     fills: {
       textInput: 'rgba(118, 118, 128, 0.12)',
       settingsGray: '#AEAEB2',
+      backdrop: 'rgba(123, 123,123,0.2)',
     },
   },
   dark: {
@@ -36,6 +37,11 @@ export default {
     fills: {
       textInput: 'rgba(118, 118, 128, 0.24)',
       settingsGray: '#636366',
+      backdrop: 'rgba(0, 0,0,0.6)',
+    },
+    materials: {
+      thickUnderlay: '#7c7c7c',
+      thinkOverlay: 'rgba(37, 37, 37, 0.9)',
     },
   },
 };
