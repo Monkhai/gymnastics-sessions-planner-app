@@ -1,7 +1,8 @@
 export default {
+  white: '#fff',
+  black: '#000',
+  gray: '#AEAEB2',
   light: {
-    white: '#fff',
-    black: '#000',
     blue: '#007AFF',
     red: '#FF3B30',
     labels: {
@@ -9,6 +10,7 @@ export default {
       secondary: 'rgba(60, 60, 67, 0.6)',
     },
     separetor: 'rgba(60, 60, 67, 0.36)',
+    seperatorOpaque: '#C6C6C8',
     bg: {
       base: '#F2F2F7',
       elevated: '#fff',
@@ -18,8 +20,6 @@ export default {
     },
   },
   dark: {
-    white: '#fff',
-    black: '#000',
     blue: '#0A84FF',
     red: '#FF453A',
     labels: {
@@ -27,6 +27,7 @@ export default {
       secondary: 'rgba(235, 235, 245, 0.6)',
     },
     separetor: 'rgba(84, 84, 88, 0.65)',
+    seperatorOpaque: '#38383A',
     bg: {
       base: '#000',
       elevated: '#1C1C1E',

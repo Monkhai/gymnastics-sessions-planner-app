@@ -1,3 +1,4 @@
+import 'expo-dev-client';
 import { AuthProvider, useAuth } from '@/context/AuthProvidor';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Slot, useRouter } from 'expo-router';

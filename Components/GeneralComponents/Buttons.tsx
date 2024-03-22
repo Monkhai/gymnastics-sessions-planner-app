@@ -1,9 +1,11 @@
-import { Pressable, PressableProps, useColorScheme } from 'react-native';
+import { Pressable, PressableProps, useColorScheme, Animated as RNAnimated } from 'react-native';
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { BodyText, EmphasizedBodyText } from './Texts';
 import Colors from '@/Constants/Colors';
 import { borderRadius } from '@/Constants/RandomStyles';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
+import { Swipeable } from 'react-native-gesture-handler';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -105,7 +107,7 @@ interface IconButtonProps extends PressableProps {
   children: React.ReactNode;
 }
 
-export const IconButton = ({ children }: IconButtonProps) => {
+export const IconButton = ({ children, ...props }: IconButtonProps) => {
   const opacity = useSharedValue(1);
 
   const style = useAnimatedStyle(() => {
@@ -113,7 +115,6 @@ export const IconButton = ({ children }: IconButtonProps) => {
       opacity: opacity.value,
       width: 60,
       height: '100%',
-      backgroundColor: 'red',
       justifyContent: 'center',
       alignItems: 'center',
     };
@@ -128,7 +129,7 @@ export const IconButton = ({ children }: IconButtonProps) => {
   }, []);
 
   return (
-    <AnimatedPressable style={style} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+    <AnimatedPressable {...props} style={[style, props.style]} onPressIn={handlePressIn} onPressOut={handlePressOut}>
       {children}
     </AnimatedPressable>
   );
