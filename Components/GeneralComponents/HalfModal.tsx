@@ -1,7 +1,8 @@
 import Colors from '@/Constants/Colors';
-import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import React, { RefObject } from 'react';
-import { useColorScheme } from 'react-native';
+import { Dimensions, useColorScheme } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 interface Props {
   modalRef: RefObject<BottomSheetModal>;
@@ -11,11 +12,12 @@ const HalfModal = ({ modalRef, children }: Props) => {
   const colorScheme = useColorScheme();
   const handleColor = colorScheme === 'dark' ? Colors.dark.separetor : Colors.light.separetor;
   const bgColor = colorScheme === 'dark' ? Colors.dark.bg.base : Colors.light.bg.elevated;
+
   return (
     <BottomSheetModal
       handleIndicatorStyle={{ backgroundColor: handleColor }}
       backgroundStyle={{ backgroundColor: bgColor }}
-      backdropComponent={BottomSheetBackdrop}
+      backdropComponent={(p) => <CustomBackDrop props={p} modalRef={modalRef} />}
       snapPoints={['50%']}
       ref={modalRef}
     >
@@ -25,3 +27,32 @@ const HalfModal = ({ modalRef, children }: Props) => {
 };
 
 export default HalfModal;
+
+interface BackdropProps {
+  props: BottomSheetBackdropProps;
+  modalRef: RefObject<BottomSheetModal>;
+}
+
+const CustomBackDrop = ({ props, modalRef }: BackdropProps) => {
+  const { animatedIndex } = props;
+  const { width, height } = Dimensions.get('window');
+  const style = useAnimatedStyle(() => {
+    const opacity = 1 - Math.abs(animatedIndex.value);
+
+    return {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: width,
+      height: height,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      opacity,
+    };
+  });
+
+  const handleTouchEnd = () => {
+    modalRef.current?.close();
+  };
+
+  return <Animated.View onTouchEnd={handleTouchEnd} style={style} />;
+};

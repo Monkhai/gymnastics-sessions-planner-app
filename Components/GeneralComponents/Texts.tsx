@@ -31,5 +31,5 @@ export const EmphasizedTitleText = (props: TextProps) => {
 export const CalloutText = (props: TextProps) => {
   const colorScheme = useColorScheme();
 
-  return <Text {...props} style={{ fontSize: 13, color: Colors[colorScheme ?? 'light'].labels.secondary }} />;
+  return <Text {...props} style={[{ fontSize: 13, color: Colors[colorScheme ?? 'light'].labels.secondary }, props.style]} />;
 };

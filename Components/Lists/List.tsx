@@ -1,6 +1,6 @@
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 import { borderRadius } from '@/Constants/RandomStyles';
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, { LinearTransition, useSharedValue } from 'react-native-reanimated';
 import ListItem from './ListItem';
@@ -19,10 +19,13 @@ export interface Positions {
 const List = ({ wide, items, setItems }: Props) => {
   const positions = useSharedValue<Positions>(Object.assign({}, ...items.map((item, index) => ({ [item.id.toString()]: index }))));
 
+  useEffect(() => {
+    positions.value = Object.assign({}, ...items.map((item, index) => ({ [item.id.toString()]: index })));
+  }, [items]);
+
   const { container, scrollViewStyle } = StyleSheet.create({
     container: {
       width: wide ? '100%' : '80%',
-      // overflow: 'hidden',
       borderRadius: borderRadius,
       height: items.length * LIST_ITEM_HEIGHT,
       left: wide ? 0 : '10%',

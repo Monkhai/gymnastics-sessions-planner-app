@@ -16,7 +16,8 @@ export default {
       elevated: '#fff',
     },
     fills: {
-      textInput: 'rgba(188, 188, 128, 0.12)',
+      textInput: 'rgba(118, 118, 128, 0.12)',
+      settingsGray: '#AEAEB2',
     },
   },
   dark: {
@@ -34,6 +35,7 @@ export default {
     },
     fills: {
       textInput: 'rgba(118, 118, 128, 0.24)',
+      settingsGray: '#636366',
     },
   },
 };
