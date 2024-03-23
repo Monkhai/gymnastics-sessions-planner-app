@@ -1,33 +1,37 @@
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
-import { borderRadius } from '@/Constants/RandomStyles';
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { borderRadius } from '@/Constants/Randoms';
+import React, { useEffect } from 'react';
+import { Alert, StyleSheet } from 'react-native';
 import Animated, { LinearTransition, useSharedValue } from 'react-native-reanimated';
 import ListItem from './ListItem';
 import { ListItemType } from './Types';
+import { BodyText } from '../GeneralComponents/Texts';
 
 interface Props {
   wide?: boolean;
-  items: ListItemType[];
-  setItems: Dispatch<SetStateAction<ListItemType[]>>;
+  items: ListItemType[] | undefined;
+  areItemsLoading: boolean;
+  error: Error | null;
 }
 
 export interface Positions {
   [id: string]: number;
 }
 
-const List = ({ wide, items, setItems }: Props) => {
-  const positions = useSharedValue<Positions>(Object.assign({}, ...items.map((item, index) => ({ [item.id.toString()]: index }))));
+const List = ({ wide, items, areItemsLoading, error }: Props) => {
+  const positions = useSharedValue<Positions>(
+    items ? Object.assign({}, ...items.map((item, index) => ({ [item.id.toString()]: index }))) : {}
+  );
 
   useEffect(() => {
-    positions.value = Object.assign({}, ...items.map((item, index) => ({ [item.id.toString()]: index })));
+    positions.value = items ? Object.assign({}, ...items.map((item, index) => ({ [item.id.toString()]: index }))) : {};
   }, [items]);
 
   const { container, scrollViewStyle } = StyleSheet.create({
     container: {
       width: wide ? '100%' : '80%',
       borderRadius: borderRadius,
-      height: items.length * LIST_ITEM_HEIGHT,
+      height: items ? items.length * LIST_ITEM_HEIGHT : 0,
       left: wide ? 0 : '10%',
     },
     scrollViewStyle: {
@@ -36,10 +40,21 @@ const List = ({ wide, items, setItems }: Props) => {
     },
   });
 
+  if (error || !items) {
+    console.log(error);
+    return null;
+  }
+
+  if (areItemsLoading) {
+    <Animated.ScrollView layout={LinearTransition} style={scrollViewStyle} contentContainerStyle={container}>
+      <BodyText>Loading...</BodyText>
+    </Animated.ScrollView>;
+  }
+
   return (
     <Animated.ScrollView layout={LinearTransition} style={scrollViewStyle} contentContainerStyle={container}>
       {items.map((item) => {
-        return <ListItem setItems={setItems} key={item.name} positions={positions} listItem={item} />;
+        return <ListItem key={item.name} positions={positions} listItem={item} />;
       })}
     </Animated.ScrollView>
   );

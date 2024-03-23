@@ -1,5 +1,5 @@
 import Colors from '@/Constants/Colors';
-import { borderRadius } from '@/Constants/RandomStyles';
+import { borderRadius } from '@/Constants/Randoms';
 import { BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import React, { RefObject } from 'react';
 import { Dimensions, Keyboard, Pressable, useColorScheme } from 'react-native';

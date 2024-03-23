@@ -1,24 +1,24 @@
-import { Pressable, PressableProps, useColorScheme, Animated as RNAnimated } from 'react-native';
-import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import { BodyText, EmphasizedBodyText } from './Texts';
 import Colors from '@/Constants/Colors';
-import { borderRadius } from '@/Constants/RandomStyles';
+import { borderRadius } from '@/Constants/Randoms';
 import React, { useCallback } from 'react';
-import { Swipeable } from 'react-native-gesture-handler';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Pressable, PressableProps, ViewProps, ViewStyle, useColorScheme } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { BodyText, EmphasizedBodyText } from './Texts';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface RectButtonProps extends PressableProps {
   wide?: boolean;
   label: string;
+  onPress: () => void;
+  style: ViewStyle;
 }
 
-export const RectButton = ({ label, wide, ...props }: RectButtonProps) => {
+export const RectButton = ({ label, wide, onPress, style }: RectButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 
-  const style = useAnimatedStyle(() => {
+  const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
       padding: 16,
@@ -39,17 +39,17 @@ export const RectButton = ({ label, wide, ...props }: RectButtonProps) => {
   }, []);
 
   return (
-    <AnimatedPressable onPressIn={handlePressIn} onPressOut={handlePressOut} style={style} {...props}>
+    <AnimatedPressable onPressIn={handlePressIn} onPressOut={handlePressOut} style={[animatedStyle, style]} onPress={onPress}>
       <EmphasizedBodyText style={{ color: 'white' }}>{label}</EmphasizedBodyText>
     </AnimatedPressable>
   );
 };
 
-export const TextButton = ({ label, ...props }: RectButtonProps) => {
+export const TextButton = ({ label, onPress, style }: RectButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 
-  const style = useAnimatedStyle(() => {
+  const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
       borderRadius,
@@ -67,17 +67,17 @@ export const TextButton = ({ label, ...props }: RectButtonProps) => {
   }, []);
 
   return (
-    <AnimatedPressable style={style} onPressIn={handlePressIn} onPressOut={handlePressOut} {...props}>
+    <AnimatedPressable style={[animatedStyle, style]} onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress}>
       <BodyText style={{ color: Colors[colorScheme ?? 'light'].blue }}>{label}</BodyText>
     </AnimatedPressable>
   );
 };
 
-export const EmphasizedTextButton = ({ label, ...props }: RectButtonProps) => {
+export const EmphasizedTextButton = ({ label, style, onPress }: RectButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 
-  const style = useAnimatedStyle(() => {
+  const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
       borderRadius,
@@ -95,7 +95,7 @@ export const EmphasizedTextButton = ({ label, ...props }: RectButtonProps) => {
   }, []);
 
   return (
-    <AnimatedPressable style={style} onPressIn={handlePressIn} onPressOut={handlePressOut} {...props}>
+    <AnimatedPressable style={[animatedStyle, style]} onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress}>
       <EmphasizedBodyText style={{ color: Colors[colorScheme ?? 'light'].blue }}>{label}</EmphasizedBodyText>
     </AnimatedPressable>
   );

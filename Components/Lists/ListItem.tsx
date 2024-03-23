@@ -2,7 +2,7 @@ import Colors from '@/Constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { useMemo, useRef } from 'react';
-import { Keyboard, Pressable, Animated as RNA, TextInput as RNTextInput, StyleSheet, useColorScheme } from 'react-native';
+import { Alert, Keyboard, Pressable, Animated as RNA, TextInput as RNTextInput, StyleSheet, useColorScheme } from 'react-native';
 import { GestureDetector, Swipeable } from 'react-native-gesture-handler';
 import Animated, { LinearTransition, SharedValue, SlideOutLeft, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { IconButton } from '../GeneralComponents/Buttons';
@@ -13,7 +13,7 @@ import LabeledTextInput from './LabeledTextInput';
 import { Positions } from './List';
 import { ListItemType } from './Types';
 import useListReorderEffect from './useListReorderEffect';
-import { borderRadius } from '@/Constants/RandomStyles';
+import { borderRadius } from '@/Constants/Randoms';
 const AnimatedSwipeable = Animated.createAnimatedComponent(Swipeable);
 
 interface SwipeableButtonProps {
@@ -75,14 +75,13 @@ const renderSwipeableButton = ({ onPress, progressAnimatedValue, width, buttonTy
 
 interface Props {
   listItem: ListItemType;
-  setItems: React.Dispatch<React.SetStateAction<ListItemType[]>>;
   positions: SharedValue<Positions>;
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
-const ListItem = ({ listItem, setItems, positions }: Props) => {
+const ListItem = ({ listItem, positions }: Props) => {
   const swipeableButtonWidth = useSharedValue(60);
 
   const modalRef = useRef<BottomSheetModal>(null);
@@ -90,11 +89,11 @@ const ListItem = ({ listItem, setItems, positions }: Props) => {
 
   const [name, setName] = React.useState(listItem.name);
 
-  const { pan, containerStyle, listItemStyle } = useListReorderEffect({ listItem, setItems, positions });
+  const { pan, containerStyle, listItemStyle } = useListReorderEffect({ listItem, positions });
 
   const handleDeleteItem = () => {
     swipeableRef.current?.close();
-    setItems((prevItems) => prevItems.filter((item) => item.id !== listItem.id));
+    Alert.alert('Delete Item', 'Implement deletion');
   };
 
   const handleOpenSettings = () => {
@@ -103,14 +102,7 @@ const ListItem = ({ listItem, setItems, positions }: Props) => {
   };
 
   const handleSaveSettings = () => {
-    setItems((prevItems) => {
-      return prevItems.map((item) => {
-        if (item.id === listItem.id) {
-          return { ...item, name };
-        }
-        return item;
-      });
-    });
+    Alert.alert('Save Settings', 'Implement saving');
     modalRef.current?.close();
   };
 

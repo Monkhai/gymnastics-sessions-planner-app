@@ -1,22 +1,15 @@
-import { useAuth } from '@/context/AuthProvidor';
+import NavBarInfoIcon from '@/Components/GeneralComponents/NavBarInfoIcon';
 import { Stack } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 const _layout = () => {
-  const { signOut } = useAuth();
-
   return (
     <Stack>
       <Stack.Screen
-        name="(top-tabs)"
+        name="(groups)"
         options={{
-          title: 'Group Title',
-          headerRight: () => (
-            <TouchableOpacity onPress={signOut}>
-              <Text style={{ color: '#007AFF' }}>Sign Out</Text>
-            </TouchableOpacity>
-          ),
+          title: 'Groups',
+          headerRight: () => <NavBarInfoIcon />,
         }}
       />
     </Stack>
@@ -24,5 +17,3 @@ const _layout = () => {
 };
 
 export default _layout;
-
-const styles = StyleSheet.create({});

@@ -1,8 +1,8 @@
 import Colors from '@/Constants/Colors';
-import { borderRadius } from '@/Constants/RandomStyles';
-import { BottomSheetTextInput, useBottomSheetInternal } from '@gorhom/bottom-sheet';
-import React, { useCallback, useMemo, useRef } from 'react';
-import { TextInput as RNTextInput, useColorScheme, StyleSheet } from 'react-native';
+import { borderRadius } from '@/Constants/Randoms';
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import React, { useMemo } from 'react';
+import { StyleSheet, useColorScheme } from 'react-native';
 
 interface Props {
   placeholder: string;

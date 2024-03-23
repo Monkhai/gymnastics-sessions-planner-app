@@ -1,28 +1,29 @@
 import Colors from '@/Constants/Colors';
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
-import { borderRadius } from '@/Constants/RandomStyles';
-import { Dispatch, SetStateAction, useMemo } from 'react';
+import { borderRadius } from '@/Constants/Randoms';
+import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import { SharedValue, runOnJS, useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Positions } from './List';
 import { ListItemType } from './Types';
 import { getOrder, getYPosition } from './helpers';
-import { Platform, StyleSheet, useColorScheme } from 'react-native';
+import { Alert, Platform, StyleSheet, useColorScheme } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
 type Args = {
   listItem: ListItemType;
-  setItems: Dispatch<SetStateAction<ListItemType[]>>;
   positions: SharedValue<Positions>;
 };
 
-const useListReorderEffect = ({ listItem, positions, setItems }: Args) => {
+const useListReorderEffect = ({ listItem, positions }: Args) => {
   const colorScheme = useColorScheme();
   const newPosition = getYPosition(positions.value[listItem.id.toString()]);
   const isGestureActive = useSharedValue(false);
   const translateY = useSharedValue(newPosition);
   const isLast = positions.value[listItem.id.toString()] === Object.keys(positions.value).length - 1;
   const isFirst = positions.value[listItem.id.toString()] === 0;
+
+  const [oldPositions, setOldPositions] = useState<Positions>(positions.value);
 
   useAnimatedReaction(
     () => positions.value[listItem.id.toString()],
@@ -42,17 +43,7 @@ const useListReorderEffect = ({ listItem, positions, setItems }: Args) => {
   );
 
   const updateListState = () => {
-    setItems((prev) => {
-      const newItems = prev.map((item) => {
-        const newItem = { ...item };
-        const newOrder = positions.value[item.id.toString()];
-        newItem.order = newOrder;
-        return newItem;
-      });
-
-      newItems.sort((a, b) => a.order - b.order);
-      return newItems;
-    });
+    Alert.alert('Update List State', 'Implement this function to update the list state.');
   };
 
   const pan = Gesture.Pan()
@@ -75,7 +66,7 @@ const useListReorderEffect = ({ listItem, positions, setItems }: Args) => {
         }
       }
     })
-    .onFinalize(() => {
+    .onEnd(() => {
       isGestureActive.value = false;
       const destination = getYPosition(positions.value[listItem.id.toString()]);
       translateY.value = withTiming(destination, {}, (finised) => finised && (isGestureActive.value = false));

@@ -1,23 +1,11 @@
 import BaseView from '@/Components/GeneralComponents/BaseView';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { useIsFocused } from '@react-navigation/native';
-import React, { useContext, useEffect, useState } from 'react';
-import { ScreenContext } from './_layout';
+import React, { useState } from 'react';
 
 import List from '@/Components/Lists/List';
 import { ListItemType } from '@/Components/Lists/Types';
 
 const index = () => {
-  const { setScreen } = useContext(ScreenContext);
-
-  const isScreenFocused = useIsFocused();
-
-  useEffect(() => {
-    if (isScreenFocused) {
-      setScreen('index');
-    }
-  }, [isScreenFocused]);
-
   const [items, setItems] = useState<ListItemType[]>([
     { order: 1, id: 2, name: 'hello' },
     { order: 2, id: 3, name: 'world' },
@@ -30,7 +18,7 @@ const index = () => {
   return (
     <BottomSheetModalProvider>
       <BaseView style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
-        <List items={items} setItems={setItems} />
+        <List items={items} areItemsLoading={false} error={null} />
       </BaseView>
     </BottomSheetModalProvider>
   );
