@@ -4,12 +4,11 @@ import { borderRadius } from '@/Constants/Randoms';
 import { PositionsContext } from '@/context/PositionsContext';
 import * as Haptics from 'expo-haptics';
 import { useContext } from 'react';
-import { Alert, Platform, useColorScheme } from 'react-native';
+import { Platform, useColorScheme } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { ListItemType } from './Types';
 import { getOrder, getYPosition } from './helpers';
-import useUpdateItemOrder from '@/features/general/useUpdateItemOrder';
 
 type Args = {
   listItem: ListItemType;
