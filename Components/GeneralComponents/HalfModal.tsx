@@ -26,7 +26,7 @@ const HalfModal = ({ modalRef, children }: Props) => {
       ref={modalRef}
     >
       <BottomSheetView style={{ flex: 1, alignItems: 'center', backgroundColor: overlayColor }}>
-        <Pressable onPress={Keyboard.dismiss} style={{ flex: 1, width: '100%', alignItems: 'center' }}>
+        <Pressable onPress={Keyboard.dismiss} style={{ flex: 1, width: '100%', alignItems: 'center', gap: 16 }}>
           {children}
         </Pressable>
       </BottomSheetView>

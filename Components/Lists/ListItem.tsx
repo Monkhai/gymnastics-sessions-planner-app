@@ -1,21 +1,21 @@
 import Colors from '@/Constants/Colors';
+import { TableContext } from '@/context/TableContext';
+import useDeleteItem from '@/features/general/useDeleteItem';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import React, { useMemo, useRef } from 'react';
-import { Alert, Keyboard, Pressable, Animated as RNA, TextInput as RNTextInput, StyleSheet, useColorScheme } from 'react-native';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import React, { useContext, useRef } from 'react';
+import { Alert, Animated as RNA, useColorScheme } from 'react-native';
 import { GestureDetector, Swipeable } from 'react-native-gesture-handler';
 import Animated, { LinearTransition, SharedValue, SlideOutLeft, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { IconButton } from '../GeneralComponents/Buttons';
 import HalfModal from '../GeneralComponents/HalfModal';
-import SettingsModalHeader from '../GeneralComponents/SettingsModalHeader';
+import ModalHeader from '../GeneralComponents/ModalHeader';
 import { BodyText } from '../GeneralComponents/Texts';
-import LabeledTextInput from './LabeledTextInput';
-import { Positions } from './List';
+import { LabeledBSTextInput } from './LabeledTextInput';
 import { ListItemType } from './Types';
 import useListReorderEffect from './useListReorderEffect';
-import { borderRadius } from '@/Constants/Randoms';
+import useUpdateItem from '@/features/general/useUpdateItem';
 const AnimatedSwipeable = Animated.createAnimatedComponent(Swipeable);
-
 interface SwipeableButtonProps {
   width: SharedValue<number>;
   onPress: () => void;
@@ -48,7 +48,7 @@ const SettingsButton = ({ width, onPress }: SwipeableButtonProps) => {
 
   return (
     <IconButton onPress={onPress} style={style}>
-      <Ionicons name="settings-sharp" color={Colors.white} size={24} />
+      <Ionicons name="ellipsis-horizontal-circle-sharp" color={Colors.white} size={24} />
     </IconButton>
   );
 };
@@ -75,13 +75,15 @@ const renderSwipeableButton = ({ onPress, progressAnimatedValue, width, buttonTy
 
 interface Props {
   listItem: ListItemType;
-  positions: SharedValue<Positions>;
+  isLast: boolean;
+  isFirst: boolean;
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
-const ListItem = ({ listItem, positions }: Props) => {
+const ListItem = ({ listItem, isFirst, isLast }: Props) => {
+  const { table, queryKey } = useContext(TableContext);
   const swipeableButtonWidth = useSharedValue(60);
 
   const modalRef = useRef<BottomSheetModal>(null);
@@ -89,11 +91,13 @@ const ListItem = ({ listItem, positions }: Props) => {
 
   const [name, setName] = React.useState(listItem.name);
 
-  const { pan, containerStyle, listItemStyle } = useListReorderEffect({ listItem, positions });
+  const { pan, containerStyle, listItemStyle } = useListReorderEffect({ listItem, isFirst, isLast });
 
+  const { mutate: deleteItem } = useDeleteItem();
+  const { mutate: updateItem } = useUpdateItem();
   const handleDeleteItem = () => {
     swipeableRef.current?.close();
-    Alert.alert('Delete Item', 'Implement deletion');
+    deleteItem({ item: listItem, table, queryKey });
   };
 
   const handleOpenSettings = () => {
@@ -102,7 +106,7 @@ const ListItem = ({ listItem, positions }: Props) => {
   };
 
   const handleSaveSettings = () => {
-    Alert.alert('Save Settings', 'Implement saving');
+    updateItem({ name, order: listItem.order, item_id: listItem.id, table, queryKey });
     modalRef.current?.close();
   };
 
@@ -137,8 +141,14 @@ const ListItem = ({ listItem, positions }: Props) => {
           </Animated.View>
           {/*  */}
           <HalfModal modalRef={modalRef}>
-            <SettingsModalHeader handleClose={() => modalRef.current?.close()} handleSave={handleSaveSettings} />
-            <LabeledTextInput label="Name" value={name} onChangeText={setName} placeholder="Enter a name" listItemName={listItem.name} />
+            <ModalHeader
+              handleSecondaryAction={() => modalRef.current?.close()}
+              handlePrimaryAction={handleSaveSettings}
+              label="Edit"
+              primaryActionLabel="Save"
+              secondaryActionLabel="Close"
+            />
+            <LabeledBSTextInput label="Name" value={name} onChangeText={setName} placeholder="Enter a name" listItemName={listItem.name} />
           </HalfModal>
           {/*  */}
         </AnimatedSwipeable>

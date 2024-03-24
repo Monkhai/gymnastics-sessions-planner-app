@@ -1,16 +1,15 @@
 import { queryKeyFactory } from '@/utils/queryFactories';
 import { useQuery } from '@tanstack/react-query';
-import getItems, { Table } from './getItems';
+import getItems from './getItems';
 import { staleTime } from '@/Constants/Randoms';
-import { ListItemType } from '@/Components/Lists/Types';
+import { ListItemType, MainTable } from '@/Components/Lists/Types';
 
 type Args = {
-  table: Table;
+  table: MainTable;
+  queryKey: string[];
 };
 
-const useGetItems = ({ table }: Args) => {
-  const queryKey = queryKeyFactory.groups();
-
+const useGetItems = ({ table, queryKey }: Args) => {
   return useQuery({
     queryKey,
     queryFn: async () => await getItems<ListItemType[]>({ table }),

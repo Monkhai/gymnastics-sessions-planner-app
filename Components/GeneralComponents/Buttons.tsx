@@ -11,7 +11,8 @@ interface RectButtonProps extends PressableProps {
   wide?: boolean;
   label: string;
   onPress: () => void;
-  style: ViewStyle;
+  style?: ViewStyle;
+  disabled?: boolean;
 }
 
 export const RectButton = ({ label, wide, onPress, style }: RectButtonProps) => {
@@ -73,7 +74,7 @@ export const TextButton = ({ label, onPress, style }: RectButtonProps) => {
   );
 };
 
-export const EmphasizedTextButton = ({ label, style, onPress }: RectButtonProps) => {
+export const EmphasizedTextButton = ({ label, style, onPress, disabled = false }: RectButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 
@@ -95,8 +96,18 @@ export const EmphasizedTextButton = ({ label, style, onPress }: RectButtonProps)
   }, []);
 
   return (
-    <AnimatedPressable style={[animatedStyle, style]} onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress}>
-      <EmphasizedBodyText style={{ color: Colors[colorScheme ?? 'light'].blue }}>{label}</EmphasizedBodyText>
+    <AnimatedPressable
+      disabled={disabled}
+      style={[animatedStyle, style]}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      onPress={onPress}
+    >
+      <EmphasizedBodyText
+        style={{ color: disabled ? Colors[colorScheme ?? 'light'].labels.secondary : Colors[colorScheme ?? 'light'].blue }}
+      >
+        {label}
+      </EmphasizedBodyText>
     </AnimatedPressable>
   );
 };

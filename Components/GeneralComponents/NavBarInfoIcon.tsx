@@ -2,8 +2,8 @@ import { useAuth } from '@/context/AuthProvidor';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React from 'react';
 import { useColorScheme } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { IconButton } from './Buttons';
+import Colors from '@/Constants/Colors';
 
 const NavBarInfoIcon = () => {
   const { signOut } = useAuth();

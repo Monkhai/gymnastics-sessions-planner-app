@@ -1,10 +1,9 @@
 import { supabase } from '@/config/initSupabase';
 import useUserId from '../auth/useUserId';
-
-export type Table = 'groups' | 'athletes' | 'sessions' | 'stations' | 'drills' | 'skills';
+import { MainTable } from '@/Components/Lists/Types';
 
 type Args = {
-  table: Table;
+  table: MainTable;
 };
 
 export default async <T>({ table }: Args) => {
@@ -16,10 +15,8 @@ export default async <T>({ table }: Args) => {
 
     if (!data) throw new Error('No data found in getItems function');
 
-    console.log(data);
     return data as T;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

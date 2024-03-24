@@ -1,32 +1,36 @@
 import Colors from '@/Constants/Colors';
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 import { borderRadius } from '@/Constants/Randoms';
-import { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import { PositionsContext } from '@/context/PositionsContext';
+import * as Haptics from 'expo-haptics';
+import { useContext } from 'react';
+import { Alert, Platform, useColorScheme } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
-import { SharedValue, runOnJS, useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import { Positions } from './List';
+import { runOnJS, useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { ListItemType } from './Types';
 import { getOrder, getYPosition } from './helpers';
-import { Alert, Platform, StyleSheet, useColorScheme } from 'react-native';
-import * as Haptics from 'expo-haptics';
 
 type Args = {
   listItem: ListItemType;
-  positions: SharedValue<Positions>;
+  isFirst: boolean;
+  isLast: boolean;
 };
 
-const useListReorderEffect = ({ listItem, positions }: Args) => {
-  const colorScheme = useColorScheme();
-  const newPosition = getYPosition(positions.value[listItem.id.toString()]);
-  const isGestureActive = useSharedValue(false);
-  const translateY = useSharedValue(newPosition);
-  const isLast = positions.value[listItem.id.toString()] === Object.keys(positions.value).length - 1;
-  const isFirst = positions.value[listItem.id.toString()] === 0;
+const useListReorderEffect = ({ listItem, isFirst, isLast }: Args) => {
+  const { positions } = useContext(PositionsContext);
 
-  const [oldPositions, setOldPositions] = useState<Positions>(positions.value);
+  const colorScheme = useColorScheme();
+
+  const newPosition = getYPosition(positions.value[listItem.order.toString()]);
+
+  const isGestureActive = useSharedValue(false);
+
+  const positionsLength = Object.keys(positions.value).length;
+
+  const translateY = useSharedValue(newPosition);
 
   useAnimatedReaction(
-    () => positions.value[listItem.id.toString()],
+    () => positions.value[listItem.order.toString()],
     (newOrder) => {
       const newPosition = getYPosition(newOrder);
       translateY.value = withTiming(newPosition);
@@ -54,21 +58,21 @@ const useListReorderEffect = ({ listItem, positions }: Args) => {
     .onChange((e) => {
       const newTranslateY = translateY.value + e.changeY;
       translateY.value = newTranslateY;
-      const oldOrder = positions.value[listItem.id.toString()];
+      const oldOrder = positions.value[listItem.order.toString()];
       const newOrder = getOrder(newTranslateY);
       if (oldOrder !== newOrder) {
         const idToSwap = Object.keys(positions.value).find((key) => positions.value[key] === newOrder);
         if (idToSwap) {
           const newPositions = { ...positions.value };
           newPositions[idToSwap] = oldOrder;
-          newPositions[listItem.id.toString()] = newOrder;
+          newPositions[listItem.order.toString()] = newOrder;
           positions.value = newPositions;
         }
       }
     })
     .onEnd(() => {
       isGestureActive.value = false;
-      const destination = getYPosition(positions.value[listItem.id.toString()]);
+      const destination = getYPosition(positions.value[listItem.order.toString()]);
       translateY.value = withTiming(destination, {}, (finised) => finised && (isGestureActive.value = false));
 
       runOnJS(updateListState)();
@@ -98,7 +102,7 @@ const useListReorderEffect = ({ listItem, positions }: Args) => {
       height: LIST_ITEM_HEIGHT,
       backgroundColor: Colors[colorScheme ?? 'light'].bg.elevated,
       zIndex: zIndex,
-      transform: [{ translateY: translateY.value }, { scale }],
+      transform: [{ translateY: isNaN(translateY.value) ? positionsLength * LIST_ITEM_HEIGHT : translateY.value }, { scale }],
       shadowColor: shadowColor,
       shadowOffset: shadowOffset,
       shadowOpacity: shadowOpacity,

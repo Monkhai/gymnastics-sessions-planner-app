@@ -1,11 +1,14 @@
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 import { borderRadius } from '@/Constants/Randoms';
-import React, { useEffect } from 'react';
-import { Alert, StyleSheet } from 'react-native';
-import Animated, { LinearTransition, useSharedValue } from 'react-native-reanimated';
+import { PositionsContext } from '@/context/PositionsContext';
+import { TableContext } from '@/context/TableContext';
+import React, { useContext, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import Animated, { LinearTransition } from 'react-native-reanimated';
+import { BodyText } from '../GeneralComponents/Texts';
 import ListItem from './ListItem';
 import { ListItemType } from './Types';
-import { BodyText } from '../GeneralComponents/Texts';
+import { usePositions } from './usePositions';
 
 interface Props {
   wide?: boolean;
@@ -19,31 +22,32 @@ export interface Positions {
 }
 
 const List = ({ wide, items, areItemsLoading, error }: Props) => {
-  const positions = useSharedValue<Positions>(
-    items ? Object.assign({}, ...items.map((item, index) => ({ [item.id.toString()]: index }))) : {}
-  );
+  if (error || !items) {
+    return null;
+  }
+
+  const { positions } = usePositions({ items });
+
+  if (!positions) {
+    return null;
+  }
 
   useEffect(() => {
-    positions.value = items ? Object.assign({}, ...items.map((item, index) => ({ [item.id.toString()]: index }))) : {};
+    positions.value = Object.assign({}, ...items.map((item, index) => ({ [item.order.toString()]: index })));
   }, [items]);
 
   const { container, scrollViewStyle } = StyleSheet.create({
     container: {
-      width: wide ? '100%' : '80%',
+      width: wide ? '100%' : '85%',
       borderRadius: borderRadius,
       height: items ? items.length * LIST_ITEM_HEIGHT : 0,
-      left: wide ? 0 : '10%',
+      left: wide ? 0 : '7.5%',
     },
     scrollViewStyle: {
       width: '100%',
       paddingTop: 16,
     },
   });
-
-  if (error || !items) {
-    console.log(error);
-    return null;
-  }
 
   if (areItemsLoading) {
     <Animated.ScrollView layout={LinearTransition} style={scrollViewStyle} contentContainerStyle={container}>
@@ -52,11 +56,15 @@ const List = ({ wide, items, areItemsLoading, error }: Props) => {
   }
 
   return (
-    <Animated.ScrollView layout={LinearTransition} style={scrollViewStyle} contentContainerStyle={container}>
-      {items.map((item) => {
-        return <ListItem key={item.name} positions={positions} listItem={item} />;
-      })}
-    </Animated.ScrollView>
+    <PositionsContext.Provider value={{ positions }}>
+      <Animated.ScrollView layout={LinearTransition} style={scrollViewStyle} contentContainerStyle={container}>
+        {items.map((item) => {
+          const isLast = items.indexOf(item) === items.length - 1;
+          const isFirst = items.indexOf(item) === 0;
+          return <ListItem key={item.id} listItem={item} isLast={isLast} isFirst={isFirst} />;
+        })}
+      </Animated.ScrollView>
+    </PositionsContext.Provider>
   );
 };
 
