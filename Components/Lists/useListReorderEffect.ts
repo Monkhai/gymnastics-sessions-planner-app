@@ -9,14 +9,16 @@ import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { ListItemType } from './Types';
 import { getOrder, getYPosition } from './helpers';
+import useUpdateItemOrder from '@/features/general/useUpdateItemOrder';
 
 type Args = {
   listItem: ListItemType;
+  updateListOrder: () => void;
   isFirst: boolean;
   isLast: boolean;
 };
 
-const useListReorderEffect = ({ listItem, isFirst, isLast }: Args) => {
+const useListReorderEffect = ({ listItem, isFirst, isLast, updateListOrder }: Args) => {
   const { positions } = useContext(PositionsContext);
 
   const colorScheme = useColorScheme();
@@ -46,10 +48,6 @@ const useListReorderEffect = ({ listItem, isFirst, isLast }: Args) => {
     }
   );
 
-  const updateListState = () => {
-    Alert.alert('Update List State', 'Implement this function to update the list state.');
-  };
-
   const pan = Gesture.Pan()
     .activateAfterLongPress(400)
     .onStart(() => {
@@ -75,7 +73,7 @@ const useListReorderEffect = ({ listItem, isFirst, isLast }: Args) => {
       const destination = getYPosition(positions.value[listItem.order.toString()]);
       translateY.value = withTiming(destination, {}, (finised) => finised && (isGestureActive.value = false));
 
-      runOnJS(updateListState)();
+      runOnJS(updateListOrder)();
     });
 
   const containerStyle = useAnimatedStyle(() => {

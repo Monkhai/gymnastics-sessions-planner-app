@@ -61,7 +61,7 @@ const List = ({ wide, items, areItemsLoading, error }: Props) => {
         {items.map((item) => {
           const isLast = items.indexOf(item) === items.length - 1;
           const isFirst = items.indexOf(item) === 0;
-          return <ListItem key={item.id} listItem={item} isLast={isLast} isFirst={isFirst} />;
+          return <ListItem items={items} key={item.id} listItem={item} isLast={isLast} isFirst={isFirst} />;
         })}
       </Animated.ScrollView>
     </PositionsContext.Provider>

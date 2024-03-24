@@ -1,10 +1,12 @@
 import Colors from '@/Constants/Colors';
 import { TableContext } from '@/context/TableContext';
 import useDeleteItem from '@/features/general/useDeleteItem';
+import useUpdateItem from '@/features/general/useUpdateItem';
+import useUpdateItemOrder from '@/features/general/useUpdateItemOrder';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import React, { useContext, useRef } from 'react';
-import { Alert, Animated as RNA, useColorScheme } from 'react-native';
+import { Animated as RNA, useColorScheme } from 'react-native';
 import { GestureDetector, Swipeable } from 'react-native-gesture-handler';
 import Animated, { LinearTransition, SharedValue, SlideOutLeft, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { IconButton } from '../GeneralComponents/Buttons';
@@ -14,7 +16,7 @@ import { BodyText } from '../GeneralComponents/Texts';
 import { LabeledBSTextInput } from './LabeledTextInput';
 import { ListItemType } from './Types';
 import useListReorderEffect from './useListReorderEffect';
-import useUpdateItem from '@/features/general/useUpdateItem';
+import { PositionsContext } from '@/context/PositionsContext';
 const AnimatedSwipeable = Animated.createAnimatedComponent(Swipeable);
 interface SwipeableButtonProps {
   width: SharedValue<number>;
@@ -74,6 +76,7 @@ const renderSwipeableButton = ({ onPress, progressAnimatedValue, width, buttonTy
 };
 
 interface Props {
+  items: ListItemType[];
   listItem: ListItemType;
   isLast: boolean;
   isFirst: boolean;
@@ -82,8 +85,11 @@ interface Props {
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
-const ListItem = ({ listItem, isFirst, isLast }: Props) => {
+const ListItem = ({ listItem, isFirst, isLast, items }: Props) => {
   const { table, queryKey } = useContext(TableContext);
+
+  const { positions } = useContext(PositionsContext);
+
   const swipeableButtonWidth = useSharedValue(60);
 
   const modalRef = useRef<BottomSheetModal>(null);
@@ -91,10 +97,20 @@ const ListItem = ({ listItem, isFirst, isLast }: Props) => {
 
   const [name, setName] = React.useState(listItem.name);
 
-  const { pan, containerStyle, listItemStyle } = useListReorderEffect({ listItem, isFirst, isLast });
-
   const { mutate: deleteItem } = useDeleteItem();
   const { mutate: updateItem } = useUpdateItem();
+  const { mutate: updateListOrder } = useUpdateItemOrder();
+
+  const handleUpdateOrder = () => {
+    const updatedItems = items.map((item) => {
+      return { ...item, order: positions.value[item.order.toString()] + 1 };
+    });
+
+    updateListOrder({ items: updatedItems, table, queryKey });
+  };
+
+  const { pan, containerStyle, listItemStyle } = useListReorderEffect({ listItem, isFirst, isLast, updateListOrder: handleUpdateOrder });
+
   const handleDeleteItem = () => {
     swipeableRef.current?.close();
     deleteItem({ item: listItem, table, queryKey });
