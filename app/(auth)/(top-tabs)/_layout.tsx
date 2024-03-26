@@ -31,15 +31,6 @@ export const ScreenContext = createContext<Context>({
 });
 
 const _layout = () => {
-  const [screen, setScreen] = React.useState<'index' | 'details'>('index');
-
-  const doThing = () => {
-    if (screen === 'index') {
-      alert('index');
-    } else {
-      alert('details');
-    }
-  };
   const colorScheme = useColorScheme();
   return (
     <MaterialTopTabs

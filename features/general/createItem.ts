@@ -1,11 +1,11 @@
 import { supabase } from '@/config/initSupabase';
-import { Table } from './getItems';
+
 import useUserId from '../auth/useUserId';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
-import { ListItemType } from '@/Components/Lists/Types';
+import { ListItemType, ListTable } from '@/Components/Lists/Types';
 
 type Args = {
-  table: Table;
+  table: ListTable;
   name: string;
   lastOrder: number;
 };

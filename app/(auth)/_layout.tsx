@@ -1,4 +1,3 @@
-import NavBarInfoIcon from '@/Components/GeneralComponents/NavBarInfoIcon';
 import { Stack } from 'expo-router';
 import React from 'react';
 
@@ -9,7 +8,7 @@ const _layout = () => {
         name="(groups)"
         options={{
           title: 'Groups',
-          headerRight: () => <NavBarInfoIcon />,
+          headerShown: false,
         }}
       />
     </Stack>

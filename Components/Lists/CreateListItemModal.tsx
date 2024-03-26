@@ -9,10 +9,12 @@ import { ModalTextInput } from '../GeneralComponents/TextInput';
 interface Props {
   isVisible: boolean;
   setIsVisible: Dispatch<SetStateAction<boolean>>;
-  onCreateGroup: (name: string) => void;
+  onCreate: (name: string) => void;
+  headerLabel: string;
+  placeholder: string;
 }
 
-const CreateListItemModal = ({ isVisible, setIsVisible, onCreateGroup }: Props) => {
+const CreateListItemModal = ({ placeholder, headerLabel, isVisible, setIsVisible, onCreate: onCreateGroup }: Props) => {
   const colorScheme = useColorScheme();
 
   const ref = React.useRef<Animated.View>(null);
@@ -76,12 +78,12 @@ const CreateListItemModal = ({ isVisible, setIsVisible, onCreateGroup }: Props) 
         <ModalHeader
           primaryActionLabel="Create"
           secondaryActionLabel="Cancel"
-          label="Create a New Group"
+          label={headerLabel}
           handlePrimaryAction={handleCreateGroup}
           handleSecondaryAction={handleDismiss}
           disabledPrimary={name ? false : true}
         />
-        <ModalTextInput value={name} onChangeText={setName} placeholder={`New Group's Name`} />
+        <ModalTextInput value={name} onChangeText={setName} placeholder={placeholder} />
       </Animated.View>
     </Animated.View>
   );

@@ -1,23 +1,27 @@
 import Colors from '@/Constants/Colors';
-import { TableContext } from '@/context/TableContext';
+import { PositionsContext } from '@/context/PositionsContext';
+import { ListContext } from '@/context/TableContext';
 import useDeleteItem from '@/features/general/useDeleteItem';
 import useUpdateItem from '@/features/general/useUpdateItem';
 import useUpdateItemOrder from '@/features/general/useUpdateItemOrder';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import React, { useContext, useRef } from 'react';
+import React, { Children, useContext, useRef } from 'react';
 import { Animated as RNA, useColorScheme } from 'react-native';
 import { GestureDetector, Swipeable } from 'react-native-gesture-handler';
 import Animated, { LinearTransition, SharedValue, SlideOutLeft, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { IconButton } from '../GeneralComponents/Buttons';
+import { ContainerButton, IconButton } from '../GeneralComponents/Buttons';
 import HalfModal from '../GeneralComponents/HalfModal';
 import ModalHeader from '../GeneralComponents/ModalHeader';
 import { BodyText } from '../GeneralComponents/Texts';
 import { LabeledBSTextInput } from './LabeledTextInput';
 import { ListItemType } from './Types';
 import useListReorderEffect from './useListReorderEffect';
-import { PositionsContext } from '@/context/PositionsContext';
+import { CRUDItemOfItemArgs } from '@/features/itemsOfItems/types';
+import { CRUDItemArgs } from '@/features/general/types';
+
 const AnimatedSwipeable = Animated.createAnimatedComponent(Swipeable);
+
 interface SwipeableButtonProps {
   width: SharedValue<number>;
   onPress: () => void;
@@ -75,18 +79,22 @@ const renderSwipeableButton = ({ onPress, progressAnimatedValue, width, buttonTy
   return <DeleteButton onPress={onPress} width={width} />;
 };
 
+//------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------------
+type CRUDFunctions<T> = T extends 'itemOfItems' ? CRUDItemOfItemArgs : CRUDItemArgs;
+
+type Type = 'itemOfItems' | 'items';
 interface Props {
   items: ListItemType[];
   listItem: ListItemType;
   isLast: boolean;
   isFirst: boolean;
+  routeFn: (id: number) => void;
 }
 
-//------------------------------------------------------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------------------------------------------------------
-const ListItem = ({ listItem, isFirst, isLast, items }: Props) => {
-  const { table, queryKey } = useContext(TableContext);
+const ListItem = ({ listItem, isFirst, isLast, items, routeFn }: Props) => {
+  const { table, queryKey, secondaryTable, deleteItem, updateItem } = useContext(ListContext);
 
   const { positions } = useContext(PositionsContext);
 
@@ -97,8 +105,6 @@ const ListItem = ({ listItem, isFirst, isLast, items }: Props) => {
 
   const [name, setName] = React.useState(listItem.name);
 
-  const { mutate: deleteItem } = useDeleteItem();
-  const { mutate: updateItem } = useUpdateItem();
   const { mutate: updateListOrder } = useUpdateItemOrder();
 
   const handleUpdateOrder = () => {
@@ -106,14 +112,19 @@ const ListItem = ({ listItem, isFirst, isLast, items }: Props) => {
       return { ...item, order: positions.value[item.order.toString()] + 1 };
     });
 
-    updateListOrder({ items: updatedItems, table, queryKey });
+    updateListOrder({
+      items: updatedItems,
+      table,
+      queryKey,
+      secondaryTable: secondaryTable ? secondaryTable : undefined,
+    });
   };
 
   const { pan, containerStyle, listItemStyle } = useListReorderEffect({ listItem, isFirst, isLast, updateListOrder: handleUpdateOrder });
 
   const handleDeleteItem = () => {
     swipeableRef.current?.close();
-    deleteItem({ item: listItem, table, queryKey });
+    deleteItem({ item: listItem });
   };
 
   const handleOpenSettings = () => {
@@ -122,13 +133,21 @@ const ListItem = ({ listItem, isFirst, isLast, items }: Props) => {
   };
 
   const handleSaveSettings = () => {
-    updateItem({ name, order: listItem.order, item_id: listItem.id, table, queryKey });
+    updateItem({
+      name,
+      order: listItem.order,
+      item_id: listItem.id,
+    });
     modalRef.current?.close();
+  };
+
+  const handleItemPress = () => {
+    routeFn(listItem.id);
   };
 
   return (
     <GestureDetector gesture={pan}>
-      <Animated.View style={containerStyle}>
+      <ContainerButton onPress={handleItemPress} style={containerStyle}>
         <AnimatedSwipeable
           exiting={SlideOutLeft}
           layout={LinearTransition}
@@ -168,7 +187,7 @@ const ListItem = ({ listItem, isFirst, isLast, items }: Props) => {
           </HalfModal>
           {/*  */}
         </AnimatedSwipeable>
-      </Animated.View>
+      </ContainerButton>
     </GestureDetector>
   );
 };

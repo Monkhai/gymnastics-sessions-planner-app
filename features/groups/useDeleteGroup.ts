@@ -1,0 +1,58 @@
+import { useMutation } from '@tanstack/react-query';
+import { DeleteItemArgs } from '../general/types';
+import deleteGroup from './deleteGroup';
+import { queryClient } from '@/Providers/ReactQueryProvider';
+import { GroupType } from './types';
+import decrementItemOrder from '../general/decrementItemOrder';
+
+type Args = DeleteItemArgs<GroupType> & { queryKey: string[] };
+
+const useDeleteGroup = () => {
+  return useMutation({
+    mutationFn: async ({ item }: Args) => {
+      deleteGroup({ group_id: item.id });
+    },
+
+    onMutate: async ({ item, queryKey }) => {
+      const previousGroups: GroupType[] = queryClient.getQueryData(queryKey) ?? [];
+
+      const index = previousGroups.findIndex((group) => group.id === item.id);
+
+      const newGroups = previousGroups.filter((group) => group.id !== item.id);
+
+      const groupsToUpdate = newGroups.slice(index);
+
+      const newOrderedGroups = newGroups.map((group) => {
+        if (group.order > index) {
+          return { ...group, order: group.order - 1 };
+        }
+        return group;
+      });
+
+      queryClient.setQueryData(queryKey, newOrderedGroups);
+
+      return {
+        rollback: () => queryClient.setQueryData(queryKey, previousGroups),
+        itemsToUpdate: groupsToUpdate,
+      };
+    },
+    onSuccess: async (_, __, { itemsToUpdate, rollback }) => {
+      try {
+        for (const group of itemsToUpdate) {
+          await decrementItemOrder({ table: 'groups', listItem: group });
+        }
+      } catch (error) {
+        rollback();
+      }
+    },
+
+    onError: (error, _, context) => {
+      console.error(error);
+      if (context) {
+        context.rollback();
+      }
+    },
+  });
+};
+
+export default useDeleteGroup;

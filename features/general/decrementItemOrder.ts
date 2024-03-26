@@ -1,10 +1,11 @@
-import { ListItemType, MainTable } from '@/Components/Lists/Types';
+import { ListItemType, ListTable } from '@/Components/Lists/Types';
 
 import { supabase } from '@/config/initSupabase';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
+import { SecondaryTable } from './types';
 
 type Args = {
-  table: MainTable;
+  table: ListTable | SecondaryTable;
   listItem: ListItemType;
 };
 export default async ({ table, listItem }: Args) => {

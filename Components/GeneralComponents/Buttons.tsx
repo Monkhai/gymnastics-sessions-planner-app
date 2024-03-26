@@ -1,13 +1,13 @@
 import Colors from '@/Constants/Colors';
 import { borderRadius } from '@/Constants/Randoms';
 import React, { useCallback } from 'react';
-import { Pressable, PressableProps, ViewProps, ViewStyle, useColorScheme } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { GestureResponderEvent, Pressable, PressableProps, ViewProps, ViewStyle, useColorScheme } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import { BodyText, EmphasizedBodyText } from './Texts';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-interface RectButtonProps extends PressableProps {
+interface ButtonProps extends PressableProps {
   wide?: boolean;
   label: string;
   onPress: () => void;
@@ -15,7 +15,32 @@ interface RectButtonProps extends PressableProps {
   disabled?: boolean;
 }
 
-export const RectButton = ({ label, wide, onPress, style }: RectButtonProps) => {
+export const ContainerButton = ({ onPress, children, style }: PressableProps) => {
+  const opacity = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
+  });
+
+  const handlePressIn = useCallback(() => {
+    opacity.value = withDelay(100, withTiming(0.5, { duration: 150 }));
+    // opacity.value = withTiming(0.5, { duration: 80 });
+  }, []);
+
+  const handlePressOut = useCallback(() => {
+    opacity.value = withTiming(1, { duration: 80 });
+  }, []);
+
+  return (
+    <AnimatedPressable onPressIn={handlePressIn} onPressOut={handlePressOut} style={[style, animatedStyle]} onPress={onPress}>
+      {children}
+    </AnimatedPressable>
+  );
+};
+
+export const RectButton = ({ label, wide, onPress, style }: ButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 
@@ -46,7 +71,7 @@ export const RectButton = ({ label, wide, onPress, style }: RectButtonProps) => 
   );
 };
 
-export const TextButton = ({ label, onPress, style }: RectButtonProps) => {
+export const TextButton = ({ label, onPress, style }: ButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 
@@ -74,7 +99,7 @@ export const TextButton = ({ label, onPress, style }: RectButtonProps) => {
   );
 };
 
-export const EmphasizedTextButton = ({ label, style, onPress, disabled = false }: RectButtonProps) => {
+export const EmphasizedTextButton = ({ label, style, onPress, disabled = false }: ButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 

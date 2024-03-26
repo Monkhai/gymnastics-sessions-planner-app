@@ -2,6 +2,7 @@ import { ListItemType, ListTable } from '@/Components/Lists/Types';
 import { useMutation } from '@tanstack/react-query';
 import updateItem from './updateItem';
 import { queryClient } from '@/Providers/ReactQueryProvider';
+import { SecondaryTable } from './types';
 
 type Args = {
   item_id: number;
@@ -9,12 +10,13 @@ type Args = {
   order: number;
   table: ListTable;
   queryKey: string[];
+  seondaryTable?: SecondaryTable;
 };
 
 const useUpdateItem = () => {
   return useMutation({
-    mutationFn: async ({ item_id, name, order, table }: Args) => {
-      return await updateItem({ table, item_id, name, order });
+    mutationFn: async ({ item_id, name, order, table, seondaryTable }: Args) => {
+      return await updateItem({ table, item_id, name, order, secondaryTable: seondaryTable ? seondaryTable : undefined });
     },
 
     onMutate: async ({ item_id, name, queryKey }) => {

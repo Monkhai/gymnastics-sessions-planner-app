@@ -14,7 +14,6 @@ export default async <T>({ table }: Args) => {
     if (error) throw error;
 
     if (!data) throw new Error('No data found in getItems function');
-
     return data as T;
   } catch (error) {
     throw error;

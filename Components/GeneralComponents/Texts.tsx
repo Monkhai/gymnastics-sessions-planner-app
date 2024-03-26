@@ -12,7 +12,7 @@ export const EmphasizedBodyText = (props: TextProps) => {
   const colorScheme = useColorScheme();
 
   return (
-    <Text {...props} style={[{ fontSize: 17, color: Colors[colorScheme ?? 'light'].labels.primary, fontWeight: '500' }, props.style]} />
+    <Text {...props} style={[{ fontSize: 17, color: Colors[colorScheme ?? 'light'].labels.primary, fontWeight: '600' }, props.style]} />
   );
 };
 

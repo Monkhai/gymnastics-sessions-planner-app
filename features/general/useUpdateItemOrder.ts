@@ -2,17 +2,19 @@ import { ListItemType, ListTable } from '@/Components/Lists/Types';
 import { useMutation } from '@tanstack/react-query';
 import updateItemOrder from './updateItemOrder';
 import { queryClient } from '@/Providers/ReactQueryProvider';
+import { SecondaryTable } from './types';
 
 type Args = {
   items: ListItemType[];
   table: ListTable;
   queryKey: string[];
+  secondaryTable?: SecondaryTable;
 };
 
 const useUpdateItemOrder = () => {
   return useMutation({
-    mutationFn: async ({ items, table }: Args) => {
-      return await updateItemOrder({ items, table });
+    mutationFn: async ({ items, table, secondaryTable }: Args) => {
+      return await updateItemOrder({ items, table, secondaryTable: secondaryTable ? secondaryTable : undefined });
     },
 
     onMutate: async ({ items, queryKey }: Args) => {

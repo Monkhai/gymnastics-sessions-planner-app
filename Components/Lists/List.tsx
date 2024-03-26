@@ -1,8 +1,7 @@
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 import { borderRadius } from '@/Constants/Randoms';
 import { PositionsContext } from '@/context/PositionsContext';
-import { TableContext } from '@/context/TableContext';
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { BodyText } from '../GeneralComponents/Texts';
@@ -15,13 +14,14 @@ interface Props {
   items: ListItemType[] | undefined;
   areItemsLoading: boolean;
   error: Error | null;
+  routeFn: (id: number) => void;
 }
 
 export interface Positions {
   [id: string]: number;
 }
 
-const List = ({ wide, items, areItemsLoading, error }: Props) => {
+const List = ({ wide, items, areItemsLoading, error, routeFn }: Props) => {
   if (error || !items) {
     return null;
   }
@@ -61,7 +61,7 @@ const List = ({ wide, items, areItemsLoading, error }: Props) => {
         {items.map((item) => {
           const isLast = items.indexOf(item) === items.length - 1;
           const isFirst = items.indexOf(item) === 0;
-          return <ListItem items={items} key={item.id} listItem={item} isLast={isLast} isFirst={isFirst} />;
+          return <ListItem routeFn={routeFn} items={items} key={item.id} listItem={item} isLast={isLast} isFirst={isFirst} />;
         })}
       </Animated.ScrollView>
     </PositionsContext.Provider>
@@ -69,5 +69,3 @@ const List = ({ wide, items, areItemsLoading, error }: Props) => {
 };
 
 export default List;
-
-const styles = StyleSheet.create({});
