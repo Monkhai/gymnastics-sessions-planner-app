@@ -1,4 +1,4 @@
-import updateItem from '../general/updateItem';
+import updateItem from '../items/updateListItem';
 
 type Args = {
   group_id: number;

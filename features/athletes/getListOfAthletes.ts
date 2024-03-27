@@ -31,7 +31,6 @@ export default async ({ group_id }: Args) => {
 
     if (!athletes) throw new Error('No athletes');
 
-    //reorder athletes to match the order in the athletes_of_groups table
     const orderedAthletes = data.map((athleteFromDB) => {
       const athlete = athletes.find((athlete) => athlete.id === athleteFromDB.athlete_id);
 

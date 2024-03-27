@@ -2,7 +2,7 @@ import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 import { borderRadius } from '@/Constants/Randoms';
 import { PositionsContext } from '@/context/PositionsContext';
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, RefreshControl, StyleSheet } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { BodyText } from '../GeneralComponents/Texts';
 import ListItem from './ListItem';
@@ -15,13 +15,14 @@ interface Props {
   areItemsLoading: boolean;
   error: Error | null;
   routeFn: (id: number) => void;
+  refetchItems: () => void;
 }
 
 export interface Positions {
   [id: string]: number;
 }
 
-const List = ({ wide, items, areItemsLoading, error, routeFn }: Props) => {
+const List = ({ wide, items, refetchItems, areItemsLoading, error, routeFn }: Props) => {
   if (error || !items) {
     return null;
   }
@@ -40,12 +41,14 @@ const List = ({ wide, items, areItemsLoading, error, routeFn }: Props) => {
     container: {
       width: wide ? '100%' : '85%',
       borderRadius: borderRadius,
-      height: items ? items.length * LIST_ITEM_HEIGHT : 0,
+      height: '100%',
       left: wide ? 0 : '7.5%',
+      overflow: 'visible',
     },
     scrollViewStyle: {
       width: '100%',
-      paddingTop: 16,
+      paddingTop: Platform.OS === 'android' ? 0 : 16,
+      overflow: 'visible',
     },
   });
 
@@ -57,11 +60,26 @@ const List = ({ wide, items, areItemsLoading, error, routeFn }: Props) => {
 
   return (
     <PositionsContext.Provider value={{ positions }}>
-      <Animated.ScrollView layout={LinearTransition} style={scrollViewStyle} contentContainerStyle={container}>
+      <Animated.ScrollView
+        refreshControl={<RefreshControl onRefresh={refetchItems} refreshing={areItemsLoading} />}
+        layout={LinearTransition}
+        style={scrollViewStyle}
+        contentContainerStyle={container}
+      >
         {items.map((item) => {
           const isLast = items.indexOf(item) === items.length - 1;
           const isFirst = items.indexOf(item) === 0;
-          return <ListItem routeFn={routeFn} items={items} key={item.id} listItem={item} isLast={isLast} isFirst={isFirst} />;
+          return (
+            <ListItem
+              wide={wide ? wide : false}
+              routeFn={routeFn}
+              items={items}
+              key={item.id}
+              listItem={item}
+              isLast={isLast}
+              isFirst={isFirst}
+            />
+          );
         })}
       </Animated.ScrollView>
     </PositionsContext.Provider>

@@ -1,5 +1,5 @@
 import { ListTable } from '@/Components/Lists/Types';
-import { DeleteItemArgs, SecondaryTable, UpdateItemArgs } from '@/features/general/types';
+import { DeleteItemArgs, SecondaryTable, UpdateItemArgs } from '@/features/items/types';
 import { createContext } from 'react';
 
 type ContextProps = {

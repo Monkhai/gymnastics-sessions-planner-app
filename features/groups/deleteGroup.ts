@@ -1,5 +1,6 @@
 import getListOfAthletes from '../athletes/getListOfAthletes';
-import deleteItem from '../general/deleteItem';
+import deleteItem from '../items/deleteItem';
+import deleteMultipleItems from '../items/deleteMultipleItems';
 import deleteSessionsOfGroup from '../sessions/deleteSessionsOfGroup';
 import deleteSessionsOfMultipleAthletes from '../sessions/deleteSessionsOfMultipleAthletes';
 
@@ -15,6 +16,7 @@ export default async ({ group_id }: Args) => {
 
     await deleteSessionsOfMultipleAthletes({ athlete_ids });
     await deleteSessionsOfGroup({ group_id });
+    deleteMultipleItems({ item_ids: athlete_ids, table: 'athletes' });
 
     await deleteItem({ table: 'groups', item_id: group_id });
 

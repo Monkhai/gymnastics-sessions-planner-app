@@ -12,6 +12,15 @@ type Args = {
   secondaryTable?: SecondaryTable;
 };
 
+const idColumn = {
+  athletes_of_groups: 'athlete_id',
+  sessions_of_groups: 'session_id',
+  sessions_of_athletes: 'session_id',
+  stations_of_sessions: 'station_id',
+  skills_of_skill_stations: 'skill_id',
+  drills_of_drill_stations: 'drill_id',
+};
+
 export default async ({ table, item_id, name, order, secondaryTable }: Args) => {
   try {
     const primaryUpdate = secondaryTable ? { name } : { name, order };
@@ -31,7 +40,8 @@ export default async ({ table, item_id, name, order, secondaryTable }: Args) => 
 
     if (secondaryTable) {
       const secondaryUpdate = { order };
-      await supabase.from(secondaryTable).update(secondaryUpdate).eq('id', item_id).eq('user_id', user_id);
+
+      await supabase.from(secondaryTable).update(secondaryUpdate).eq(idColumn[secondaryTable], item_id).eq('user_id', user_id);
 
       return { ...data[0], order };
     }

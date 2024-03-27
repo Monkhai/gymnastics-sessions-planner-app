@@ -1,24 +1,24 @@
 import { useMutation } from '@tanstack/react-query';
-import { DeleteItemArgs } from '../general/types';
+import { DeleteItemArgs } from '../items/types';
 import deleteGroup from './deleteGroup';
 import { queryClient } from '@/Providers/ReactQueryProvider';
 import { GroupType } from './types';
-import decrementItemOrder from '../general/decrementItemOrder';
+import decrementItemOrder from '../items/decrementItemOrder';
 
-type Args = DeleteItemArgs<GroupType> & { queryKey: string[] };
+type Args = DeleteItemArgs & { queryKey: string[] };
 
 const useDeleteGroup = () => {
   return useMutation({
-    mutationFn: async ({ item }: Args) => {
-      deleteGroup({ group_id: item.id });
+    mutationFn: async ({ item_id }: Args) => {
+      deleteGroup({ group_id: item_id });
     },
 
-    onMutate: async ({ item, queryKey }) => {
+    onMutate: async ({ item_id, queryKey }) => {
       const previousGroups: GroupType[] = queryClient.getQueryData(queryKey) ?? [];
 
-      const index = previousGroups.findIndex((group) => group.id === item.id);
+      const index = previousGroups.findIndex((group) => group.id === item_id);
 
-      const newGroups = previousGroups.filter((group) => group.id !== item.id);
+      const newGroups = previousGroups.filter((group) => group.id !== item_id);
 
       const groupsToUpdate = newGroups.slice(index);
 

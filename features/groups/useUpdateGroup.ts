@@ -10,7 +10,7 @@ type Args = {
   queryKey: string[];
 };
 
-const useUpdateItem = () => {
+const useUpdateGroup = () => {
   return useMutation({
     mutationFn: async ({ item_id, name, order }: Args) => {
       return await updateGroup({ group_id: item_id, name, order });
@@ -63,4 +63,4 @@ const useUpdateItem = () => {
   });
 };
 
-export default useUpdateItem;
+export default useUpdateGroup;

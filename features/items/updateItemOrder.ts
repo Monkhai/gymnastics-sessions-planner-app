@@ -1,5 +1,5 @@
 import { ListItemType, ListTable } from '@/Components/Lists/Types';
-import updateItem from './updateItem';
+import updateItem from './updateListItem';
 import { SecondaryTable } from './types';
 
 type Args = {

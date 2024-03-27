@@ -34,7 +34,7 @@ export type UpdateItemArgs = {
 };
 
 export type DeleteItemArgs = {
-  item: ListItemType;
+  item_id: number;
 };
 
 export type CRUDItemArgs = {

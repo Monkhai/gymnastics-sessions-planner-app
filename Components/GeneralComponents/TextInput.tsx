@@ -2,7 +2,7 @@ import Colors from '@/Constants/Colors';
 import { borderRadius } from '@/Constants/Randoms';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { useMemo } from 'react';
-import { StyleSheet, TextInput, useColorScheme } from 'react-native';
+import { Dimensions, Platform, StyleSheet, TextInput, useColorScheme } from 'react-native';
 
 interface Props {
   placeholder: string;
@@ -51,7 +51,7 @@ export const ModalTextInput = ({ onChangeText, placeholder, value, onSubmitEditi
     () =>
       StyleSheet.create({
         style: {
-          width: '90%',
+          width: Platform.OS === 'android' ? Dimensions.get('window').width * 0.9 * 0.9 : '90%',
           padding: 8,
           borderRadius,
           fontSize: 17,

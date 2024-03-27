@@ -15,9 +15,10 @@ type Args = {
   updateListOrder: () => void;
   isFirst: boolean;
   isLast: boolean;
+  wide: boolean;
 };
 
-const useListReorderEffect = ({ listItem, isFirst, isLast, updateListOrder }: Args) => {
+const useListReorderEffect = ({ wide, listItem, isFirst, isLast, updateListOrder }: Args) => {
   const { positions } = useContext(PositionsContext);
 
   const colorScheme = useColorScheme();
@@ -89,8 +90,7 @@ const useListReorderEffect = ({ listItem, isFirst, isLast, updateListOrder }: Ar
     const elevation = isGestureActive.value ? 10 : 0;
 
     const borderBottomWidth = !isLast ? (!isGestureActive.value ? 0.5 : 0) : 0;
-    const borderBottomColor =
-      !isGestureActive.value || !isLast ? Colors[colorScheme ?? 'light'].separetor : Colors[colorScheme ?? 'light'].blue;
+    const borderBottomColor = !isGestureActive.value || !isLast ? Colors[colorScheme ?? 'light'].separetor : 'transparent';
 
     const borderTopRadius = isFirst ? borderRadius : isGestureActive.value ? borderRadius : 0;
     const borderBottomRadius = isLast ? borderRadius : isGestureActive.value ? borderRadius : 0;
@@ -108,10 +108,10 @@ const useListReorderEffect = ({ listItem, isFirst, isLast, updateListOrder }: Ar
       position: 'absolute',
       width: '100%',
       overflow: overflow,
-      borderBottomRightRadius: borderBottomRadius,
-      borderBottomLeftRadius: borderBottomRadius,
-      borderTopRightRadius: borderTopRadius,
-      borderTopLeftRadius: borderTopRadius,
+      borderBottomRightRadius: wide ? 0 : borderBottomRadius,
+      borderBottomLeftRadius: wide ? 0 : borderBottomRadius,
+      borderTopRightRadius: wide ? 0 : borderTopRadius,
+      borderTopLeftRadius: wide ? 0 : borderTopRadius,
       borderBottomWidth: borderBottomWidth,
       borderBottomColor: borderBottomColor,
     };
@@ -127,7 +127,7 @@ const useListReorderEffect = ({ listItem, isFirst, isLast, updateListOrder }: Ar
       height: '100%',
       paddingHorizontal: 16,
       backgroundColor: Colors[colorScheme ?? 'light'].bg.elevated,
-      borderRadius: innerRadius,
+      borderRadius: wide ? 0 : innerRadius,
     };
   });
 

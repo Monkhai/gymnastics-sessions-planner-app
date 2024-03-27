@@ -1,4 +1,4 @@
-import deleteItem from '../general/deleteItem';
+import deleteItem from '../items/deleteItem';
 import deleteSessionsOfAthlete from '../sessions/deleteSessionsOfAthlete';
 
 type Args = {

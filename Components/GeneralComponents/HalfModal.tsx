@@ -16,7 +16,8 @@ const HalfModal = ({ modalRef, children }: Props) => {
   const overlayColor = colorScheme === 'dark' ? Colors.dark.materials.thinkOverlay : Colors.light.bg.elevated;
   return (
     <BottomSheetModal
-      keyboardBehavior="interactive"
+      android_keyboardInputMode="adjustPan"
+      keyboardBehavior={'interactive'}
       handleIndicatorStyle={{ backgroundColor: handleColor }}
       handleStyle={{ backgroundColor: overlayColor, borderTopLeftRadius: borderRadius * 2, borderTopRightRadius: borderRadius * 2 }}
       backgroundStyle={{ backgroundColor: bgColor, borderRadius: borderRadius * 2 }}

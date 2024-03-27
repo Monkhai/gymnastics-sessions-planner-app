@@ -1,4 +1,4 @@
-import deleteMultipleItems from '../general/deleteMultipleItems';
+import deleteMultipleItems from '../items/deleteMultipleItems';
 
 type Args = {
   skill_ids: number[];

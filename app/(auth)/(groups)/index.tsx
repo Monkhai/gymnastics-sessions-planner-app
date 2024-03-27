@@ -1,24 +1,24 @@
-import { DeleteItemArgs, UpdateItemArgs } from '@/features/general/types';
 import { RectButton } from '@/Components/GeneralComponents/Buttons';
 import CreateListItemModal from '@/Components/Lists/CreateListItemModal';
 import List from '@/Components/Lists/List';
 import { GroupNameContext } from '@/context/GroupNameContext';
 import { ListContext } from '@/context/TableContext';
-import useGetItems from '@/features/general/useGetItems';
 import useCreateGroup from '@/features/groups/useCreateGroup';
+import useDeleteGroup from '@/features/groups/useDeleteGroup';
+import { DeleteItemArgs, UpdateItemArgs } from '@/features/items/types';
+import useGetItems from '@/features/items/useGetItems';
+import useUpdateListItem from '@/features/items/useUpdateListItem';
 import { queryKeyFactory } from '@/utils/queryFactories';
 import { router } from 'expo-router';
 import React, { useContext, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import useUpdateItem from '@/features/general/useUpdateItem';
-import { GroupType } from '@/features/groups/types';
-import useDeleteGroup from '@/features/groups/useDeleteGroup';
+import { Platform, StyleSheet, View } from 'react-native';
+import { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
 
 const index = () => {
   const queryKey = queryKeyFactory.groups();
-  const { data: groups, isLoading, error } = useGetItems({ table: 'groups', queryKey });
+  const { data: groups, isLoading, error, refetch } = useGetItems({ table: 'groups', queryKey });
   const { mutate: createGroup } = useCreateGroup();
-  const { mutate: updateGroup } = useUpdateItem();
+  const { mutate: updateGroup } = useUpdateListItem();
   const { mutate: deleteGroup } = useDeleteGroup();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -41,14 +41,30 @@ const index = () => {
     updateGroup({ item_id, name, order, queryKey, table: 'groups' });
   };
 
-  const deleteItem = ({ item }: DeleteItemArgs) => {
-    deleteGroup({ item, queryKey });
+  const deleteItem = ({ item_id }: DeleteItemArgs) => {
+    deleteGroup({ item_id, queryKey });
   };
+
+  const { state: keyBoardState } = useAnimatedKeyboard();
+  const rectButtonStyle = useAnimatedStyle(() => {
+    return {
+      opacity: keyBoardState.value ? 0 : 1,
+      position: 'absolute',
+      bottom: 48,
+    };
+  });
 
   return (
     <ListContext.Provider value={{ table: 'groups', queryKey, updateItem, deleteItem }}>
       <View style={styles.container}>
-        <List routeFn={handleNavToGroup} items={groups} areItemsLoading={isLoading} error={error} />
+        <List
+          refetchItems={refetch}
+          wide={Platform.OS === 'android'}
+          routeFn={handleNavToGroup}
+          items={groups}
+          areItemsLoading={isLoading}
+          error={error}
+        />
 
         <CreateListItemModal
           headerLabel="Create New Group"
@@ -58,7 +74,7 @@ const index = () => {
           placeholder={`New group's name`}
         />
 
-        <RectButton label="Create Group" style={styles.rectButton} onPress={openCreateGroupModal} />
+        <RectButton label="Create Group" style={rectButtonStyle} onPress={openCreateGroupModal} />
       </View>
     </ListContext.Provider>
   );

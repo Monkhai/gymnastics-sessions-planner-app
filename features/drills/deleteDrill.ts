@@ -1,5 +1,5 @@
 import useUserId from '../auth/useUserId';
-import deleteItem from '../general/deleteItem';
+import deleteItem from '../items/deleteItem';
 import deleteAllDrillMedia from './deleteAllDrillMedia';
 
 type Args = {

@@ -1,8 +1,8 @@
 import Colors from '@/Constants/Colors';
 import { borderRadius } from '@/Constants/Randoms';
 import React, { Dispatch, SetStateAction } from 'react';
-import { GestureResponderEvent, Keyboard, StyleSheet, useColorScheme } from 'react-native';
-import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from 'react-native-reanimated';
+import { GestureResponderEvent, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, useColorScheme } from 'react-native';
+import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut, useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
 import ModalHeader from '../GeneralComponents/ModalHeader';
 import { ModalTextInput } from '../GeneralComponents/TextInput';
 
@@ -17,6 +17,7 @@ interface Props {
 const CreateListItemModal = ({ placeholder, headerLabel, isVisible, setIsVisible, onCreate: onCreateGroup }: Props) => {
   const colorScheme = useColorScheme();
 
+  // const { height } = useAnimatedKeyboard();
   const ref = React.useRef<Animated.View>(null);
   const [name, setName] = React.useState('');
 
@@ -46,35 +47,30 @@ const CreateListItemModal = ({ placeholder, headerLabel, isVisible, setIsVisible
     setName('');
   };
 
+  const { containerStyle, innerContainerStyle } = StyleSheet.create({
+    containerStyle: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: Colors[colorScheme ?? 'light'].fills.backdrop,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingBottom: Platform.OS === 'ios' ? '40%' : '20%',
+    },
+    innerContainerStyle: {
+      backgroundColor: Colors[colorScheme ?? 'light'].bg.elevated,
+      paddingTop: 16,
+      paddingBottom: 24,
+      gap: 16,
+      borderRadius,
+      width: '90%',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+    },
+  });
+
   return (
-    <Animated.View
-      ref={ref}
-      entering={FadeIn}
-      exiting={FadeOut}
-      onTouchEnd={handleTouchEnd}
-      style={{
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: Colors[colorScheme ?? 'light'].fills.backdrop,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingBottom: '40%',
-      }}
-    >
-      <Animated.View
-        entering={ZoomIn}
-        exiting={ZoomOut}
-        style={{
-          backgroundColor: Colors[colorScheme ?? 'light'].bg.elevated,
-          paddingTop: 16,
-          paddingBottom: 32,
-          gap: 16,
-          borderRadius,
-          width: '90%',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-        }}
-      >
+    <Animated.View ref={ref} entering={FadeIn} exiting={FadeOut} onTouchEnd={handleTouchEnd} style={containerStyle}>
+      <Animated.View entering={ZoomIn} exiting={ZoomOut} style={innerContainerStyle}>
         <ModalHeader
           primaryActionLabel="Create"
           secondaryActionLabel="Cancel"

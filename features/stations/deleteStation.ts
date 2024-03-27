@@ -1,6 +1,6 @@
 import deleteMultipleDrills from '../drills/deleteMultipleDrills';
 import { DrillType } from '../drills/types';
-import deleteItem from '../general/deleteItem';
+import deleteItem from '../items/deleteItem';
 import deleteMultipleSkills from '../skills/deleteMultipleSkills';
 import { SkillType } from '../skills/types';
 import { StationTypeType } from './types';

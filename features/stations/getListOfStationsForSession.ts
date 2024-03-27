@@ -13,13 +13,8 @@ export default async ({ session_id }: Args) => {
       .select('station_id')
       .eq('session_id', session_id);
 
-    if (error) {
-      throw error;
-    }
-
-    if (!data) {
-      throw new Error('No data');
-    }
+    if (error) throw error;
+    if (!data) throw new Error('No data');
 
     const station_ids = data.map((station) => station.station_id);
 

@@ -1,4 +1,4 @@
-import deleteMultipleItems from '../general/deleteMultipleItems';
+import deleteMultipleItems from '../items/deleteMultipleItems';
 import deleteAllDrillMedia from './deleteAllDrillMedia';
 
 type Args = {

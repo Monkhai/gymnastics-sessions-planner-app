@@ -7,13 +7,14 @@ import { SecondaryTable } from './types';
 type Args = {
   table: ListTable | SecondaryTable;
   listItem: ListItemType;
+  id?: 'athlete_id' | 'id' | 'session_id';
 };
-export default async ({ table, listItem }: Args) => {
+export default async ({ table, listItem, id = 'id' }: Args) => {
   try {
     const { data, error }: PostgrestSingleResponse<ListItemType[]> = await supabase
       .from(table)
       .update({ order: listItem.order - 1 })
-      .eq('id', listItem.id)
+      .eq(id, listItem.id)
       .select();
 
     if (error) {

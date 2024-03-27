@@ -15,7 +15,6 @@ export default async ({ group_id }: Args) => {
       .order('order', { ascending: true });
 
     if (error) throw error;
-
     if (!data) throw new Error('No data');
 
     const session_ids = data.map((session) => session.session_id);

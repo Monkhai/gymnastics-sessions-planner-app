@@ -10,8 +10,13 @@ import { Slot, SplashScreen, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { I18nManager } from 'react-native';
 
 SplashScreen.preventAutoHideAsync();
+
+//cancel RTL layouts. Force LTR
+I18nManager.forceRTL(false);
+I18nManager.allowRTL(false);
 
 const InitialRoot = () => {
   const { session, initialized } = useAuth();

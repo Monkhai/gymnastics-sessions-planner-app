@@ -3,7 +3,7 @@ import { queryClient } from '@/Providers/ReactQueryProvider';
 import { queryKeyFactory } from '@/utils/queryFactories';
 import { useMutation } from '@tanstack/react-query';
 import useUserId from '../auth/useUserId';
-import createItem from '../general/createItem';
+import createItem from '../items/createItem';
 
 type Args = {
   name: string;

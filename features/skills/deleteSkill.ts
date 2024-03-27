@@ -1,4 +1,4 @@
-import deleteItem from '../general/deleteItem';
+import deleteItem from '../items/deleteItem';
 
 type Args = {
   skill_id: number;

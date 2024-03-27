@@ -1,12 +1,10 @@
 import Colors from '@/Constants/Colors';
 import { PositionsContext } from '@/context/PositionsContext';
 import { ListContext } from '@/context/TableContext';
-import useDeleteItem from '@/features/general/useDeleteItem';
-import useUpdateItem from '@/features/general/useUpdateItem';
-import useUpdateItemOrder from '@/features/general/useUpdateItemOrder';
+import useUpdateItemOrder from '@/features/items/useUpdateItemOrder';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import React, { Children, useContext, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { Animated as RNA, useColorScheme } from 'react-native';
 import { GestureDetector, Swipeable } from 'react-native-gesture-handler';
 import Animated, { LinearTransition, SharedValue, SlideOutLeft, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
@@ -17,8 +15,6 @@ import { BodyText } from '../GeneralComponents/Texts';
 import { LabeledBSTextInput } from './LabeledTextInput';
 import { ListItemType } from './Types';
 import useListReorderEffect from './useListReorderEffect';
-import { CRUDItemOfItemArgs } from '@/features/itemsOfItems/types';
-import { CRUDItemArgs } from '@/features/general/types';
 
 const AnimatedSwipeable = Animated.createAnimatedComponent(Swipeable);
 
@@ -82,18 +78,17 @@ const renderSwipeableButton = ({ onPress, progressAnimatedValue, width, buttonTy
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
-type CRUDFunctions<T> = T extends 'itemOfItems' ? CRUDItemOfItemArgs : CRUDItemArgs;
 
-type Type = 'itemOfItems' | 'items';
 interface Props {
   items: ListItemType[];
   listItem: ListItemType;
   isLast: boolean;
   isFirst: boolean;
   routeFn: (id: number) => void;
+  wide: boolean;
 }
 
-const ListItem = ({ listItem, isFirst, isLast, items, routeFn }: Props) => {
+const ListItem = ({ wide, listItem, isFirst, isLast, items, routeFn }: Props) => {
   const { table, queryKey, secondaryTable, deleteItem, updateItem } = useContext(ListContext);
 
   const { positions } = useContext(PositionsContext);
@@ -120,11 +115,17 @@ const ListItem = ({ listItem, isFirst, isLast, items, routeFn }: Props) => {
     });
   };
 
-  const { pan, containerStyle, listItemStyle } = useListReorderEffect({ listItem, isFirst, isLast, updateListOrder: handleUpdateOrder });
+  const { pan, containerStyle, listItemStyle } = useListReorderEffect({
+    wide,
+    listItem,
+    isFirst,
+    isLast,
+    updateListOrder: handleUpdateOrder,
+  });
 
   const handleDeleteItem = () => {
     swipeableRef.current?.close();
-    deleteItem({ item: listItem });
+    deleteItem({ item_id: listItem.id });
   };
 
   const handleOpenSettings = () => {
