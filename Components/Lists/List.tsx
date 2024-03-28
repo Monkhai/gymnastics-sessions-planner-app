@@ -1,13 +1,13 @@
-import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 import { borderRadius } from '@/Constants/Randoms';
 import { PositionsContext } from '@/context/PositionsContext';
 import React, { useEffect } from 'react';
-import { Platform, RefreshControl, StyleSheet } from 'react-native';
+import { Platform, RefreshControl, StyleSheet, View, useColorScheme } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { BodyText } from '../GeneralComponents/Texts';
 import ListItem from './ListItem';
 import { ListItemType } from './Types';
 import { usePositions } from './usePositions';
+import Loader from '../GeneralComponents/Loader';
 
 interface Props {
   wide?: boolean;
@@ -23,7 +23,24 @@ export interface Positions {
 }
 
 const List = ({ wide, items, refetchItems, areItemsLoading, error, routeFn }: Props) => {
-  if (error || !items) {
+  if (error) {
+    return null;
+  }
+
+  if (areItemsLoading) {
+    return (
+      <Animated.ScrollView
+        layout={LinearTransition}
+        refreshControl={<RefreshControl onRefresh={refetchItems} refreshing={areItemsLoading} />}
+        style={{ width: '100%' }}
+        contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+      >
+        <Loader />
+      </Animated.ScrollView>
+    );
+  }
+
+  if (!items) {
     return null;
   }
 
@@ -51,12 +68,6 @@ const List = ({ wide, items, refetchItems, areItemsLoading, error, routeFn }: Pr
       overflow: 'visible',
     },
   });
-
-  if (areItemsLoading) {
-    <Animated.ScrollView layout={LinearTransition} style={scrollViewStyle} contentContainerStyle={container}>
-      <BodyText>Loading...</BodyText>
-    </Animated.ScrollView>;
-  }
 
   return (
     <PositionsContext.Provider value={{ positions }}>

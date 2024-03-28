@@ -1,6 +1,7 @@
 import { RectButton } from '@/Components/GeneralComponents/Buttons';
 import CreateListItemModal from '@/Components/Lists/CreateListItemModal';
 import List from '@/Components/Lists/List';
+import { GroupContext } from '@/context/GroupContext';
 import { ListContext } from '@/context/TableContext';
 import { DeleteItemArgs, UpdateItemArgs } from '@/features/items/types';
 import useUpdateListItem from '@/features/items/useUpdateListItem';
@@ -8,22 +9,31 @@ import useCreateSession from '@/features/sessions/useCreateSession';
 import useDeleteSession from '@/features/sessions/useDeleteSession';
 import useGetSessions from '@/features/sessions/useGetSessions';
 import { queryKeyFactory } from '@/utils/queryFactories';
-import { useGlobalSearchParams } from 'expo-router';
-import React, { useState } from 'react';
+import { router, useGlobalSearchParams } from 'expo-router';
+import React, { useContext, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
 const GroupSessions = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const { setGroup_id, setSessionName } = useContext(GroupContext);
   const { group_id } = useGlobalSearchParams<{ group_id: string }>();
   const queryKey = queryKeyFactory.groupSessions({ group_id });
 
-  const { data: groupSessions, isLoading, error, refetch } = useGetSessions({ group_id, joinTable: 'sessions_of_groups', queryKey });
+  const {
+    data: groupSessions,
+    isLoading,
+    error,
+    refetch,
+  } = useGetSessions({ parent_id: group_id, sessionTable: 'sessions_of_groups', queryKey });
   const { mutate: deleteSession } = useDeleteSession();
   const { mutate: createSession } = useCreateSession();
   const { mutate: updateSession } = useUpdateListItem();
 
-  const handleNavToSession = (id: number) => {};
+  const handleNavToSession = (id: number) => {
+    setGroup_id(group_id);
+    setSessionName(groupSessions?.find((session) => session.id === id)?.name || '');
+    router.push(`/(groups)/(sessions)/${id}`);
+  };
 
   const handleCreateSession = (name: string) => {
     createSession({

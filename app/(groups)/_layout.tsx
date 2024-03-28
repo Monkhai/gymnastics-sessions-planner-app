@@ -5,11 +5,16 @@ import React from 'react';
 
 const _layout = () => {
   const [groupName, setGroupName] = React.useState<string>('');
+  const [group_id, setGroup_id] = React.useState<string>('');
+  const [athleteName, setAthleteName] = React.useState<string>('');
+  const [sessionName, setSessionName] = React.useState<string>('');
   return (
-    <GroupContext.Provider value={{ setGroupName }}>
+    <GroupContext.Provider value={{ setGroupName, group_id, setGroup_id, setAthleteName, setSessionName }}>
       <Stack screenOptions={{ headerRight: NavBarInfoIcon }}>
         <Stack.Screen name="index" options={{ title: 'Groups' }} />
         <Stack.Screen name="[group_id]" options={{ title: groupName }} />
+        <Stack.Screen name="(athletes)" options={{ title: athleteName }} />
+        <Stack.Screen name="(sessions)" options={{ title: sessionName }} />
       </Stack>
     </GroupContext.Provider>
   );

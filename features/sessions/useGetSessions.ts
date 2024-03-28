@@ -5,15 +5,16 @@ import { SessionJoinTable } from './types';
 
 type Args = {
   queryKey: string[];
-  group_id: string;
-  joinTable: SessionJoinTable;
+  parent_id: string;
+  sessionTable: SessionJoinTable;
 };
 
-const useGetSessions = ({ queryKey, group_id, joinTable }: Args) => {
+const useGetSessions = ({ queryKey, parent_id, sessionTable }: Args) => {
   return useQuery({
     queryKey,
-    queryFn: async () => await getGroupSessions({ group_id: Number(group_id), joinTable }),
+    queryFn: async () => await getGroupSessions({ parent_id: Number(parent_id), sessionTable }),
     staleTime,
+    retry: 3,
   });
 };
 

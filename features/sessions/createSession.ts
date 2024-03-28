@@ -23,6 +23,7 @@ export default async ({ parent_id, sessionTable, name, order }: Args) => {
     if (!session) throw new Error('Session not created');
 
     if (sessionTable === 'sessions_of_athletes') {
+      console.log(parent_id);
       const { data: sessionOfAthlete, error: sessionOfAthleteError } = await supabase
         .from(sessionTable)
         .insert([{ session_id: session[0].id, athlete_id: parent_id, order, user_id }])

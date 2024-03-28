@@ -1,10 +1,10 @@
-import { Stack } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Stack } from 'expo-router';
 
 const _layout = () => {
   return (
-    <Stack>
+    <Stack initialRouteName="[athlete_id]">
       <Stack.Screen name="[athlete_id]" options={{ headerShown: false }} />
     </Stack>
   );
