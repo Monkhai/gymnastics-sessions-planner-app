@@ -1,7 +1,7 @@
 import { RectButton } from '@/Components/GeneralComponents/Buttons';
 import CreateListItemModal from '@/Components/Lists/CreateListItemModal';
 import List from '@/Components/Lists/List';
-import { GroupNameContext } from '@/context/GroupNameContext';
+import { GroupContext } from '@/context/GroupContext';
 import { ListContext } from '@/context/TableContext';
 import useCreateGroup from '@/features/groups/useCreateGroup';
 import useDeleteGroup from '@/features/groups/useDeleteGroup';
@@ -31,9 +31,9 @@ const index = () => {
     createGroup({ name, lastOrder: groups?.length ? groups.length : 0 });
   };
 
-  const { setGroupName } = useContext(GroupNameContext);
+  const { setGroupName } = useContext(GroupContext);
   const handleNavToGroup = (id: number) => {
-    router.push(`/(auth)/(groups)/${id}`);
+    router.push(`/(groups)/${id}/(group)`);
     setGroupName(groups?.find((group) => group.id === id)?.name ?? '');
   };
 

@@ -4,6 +4,6 @@ type ContextArgs = {
   setGroupName: Dispatch<SetStateAction<string>>;
 };
 
-export const GroupNameContext = createContext<ContextArgs>({
+export const GroupContext = createContext<ContextArgs>({
   setGroupName: () => {},
 });

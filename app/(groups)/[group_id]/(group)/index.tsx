@@ -8,7 +8,7 @@ import useGetAthletes from '@/features/athletes/useGetAthletes';
 import { DeleteItemArgs, UpdateItemArgs } from '@/features/items/types';
 import useUpdateListItem from '@/features/items/useUpdateListItem';
 import { queryKeyFactory } from '@/utils/queryFactories';
-import { useGlobalSearchParams } from 'expo-router';
+import { router, useGlobalSearchParams, useNavigation } from 'expo-router';
 import React, { useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
@@ -24,8 +24,9 @@ const index = () => {
     createAthlete({ name, order: athletes ? athletes.length + 1 : 1, group_id, queryKey: athleteQueryKey });
   };
   const { mutate: deleteAthlete } = useDeleteAthlete();
-
-  const handleNavToAthlete = (id: number) => {};
+  const handleNavToAthlete = (id: number) => {
+    router.push(`/(groups)/${group_id}/(athletes)/${id}`);
+  };
 
   const openCreateAthleteModal = () => {
     setIsModalVisible(true);

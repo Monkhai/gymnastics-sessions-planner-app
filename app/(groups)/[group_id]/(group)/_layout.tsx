@@ -6,13 +6,10 @@ import {
 } from '@react-navigation/material-top-tabs';
 import { ParamListBase, TabNavigationState } from '@react-navigation/native';
 import { withLayoutContext } from 'expo-router';
-import React, { Dispatch, SetStateAction, createContext } from 'react';
-import { Pressable, StyleSheet, Text, View, useColorScheme } from 'react-native';
-import Animated, { LinearTransition } from 'react-native-reanimated';
+import React from 'react';
+import { StyleSheet, useColorScheme } from 'react-native';
 
 const { Navigator } = createMaterialTopTabNavigator();
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
 export const MaterialTopTabs = withLayoutContext<
   MaterialTopTabNavigationOptions,
   typeof Navigator,
@@ -20,18 +17,9 @@ export const MaterialTopTabs = withLayoutContext<
   MaterialTopTabNavigationEventMap
 >(Navigator);
 
-type Context = {
-  screen: string;
-  setScreen: Dispatch<SetStateAction<'index' | 'details'>>;
-};
-
-export const ScreenContext = createContext<Context>({
-  screen: 'index',
-  setScreen: () => {},
-});
-
 const _layout = () => {
   const colorScheme = useColorScheme();
+
   return (
     <MaterialTopTabs
       screenOptions={{
@@ -42,8 +30,8 @@ const _layout = () => {
         tabBarLabelStyle: { fontSize: 13, fontWeight: '500', textTransform: 'capitalize' },
       }}
     >
-      <MaterialTopTabs.Screen name="index" />
-      <MaterialTopTabs.Screen name="details" />
+      <MaterialTopTabs.Screen name="index" options={{ title: 'Athletes' }} />
+      <MaterialTopTabs.Screen name="GroupSessions" options={{ title: 'Group Sessions' }} />
     </MaterialTopTabs>
   );
 };

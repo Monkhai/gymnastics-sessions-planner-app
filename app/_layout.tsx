@@ -38,7 +38,7 @@ const InitialRoot = () => {
     const inAuthGroup = segments[0] === '(auth)';
 
     if (session && !inAuthGroup) {
-      router.replace('/(auth)/(groups)/');
+      router.replace('/(groups)/');
     } else if (!session && inAuthGroup) {
       router.replace('/');
     }
