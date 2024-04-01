@@ -6,13 +6,12 @@ import { Dimensions, Platform, StyleSheet, TextInput, useColorScheme } from 'rea
 
 interface Props {
   placeholder: string;
-  value: string;
+  value: string | undefined;
   onChangeText: (text: string) => void;
   onSubmitEditing?: () => void;
-  disableReturnKey?: boolean;
 }
 
-export const BSTextInput = ({ onChangeText, placeholder, value, disableReturnKey }: Props) => {
+export const BSTextInput = ({ onChangeText, placeholder, value }: Props) => {
   const colorScheme = useColorScheme();
 
   const { style } = useMemo(
@@ -44,7 +43,7 @@ export const BSTextInput = ({ onChangeText, placeholder, value, disableReturnKey
   );
 };
 
-export const ModalTextInput = ({ onChangeText, placeholder, value, onSubmitEditing, disableReturnKey }: Props) => {
+export const ModalTextInput = ({ onChangeText, placeholder, value, onSubmitEditing }: Props) => {
   const colorScheme = useColorScheme();
 
   const { style } = useMemo(
@@ -72,6 +71,35 @@ export const ModalTextInput = ({ onChangeText, placeholder, value, onSubmitEditi
       style={style}
       value={value}
       onChangeText={onChangeText}
+      placeholder={placeholder}
+      placeholderTextColor={Colors[colorScheme ?? 'light'].labels.secondary}
+    />
+  );
+};
+
+export const StationTitleTextInput = ({ onChangeText, placeholder, value, onSubmitEditing }: Props) => {
+  const colorScheme = useColorScheme();
+  const { style } = useMemo(
+    () =>
+      StyleSheet.create({
+        style: {
+          fontSize: 21,
+          color: Colors[colorScheme ?? 'light'].labels.primary,
+        },
+      }),
+    [colorScheme]
+  );
+
+  return (
+    <TextInput
+      key={'textInputBro'}
+      returnKeyType="done"
+      returnKeyLabel="Save"
+      clearButtonMode="while-editing"
+      style={[style, { fontWeight: '600' }]}
+      value={value}
+      onChangeText={onChangeText}
+      onSubmitEditing={onSubmitEditing}
       placeholder={placeholder}
       placeholderTextColor={Colors[colorScheme ?? 'light'].labels.secondary}
     />

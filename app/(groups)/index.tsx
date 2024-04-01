@@ -1,6 +1,7 @@
 import { RectButton } from '@/Components/GeneralComponents/Buttons';
 import CreateListItemModal from '@/Components/Lists/CreateListItemModal';
 import List from '@/Components/Lists/List';
+import SessionScreen from '@/Components/Session/SessionScreen';
 import { GroupContext } from '@/context/GroupContext';
 import { ListContext } from '@/context/TableContext';
 import useCreateGroup from '@/features/groups/useCreateGroup';

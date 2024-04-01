@@ -13,13 +13,8 @@ export type SkillofSKillStation = {
   order: number;
 };
 
-export type SkillType = {
-  id: number;
+export type SkillType = SkillFromDBType & {
   skillOfStationId: number;
   station_id: number;
-  name: string;
-  repetitions: number;
   order: number;
-  description: string;
-  show_reps: boolean;
 };

@@ -17,7 +17,6 @@ interface Props {
 const CreateListItemModal = ({ placeholder, headerLabel, isVisible, setIsVisible, onCreate: onCreateGroup }: Props) => {
   const colorScheme = useColorScheme();
 
-  // const { height } = useAnimatedKeyboard();
   const ref = React.useRef<Animated.View>(null);
   const [name, setName] = React.useState('');
 
@@ -27,6 +26,7 @@ const CreateListItemModal = ({ placeholder, headerLabel, isVisible, setIsVisible
     if (e.target === ref.current) {
       if (name) setName('');
       if (Keyboard.isVisible()) Keyboard.dismiss();
+
       setIsVisible(false);
     }
   };

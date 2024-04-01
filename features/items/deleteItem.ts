@@ -9,7 +9,6 @@ type Args = {
 
 export default async ({ table, item_id }: Args) => {
   try {
-    console.log(item_id);
     const user_id = useUserId();
     const { error } = await supabase.from(table).delete().eq('id', item_id).eq('user_id', user_id);
 

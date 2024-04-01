@@ -4,7 +4,7 @@ import { borderRadius } from '@/Constants/Randoms';
 import { PositionsContext } from '@/context/PositionsContext';
 import * as Haptics from 'expo-haptics';
 import { useContext } from 'react';
-import { Platform, useColorScheme } from 'react-native';
+import { Platform, StyleSheet, useColorScheme } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { ListItemType } from './Types';
@@ -89,7 +89,7 @@ const useListReorderEffect = ({ wide, listItem, isFirst, isLast, updateListOrder
     };
     const elevation = isGestureActive.value ? 10 : 0;
 
-    const borderBottomWidth = !isLast ? (!isGestureActive.value ? 0.5 : 0) : 0;
+    const borderBottomWidth = !isLast ? (!isGestureActive.value ? StyleSheet.hairlineWidth : 0) : 0;
     const borderBottomColor = !isGestureActive.value || !isLast ? Colors[colorScheme ?? 'light'].separetor : 'transparent';
 
     const borderTopRadius = isFirst ? borderRadius : isGestureActive.value ? borderRadius : 0;

@@ -4,6 +4,11 @@ export type QKFStationsArgs = {
   session_id: string;
 };
 
+export type QKFStationChildrenArgs = {
+  station_id: string;
+  session_id: string;
+};
+
 export type QKFDrillMediaArgs = {
   drill_id: number;
   session_id: string;
@@ -50,9 +55,9 @@ export const queryKeyFactory = {
 
   stations: ({ session_id }: QKFStationsArgs): string[] => ['sessions', session_id, 'stations'],
 
-  skills: ({ session_id }: QKFStationsArgs): string[] => ['sessions', session_id, 'skills'],
+  skills: ({ session_id, station_id }: QKFStationChildrenArgs): string[] => ['sessions', session_id, station_id, 'skills'],
 
-  drills: ({ session_id }: QKFStationsArgs): string[] => ['sessions', session_id, 'drills'],
+  drills: ({ session_id, station_id }: QKFStationChildrenArgs): string[] => ['sessions', session_id, station_id, 'drills'],
 
   drillMedia: ({ drill_id, session_id }: QKFDrillMediaArgs): string[] => [session_id, String(drill_id), 'drillMedia'],
 };

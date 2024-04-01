@@ -14,6 +14,7 @@ const HalfModal = ({ modalRef, children }: Props) => {
   const handleColor = colorScheme === 'dark' ? Colors.dark.separetor : Colors.light.separetor;
   const bgColor = colorScheme === 'dark' ? Colors.dark.materials.thickUnderlay : Colors.light.bg.elevated;
   const overlayColor = colorScheme === 'dark' ? Colors.dark.materials.thinkOverlay : Colors.light.bg.elevated;
+
   return (
     <BottomSheetModal
       android_keyboardInputMode="adjustPan"
@@ -42,7 +43,7 @@ interface BackdropProps {
   modalRef: RefObject<BottomSheetModal>;
 }
 
-const CustomBackDrop = ({ props, modalRef }: BackdropProps) => {
+export const CustomBackDrop = ({ props, modalRef }: BackdropProps) => {
   const colorScheme = useColorScheme();
   const { animatedIndex } = props;
   const { width, height } = Dimensions.get('window');

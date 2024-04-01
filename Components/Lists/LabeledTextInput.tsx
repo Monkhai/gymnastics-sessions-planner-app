@@ -3,20 +3,20 @@ import { StyleSheet, View } from 'react-native';
 
 import { CalloutText } from '../GeneralComponents/Texts';
 import { BSTextInput, ModalTextInput } from '../GeneralComponents/TextInput';
+import { TextButton } from '../GeneralComponents/Buttons';
 
 interface BSProps {
-  value: string;
+  value: string | undefined;
   onChangeText: (text: string) => void;
-  listItemName: string;
   placeholder: string;
   label: string;
 }
 
-export const LabeledBSTextInput = ({ listItemName, value, onChangeText, label, placeholder }: BSProps) => {
+export const LabeledBSTextInput = ({ value, onChangeText, label, placeholder }: BSProps) => {
   return (
-    <View style={{ flexDirection: 'column', gap: 8, width: '80%', justifyContent: 'center', alignItems: 'flex-start' }}>
+    <View style={{ flexDirection: 'column', gap: 8, width: '90%', justifyContent: 'center', alignItems: 'flex-start' }}>
       <CalloutText style={{ marginLeft: 8 }}>{label}</CalloutText>
-      <BSTextInput value={value} onChangeText={onChangeText} placeholder={listItemName ? listItemName : placeholder} />
+      <BSTextInput value={value} onChangeText={onChangeText} placeholder={placeholder} />
     </View>
   );
 };

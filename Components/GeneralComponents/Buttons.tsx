@@ -1,11 +1,12 @@
 import Colors from '@/Constants/Colors';
 import { borderRadius } from '@/Constants/Randoms';
 import React, { useCallback } from 'react';
-import { GestureResponderEvent, Pressable, PressableProps, ViewProps, ViewStyle, useColorScheme } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
-import { BodyText, EmphasizedBodyText } from './Texts';
+import { GestureResponderEvent, Pressable, PressableProps, View, ViewProps, ViewStyle, useColorScheme } from 'react-native';
+import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
+import { BodyText, DurationText, EmphasizedBodyText } from './Texts';
+import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+export const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface ButtonProps extends PressableProps {
   wide?: boolean;
@@ -13,6 +14,7 @@ interface ButtonProps extends PressableProps {
   onPress: () => void;
   style?: ViewStyle;
   disabled?: boolean;
+  danger?: boolean;
 }
 
 export const ContainerButton = ({ onPress, children, style }: PressableProps) => {
@@ -71,7 +73,7 @@ export const RectButton = ({ label, wide, onPress, style }: ButtonProps) => {
   );
 };
 
-export const TextButton = ({ label, onPress, style }: ButtonProps) => {
+export const TextButton = ({ label, onPress, style, danger }: ButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 
@@ -94,7 +96,7 @@ export const TextButton = ({ label, onPress, style }: ButtonProps) => {
 
   return (
     <AnimatedPressable style={[animatedStyle, style]} onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress}>
-      <BodyText style={{ color: Colors[colorScheme ?? 'light'].blue }}>{label}</BodyText>
+      <BodyText style={{ color: danger ? Colors[colorScheme ?? 'light'].red : Colors[colorScheme ?? 'light'].blue }}>{label}</BodyText>
     </AnimatedPressable>
   );
 };
@@ -166,6 +168,100 @@ export const IconButton = ({ children, ...props }: IconButtonProps) => {
 
   return (
     <AnimatedPressable {...props} style={[style, props.style]} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+      {children}
+    </AnimatedPressable>
+  );
+};
+
+export const StationIconButton = ({ children, ...props }: IconButtonProps) => {
+  const opacity = useSharedValue(1);
+
+  const style = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      width: 48,
+      height: 48,
+      justifyContent: 'center',
+      alignItems: 'center',
+    };
+  });
+
+  const handlePressIn = useCallback(() => {
+    opacity.value = withTiming(0.5, { duration: 80 });
+  }, []);
+
+  const handlePressOut = useCallback(() => {
+    opacity.value = withTiming(1, { duration: 80 });
+  }, []);
+
+  return (
+    <AnimatedPressable {...props} style={[style, props.style]} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+      {children}
+    </AnimatedPressable>
+  );
+};
+
+interface DurationButtonProps extends PressableProps {
+  value: string | undefined;
+}
+
+export const DurationButton = ({ onPress, style, value }: DurationButtonProps) => {
+  const colorScheme = useColorScheme();
+  const opacity = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      paddingLeft: 8,
+    };
+  });
+
+  const handlePressIn = useCallback(() => {
+    opacity.value = withTiming(0.5, { duration: 80 });
+  }, []);
+
+  const handlePressOut = useCallback(() => {
+    opacity.value = withTiming(1, { duration: 80 });
+  }, []);
+
+  return (
+    <AnimatedPressable style={[animatedStyle, style]} onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress}>
+      <DurationText
+        style={{ color: value ? Colors[colorScheme ?? 'light'].labels.primary : Colors[colorScheme ?? 'light'].labels.secondary }}
+      >
+        {value || 'Duration'}
+      </DurationText>
+    </AnimatedPressable>
+  );
+};
+
+export const SkillIconButton = ({ children, translateY, onPress }: PressableProps & { translateY: SharedValue<number> }) => {
+  const opacity = useSharedValue(1);
+
+  const iconStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      height: LIST_ITEM_HEIGHT,
+      position: 'absolute',
+      right: 16,
+      top: translateY.value,
+      justifyContent: 'center',
+      alignItems: 'center',
+    };
+  });
+
+  const handlePressIn = useCallback(() => {
+    opacity.value = withTiming(0.5, { duration: 80 });
+  }, []);
+
+  const handlePressOut = useCallback(() => {
+    opacity.value = withTiming(1, { duration: 80 });
+  }, []);
+
+  return (
+    <AnimatedPressable onPressIn={handlePressIn} onPressOut={handlePressOut} style={iconStyle} onPress={onPress}>
       {children}
     </AnimatedPressable>
   );

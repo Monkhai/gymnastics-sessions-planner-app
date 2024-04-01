@@ -184,7 +184,7 @@ const ListItem = ({ wide, listItem, isFirst, isLast, items, routeFn }: Props) =>
               primaryActionLabel="Save"
               secondaryActionLabel="Close"
             />
-            <LabeledBSTextInput label="Name" value={name} onChangeText={setName} placeholder="Enter a name" listItemName={listItem.name} />
+            <LabeledBSTextInput label="Name" value={name} onChangeText={setName} placeholder="Enter a name" />
           </HalfModal>
           {/*  */}
         </AnimatedSwipeable>

@@ -8,7 +8,7 @@ interface Props {
   handlePrimaryAction: () => void;
   label: string;
   secondaryActionLabel?: 'Close' | 'Cancel';
-  primaryActionLabel?: 'Save' | 'Create' | 'Update';
+  primaryActionLabel?: 'Save' | 'Create' | 'Update' | 'Set' | 'Clear';
   disabledPrimary?: boolean;
 }
 
