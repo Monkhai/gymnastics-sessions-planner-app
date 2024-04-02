@@ -1,14 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
 import SessionScreen from '@/Components/Session/SessionScreen';
-import { useLocalSearchParams } from 'expo-router';
+import React from 'react';
 
 const index = () => {
-  const { session_id } = useLocalSearchParams<{ session_id: string }>();
-
-  return <SessionScreen session_id={session_id} />;
+  return <SessionScreen />;
 };
 
 export default index;
-
-const styles = StyleSheet.create({});

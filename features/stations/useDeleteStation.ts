@@ -19,7 +19,7 @@ const useDeleteStation = () => {
       deleteStation({ station_id, childrenArray, type });
     },
 
-    onMutate: ({ station_id, childrenArray, type, queryKey }: Args) => {
+    onMutate: ({ station_id, queryKey }: Args) => {
       const previousStations: StationType[] = queryClient.getQueryData(queryKey) ?? [];
 
       const index = previousStations.findIndex((station) => station.id === station_id);
@@ -28,13 +28,15 @@ const useDeleteStation = () => {
 
       const stationsToUpdate = newStations.slice(index);
 
-      const newStationsWithUpdatedOrder = stationsToUpdate.map((station) => {
+      const newStationsWithUpdatedOrder = newStations.map((station) => {
         if (station.order > index) {
           return {
             ...station,
             order: station.order - 1,
           };
         }
+
+        return station;
       });
 
       queryClient.setQueryData(queryKey, newStationsWithUpdatedOrder);

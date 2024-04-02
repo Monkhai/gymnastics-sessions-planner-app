@@ -2,16 +2,18 @@ import Colors from '@/Constants/Colors';
 import { borderRadius } from '@/Constants/Randoms';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { useMemo } from 'react';
-import { Dimensions, Platform, StyleSheet, TextInput, useColorScheme } from 'react-native';
+import { Dimensions, KeyboardType, Platform, StyleSheet, TextInput, useColorScheme } from 'react-native';
 
 interface Props {
+  keyboardType?: KeyboardType;
   placeholder: string;
   value: string | undefined;
   onChangeText: (text: string) => void;
   onSubmitEditing?: () => void;
+  onBlur?: () => void;
 }
 
-export const BSTextInput = ({ onChangeText, placeholder, value }: Props) => {
+export const BSTextInput = ({ onChangeText, placeholder, value, keyboardType = 'default' }: Props) => {
   const colorScheme = useColorScheme();
 
   const { style } = useMemo(
@@ -31,6 +33,7 @@ export const BSTextInput = ({ onChangeText, placeholder, value }: Props) => {
 
   return (
     <BottomSheetTextInput
+      keyboardType={keyboardType}
       returnKeyType="done"
       returnKeyLabel="Save"
       clearButtonMode="always"
@@ -77,7 +80,7 @@ export const ModalTextInput = ({ onChangeText, placeholder, value, onSubmitEditi
   );
 };
 
-export const StationTitleTextInput = ({ onChangeText, placeholder, value, onSubmitEditing }: Props) => {
+export const StationTitleTextInput = ({ onChangeText, placeholder, value, onSubmitEditing, onBlur }: Props) => {
   const colorScheme = useColorScheme();
   const { style } = useMemo(
     () =>
@@ -100,6 +103,7 @@ export const StationTitleTextInput = ({ onChangeText, placeholder, value, onSubm
       value={value}
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}
+      onBlur={onBlur}
       placeholder={placeholder}
       placeholderTextColor={Colors[colorScheme ?? 'light'].labels.secondary}
     />

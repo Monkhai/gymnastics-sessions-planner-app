@@ -8,8 +8,9 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 interface Props {
   modalRef: RefObject<BottomSheetModal>;
   children?: React.ReactNode;
+  onBackdropTouch?: () => void;
 }
-const HalfModal = ({ modalRef, children }: Props) => {
+const HalfModal = ({ modalRef, children, onBackdropTouch }: Props) => {
   const colorScheme = useColorScheme();
   const handleColor = colorScheme === 'dark' ? Colors.dark.separetor : Colors.light.separetor;
   const bgColor = colorScheme === 'dark' ? Colors.dark.materials.thickUnderlay : Colors.light.bg.elevated;
@@ -22,7 +23,7 @@ const HalfModal = ({ modalRef, children }: Props) => {
       handleIndicatorStyle={{ backgroundColor: handleColor }}
       handleStyle={{ backgroundColor: overlayColor, borderTopLeftRadius: borderRadius * 2, borderTopRightRadius: borderRadius * 2 }}
       backgroundStyle={{ backgroundColor: bgColor, borderRadius: borderRadius * 2 }}
-      backdropComponent={(p) => <CustomBackDrop props={p} modalRef={modalRef} />}
+      backdropComponent={(p) => <CustomBackDrop props={p} onBackdropTouch={onBackdropTouch} />}
       keyboardBlurBehavior="restore"
       snapPoints={['50%']}
       ref={modalRef}
@@ -40,10 +41,10 @@ export default HalfModal;
 
 interface BackdropProps {
   props: BottomSheetBackdropProps;
-  modalRef: RefObject<BottomSheetModal>;
+  onBackdropTouch?: () => void;
 }
 
-export const CustomBackDrop = ({ props, modalRef }: BackdropProps) => {
+export const CustomBackDrop = ({ props, onBackdropTouch }: BackdropProps) => {
   const colorScheme = useColorScheme();
   const { animatedIndex } = props;
   const { width, height } = Dimensions.get('window');
@@ -61,9 +62,5 @@ export const CustomBackDrop = ({ props, modalRef }: BackdropProps) => {
     };
   });
 
-  const handleTouchEnd = () => {
-    modalRef.current?.close();
-  };
-
-  return <Animated.View onTouchEnd={handleTouchEnd} style={style} />;
+  return <Animated.View onTouchEnd={onBackdropTouch} style={style} />;
 };

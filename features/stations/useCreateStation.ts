@@ -13,7 +13,7 @@ type Args = {
 const useCreateStation = () => {
   return useMutation({
     mutationFn: async ({ lastOrder, session_id, type }: Args) => {
-      createStation({ lastOrder, session_id, type });
+      return await createStation({ lastOrder, session_id, type });
     },
 
     onMutate: ({ lastOrder, type, queryKey }: Args) => {
@@ -41,7 +41,6 @@ const useCreateStation = () => {
 
     onSuccess: async (data, { queryKey }, { stationToReplace }) => {
       const previousStations: StationType[] = queryClient.getQueryData(queryKey) ?? [];
-
       const updatedStations = previousStations.map((station) => {
         if (station.id === stationToReplace.id) {
           return data;
@@ -49,7 +48,6 @@ const useCreateStation = () => {
 
         return station;
       });
-
       queryClient.setQueryData(queryKey, updatedStations);
     },
 

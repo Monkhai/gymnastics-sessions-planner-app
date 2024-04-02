@@ -7,18 +7,14 @@ import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native
 import Loader from '../GeneralComponents/Loader';
 import SkillStation from '../Stations/SkillStation';
 import { RectButton } from '../GeneralComponents/Buttons';
+import { useLocalSearchParams } from 'expo-router';
 
-interface Props {
-  session_id: string;
-}
-
-const SessionScreen = ({ session_id }: Props) => {
+const SessionScreen = () => {
+  const { session_id } = useLocalSearchParams<{ session_id: string }>();
   const queryKey = queryKeyFactory.stations({ session_id });
 
   const { mutate: createStation } = useCreateStation();
   const { data: stations, error, isLoading, refetch } = useGetStations({ session_id, queryKey });
-
-  const buttonRef = useRef<View>(null);
 
   const createNewSkillStation = () => {
     createStation({ session_id, type: 'skillStation', lastOrder: stations?.length ?? 0, queryKey });
@@ -38,8 +34,6 @@ const SessionScreen = ({ session_id }: Props) => {
       </View>
     );
   }
-
-  console.log(stations);
 
   return (
     <>

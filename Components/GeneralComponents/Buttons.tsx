@@ -3,7 +3,7 @@ import { borderRadius } from '@/Constants/Randoms';
 import React, { useCallback } from 'react';
 import { GestureResponderEvent, Pressable, PressableProps, View, ViewProps, ViewStyle, useColorScheme } from 'react-native';
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
-import { BodyText, DurationText, EmphasizedBodyText } from './Texts';
+import { BodyText, DurationText, EmphasizedBodyText, StationTitleText } from './Texts';
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 
 export const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -201,11 +201,11 @@ export const StationIconButton = ({ children, ...props }: IconButtonProps) => {
   );
 };
 
-interface DurationButtonProps extends PressableProps {
+interface StationHeaderButtonProps extends PressableProps {
   value: string | undefined;
 }
 
-export const DurationButton = ({ onPress, style, value }: DurationButtonProps) => {
+export const DurationButton = ({ onPress, style, value }: StationHeaderButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 
@@ -233,6 +233,36 @@ export const DurationButton = ({ onPress, style, value }: DurationButtonProps) =
       >
         {value || 'Duration'}
       </DurationText>
+    </AnimatedPressable>
+  );
+};
+export const StationTitleButton = ({ onPress, style, value }: StationHeaderButtonProps) => {
+  const colorScheme = useColorScheme();
+  const opacity = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+    };
+  });
+
+  const handlePressIn = useCallback(() => {
+    opacity.value = withTiming(0.5, { duration: 80 });
+  }, []);
+
+  const handlePressOut = useCallback(() => {
+    opacity.value = withTiming(1, { duration: 80 });
+  }, []);
+
+  return (
+    <AnimatedPressable style={[animatedStyle, style]} onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress}>
+      <StationTitleText
+        style={{ color: value ? Colors[colorScheme ?? 'light'].labels.primary : Colors[colorScheme ?? 'light'].labels.secondary }}
+      >
+        {value || 'Station Name'}
+      </StationTitleText>
     </AnimatedPressable>
   );
 };

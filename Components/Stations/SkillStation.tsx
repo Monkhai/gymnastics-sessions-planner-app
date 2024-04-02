@@ -2,12 +2,15 @@ import { StationType } from '@/features/stations/types';
 import React, { useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import Animated, { LinearTransition, SlideInLeft } from 'react-native-reanimated';
-import StationHeader from '../Session/StationHeader';
+import SkillStationHeader from './SkillStationHeader';
 import { useLocalSearchParams } from 'expo-router';
 import useGetSkills from '@/features/skills/useGetSkills';
 import SkillList from './SkillList';
 import Loader from '../GeneralComponents/Loader';
 import useUpdateStation from '@/features/stations/useUpdateStation';
+import useDeleteStation from '@/features/stations/useDeleteStation';
+import { queryKeyFactory } from '@/utils/queryFactories';
+import { dbDurationToMinutes } from '@/utils/durationFn';
 
 interface Props {
   station: StationType;
@@ -15,36 +18,24 @@ interface Props {
 
 const SkillStation = ({ station }: Props) => {
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
+  const queryKey = queryKeyFactory.stations({ session_id });
 
   const { data: skills, isLoading, error } = useGetSkills({ session_id, station_id: String(station.id) });
-  const { mutate: updateStation } = useUpdateStation();
 
-  const [title, setTitle] = useState(station.name);
-  const [duration, setDuration] = useState(station.duration);
-  const [showDuration, setShowDuration] = useState(false);
+  const { mutate: deleteStation } = useDeleteStation();
 
   if (error) {
     return <Text>Error loading skills</Text>;
   }
 
-  const handleUpdateStation = () => {
-    // updateStation({
-    //   duration
-    // })
-  };
+  const handleUpdateStation = () => {};
 
+  const handleDeleteStation = () => {
+    deleteStation({ childrenArray: skills ?? [], station_id: station.id, queryKey, type: 'skillStation' });
+  };
   return (
     <Animated.View layout={LinearTransition} style={{ paddingTop: 16, width: '100%', justifyContent: 'flex-start' }}>
-      <StationHeader
-        handleSubmit={() => {}}
-        title={title}
-        setTitle={setTitle}
-        duration={duration}
-        setDuration={setDuration}
-        showDuration={showDuration}
-        setShowDuration={setShowDuration}
-        stationType="skillStation"
-      />
+      <SkillStationHeader onDelete={handleDeleteStation} station={station} />
 
       {isLoading ? (
         <Loader />
@@ -56,5 +47,3 @@ const SkillStation = ({ station }: Props) => {
 };
 
 export default SkillStation;
-
-const styles = StyleSheet.create({});

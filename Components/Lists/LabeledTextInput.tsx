@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { KeyboardType, StyleSheet, View } from 'react-native';
 
 import { CalloutText } from '../GeneralComponents/Texts';
 import { BSTextInput, ModalTextInput } from '../GeneralComponents/TextInput';
@@ -10,13 +10,14 @@ interface BSProps {
   onChangeText: (text: string) => void;
   placeholder: string;
   label: string;
+  keyboardType?: KeyboardType;
 }
 
-export const LabeledBSTextInput = ({ value, onChangeText, label, placeholder }: BSProps) => {
+export const LabeledBSTextInput = ({ value, onChangeText, label, placeholder, keyboardType }: BSProps) => {
   return (
     <View style={{ flexDirection: 'column', gap: 8, width: '90%', justifyContent: 'center', alignItems: 'flex-start' }}>
       <CalloutText style={{ marginLeft: 8 }}>{label}</CalloutText>
-      <BSTextInput value={value} onChangeText={onChangeText} placeholder={placeholder} />
+      <BSTextInput keyboardType={keyboardType} value={value} onChangeText={onChangeText} placeholder={placeholder} />
     </View>
   );
 };
