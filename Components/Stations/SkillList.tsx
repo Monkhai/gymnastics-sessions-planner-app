@@ -14,14 +14,9 @@ interface Props {
   skills: SkillType[] | undefined;
   areItemsLoading: boolean;
   error: Error | null;
-  refetchSkills: () => void;
 }
 
-export interface Positions {
-  [id: string]: number;
-}
-
-const SkillList = ({ wide = false, skills, refetchSkills, areItemsLoading, error }: Props) => {
+const SkillList = ({ wide = false, skills, areItemsLoading, error }: Props) => {
   if (error) {
     return null;
   }
@@ -62,7 +57,14 @@ const SkillList = ({ wide = false, skills, refetchSkills, areItemsLoading, error
 
   return (
     <PositionsContext.Provider value={{ positions }}>
-      <View style={{ width: '100%', paddingTop: 16, justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        style={{
+          width: '100%',
+          paddingTop: 16,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <Animated.View layout={LinearTransition} style={container}>
           {skills.map((skill) => {
             const isLast = skills.indexOf(skill) === skills.length - 1;

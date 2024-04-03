@@ -59,7 +59,7 @@ const List = ({ wide, items, refetchItems, areItemsLoading, error, routeFn }: Pr
       width: wide ? '100%' : '90%',
       borderRadius: borderRadius,
       height: '100%',
-      left: wide ? 0 : '7.5%',
+      left: wide ? 0 : '5%',
       overflow: 'visible',
     },
     scrollViewStyle: {

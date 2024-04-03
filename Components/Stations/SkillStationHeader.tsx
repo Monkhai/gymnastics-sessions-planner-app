@@ -7,20 +7,22 @@ import { queryKeyFactory } from '@/utils/queryFactories';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useLocalSearchParams } from 'expo-router';
-import React, { useState } from 'react';
-import { Alert, Keyboard, StyleSheet, View, useColorScheme } from 'react-native';
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { Alert, Keyboard, LayoutChangeEvent, StyleSheet, View, useColorScheme } from 'react-native';
 import { DurationButton, StationIconButton, StationTitleButton, TextButton } from '../GeneralComponents/Buttons';
 import HalfModal from '../GeneralComponents/HalfModal';
 import ModalHeader from '../GeneralComponents/ModalHeader';
 import ToggleRow from '../GeneralComponents/ToggleRow';
 import { LabeledBSTextInput } from '../Lists/LabeledTextInput';
+import { GestureDetector, PanGesture } from 'react-native-gesture-handler';
 
 interface Props {
   station: StationType;
   onDelete: () => void;
+  pan: PanGesture;
 }
 
-const SkillStationHeader = ({ station, onDelete }: Props) => {
+const SkillStationHeader = ({ station, onDelete, pan }: Props) => {
   const colorScheme = useColorScheme();
 
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
@@ -101,9 +103,11 @@ const SkillStationHeader = ({ station, onDelete }: Props) => {
 
   return (
     <View style={styles.container}>
-      <StationIconButton onPress={Keyboard.dismiss}>
-        <Ionicons name="reorder-three-sharp" size={32} color={'gray'} />
-      </StationIconButton>
+      <GestureDetector gesture={pan}>
+        <StationIconButton onPress={Keyboard.dismiss}>
+          <Ionicons name="reorder-three-sharp" size={32} color={'gray'} />
+        </StationIconButton>
+      </GestureDetector>
       <View style={{ flex: 1, gap: 4, justifyContent: 'center' }}>
         <StationTitleButton value={title} onPress={toggleSettingsModal} />
         {showDuration && <DurationButton value={durationString} onPress={toggleSettingsModal} />}
@@ -148,7 +152,7 @@ export default SkillStationHeader;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    height: 50,
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'flex-start',

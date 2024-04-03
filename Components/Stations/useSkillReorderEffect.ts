@@ -15,10 +15,9 @@ type Args = {
   updateListOrder: () => void;
   isFirst: boolean;
   isLast: boolean;
-  wide: boolean;
 };
 
-const useSkillReorderEffect = ({ wide, skill, isFirst, isLast, updateListOrder }: Args) => {
+const useSkillReorderEffect = ({ skill, isFirst, isLast, updateListOrder }: Args) => {
   const { positions } = useContext(PositionsContext);
 
   const colorScheme = useColorScheme();

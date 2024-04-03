@@ -81,7 +81,7 @@ const SkillRow = ({ wide, skill, isFirst, isLast, skills }: Props) => {
 
   const [name, setName] = React.useState(skill.name);
 
-  const [reps, setReps] = React.useState(skill.repetitions.toString());
+  const [reps, setReps] = React.useState(skill.repetitions ? skill.repetitions.toString() : '');
 
   const handleUpdateOrder = () => {
     const updatedItems = skills.map((skill) => {
@@ -92,7 +92,6 @@ const SkillRow = ({ wide, skill, isFirst, isLast, skills }: Props) => {
   };
 
   const { pan, containerStyle, listItemStyle, translateY } = useSkillReorderEffect({
-    wide,
     skill,
     isFirst,
     isLast,

@@ -3,9 +3,10 @@ import { useSharedValue } from 'react-native-reanimated';
 import { Positions } from './List';
 import { ListItemType } from './Types';
 import { SkillType } from '@/features/skills/types';
+import { StationType } from '@/features/stations/types';
 
 type Args = {
-  items: ListItemType[] | SkillType[];
+  items: ListItemType[] | SkillType[] | StationType[];
 };
 
 export const usePositions = ({ items }: Args) => {

@@ -8,6 +8,9 @@ import Loader from '../GeneralComponents/Loader';
 import SkillStation from '../Stations/SkillStation';
 import { RectButton } from '../GeneralComponents/Buttons';
 import { useLocalSearchParams } from 'expo-router';
+import { useSharedValue } from 'react-native-reanimated';
+import { StationPositionObject, StationPositionsContext } from '@/context/StationPositionContext';
+import { usePositions } from '../Lists/usePositions';
 
 const SessionScreen = () => {
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
@@ -22,7 +25,8 @@ const SessionScreen = () => {
   const createNewDrillStation = () => {
     createStation({ session_id, type: 'drillStation', lastOrder: stations?.length ?? 0, queryKey });
   };
-
+  const { positions } = usePositions({ items: stations ?? [] });
+  const stationPositionObject = useSharedValue<StationPositionObject[]>([]);
   if (error) {
     return <Text>Error loading stations</Text>;
   }
@@ -36,23 +40,23 @@ const SessionScreen = () => {
   }
 
   return (
-    <>
+    <StationPositionsContext.Provider value={{ positions, stationPositions: stationPositionObject }}>
       <ScrollView
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
-        style={{ width: '100%' }}
-        contentContainerStyle={{ minHeight: '100%', paddingBottom: 68 }}
+        style={{ width: '100%', overflow: 'visible' }}
+        contentContainerStyle={{ width: '100%', minHeight: '100%', paddingBottom: 68, overflow: 'visible' }}
       >
         {stations &&
           stations.map((station) => {
             if (station.type === 'skillStation') {
-              return <SkillStation key={station.id} station={station} />;
+              return <SkillStation stations={stations} key={station.id} station={station} />;
             } else {
               return null;
             }
           })}
       </ScrollView>
       <CreateStationButton createNewDrillStation={createNewDrillStation} createNewSkillStation={createNewSkillStation} />
-    </>
+    </StationPositionsContext.Provider>
   );
 };
 
