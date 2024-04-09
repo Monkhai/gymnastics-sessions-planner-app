@@ -1,5 +1,5 @@
 import { supabase } from '@/config/initSupabase';
-import { StationFromDB, StationOfSessionFromDB } from './types';
+import { StationFromDB, StationOfSessionFromDB, StationType } from './types';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 
 type Args = {
@@ -32,7 +32,7 @@ export default async ({ session_id }: Args) => {
       return { ...station, order: stationOrder };
     });
 
-    return stationsWithOrder.sort((a, b) => a.order - b.order);
+    return stationsWithOrder.sort((a, b) => a.order - b.order) as StationType[];
   } catch (error) {
     throw error;
   }

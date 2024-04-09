@@ -69,19 +69,21 @@ const CreateListItemModal = ({ placeholder, headerLabel, isVisible, setIsVisible
   });
 
   return (
-    <Animated.View ref={ref} entering={FadeIn} exiting={FadeOut} onTouchEnd={handleTouchEnd} style={containerStyle}>
-      <Animated.View entering={ZoomIn} exiting={ZoomOut} style={innerContainerStyle}>
-        <ModalHeader
-          primaryActionLabel="Create"
-          secondaryActionLabel="Cancel"
-          label={headerLabel}
-          handlePrimaryAction={handleCreateGroup}
-          handleSecondaryAction={handleDismiss}
-          disabledPrimary={name ? false : true}
-        />
-        <ModalTextInput value={name} onChangeText={setName} placeholder={placeholder} />
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={StyleSheet.absoluteFillObject}>
+      <Animated.View ref={ref} entering={FadeIn} exiting={FadeOut} onTouchEnd={handleTouchEnd} style={containerStyle}>
+        <Animated.View entering={ZoomIn} exiting={ZoomOut} style={innerContainerStyle}>
+          <ModalHeader
+            primaryActionLabel="Create"
+            secondaryActionLabel="Cancel"
+            label={headerLabel}
+            handlePrimaryAction={handleCreateGroup}
+            handleSecondaryAction={handleDismiss}
+            disabledPrimary={name ? false : true}
+          />
+          <ModalTextInput value={name} onChangeText={setName} placeholder={placeholder} />
+        </Animated.View>
       </Animated.View>
-    </Animated.View>
+    </KeyboardAvoidingView>
   );
 };
 

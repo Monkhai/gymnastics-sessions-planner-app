@@ -2,6 +2,7 @@ import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import useUserId from '../auth/useUserId';
 import { StationFromDB, StationOfSessionFromDB, StationType, StationTypeType } from './types';
 import { supabase } from '@/config/initSupabase';
+import createDrill from '../drills/createDrill';
 
 type Args = {
   lastOrder: number;
@@ -55,6 +56,10 @@ export default async ({ lastOrder, session_id, type }: Args) => {
       ...data[0],
       order: lastOrder + 1,
     };
+
+    if (type === 'drillStation') {
+      createDrill({ lastOrder: lastOrder, station_id: station.id });
+    }
 
     return station;
   } catch (error) {

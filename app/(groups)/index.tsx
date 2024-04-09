@@ -46,10 +46,8 @@ const index = () => {
     deleteGroup({ item_id, queryKey });
   };
 
-  const { state: keyBoardState } = useAnimatedKeyboard();
   const rectButtonStyle = useAnimatedStyle(() => {
     return {
-      opacity: keyBoardState.value ? 0 : 1,
       position: 'absolute',
       bottom: 48,
     };

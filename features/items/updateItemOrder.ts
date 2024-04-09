@@ -1,10 +1,13 @@
-import { ListItemType, ListTable } from '@/Components/Lists/Types';
+import { ListItemType, ListTable, MainTable } from '@/Components/Lists/Types';
 import updateItem from './updateListItem';
 import { SecondaryTable } from './types';
+import { StationType } from '../stations/types';
+import { SkillType } from '../skills/types';
+import { DrillType } from '../drills/types';
 
 type Args = {
-  table: ListTable;
-  items: ListItemType[];
+  table: MainTable;
+  items: ListItemType[] | StationType[] | SkillType[] | DrillType[];
   secondaryTable?: SecondaryTable;
 };
 

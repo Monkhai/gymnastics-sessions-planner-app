@@ -176,7 +176,7 @@ const ListItem = ({ wide, listItem, isFirst, isLast, items, routeFn }: Props) =>
             <Ionicons name="chevron-forward" size={16} color={Colors.gray} />
           </Animated.View>
           {/*  */}
-          <HalfModal modalRef={modalRef}>
+          <HalfModal onBackdropTouch={() => modalRef.current?.dismiss()} modalRef={modalRef}>
             <ModalHeader
               handleSecondaryAction={() => modalRef.current?.close()}
               handlePrimaryAction={handleSaveSettings}

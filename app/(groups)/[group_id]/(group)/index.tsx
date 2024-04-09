@@ -98,5 +98,6 @@ const styles = StyleSheet.create({
   rectButton: {
     position: 'absolute',
     bottom: 48,
+    alignSelf: 'center',
   },
 });

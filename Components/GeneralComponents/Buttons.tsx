@@ -179,8 +179,8 @@ export const StationIconButton = ({ children, ...props }: IconButtonProps) => {
   const style = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
-      width: 48,
-      height: 48,
+      // width: 48,
+      // height: 48,
       justifyContent: 'center',
       alignItems: 'center',
     };
@@ -267,16 +267,14 @@ export const StationTitleButton = ({ onPress, style, value }: StationHeaderButto
   );
 };
 
-export const SkillIconButton = ({ children, translateY, onPress }: PressableProps & { translateY: SharedValue<number> }) => {
+export const SkillIconButton = ({ children, onPress }: PressableProps) => {
   const opacity = useSharedValue(1);
 
   const iconStyle = useAnimatedStyle(() => {
     return {
+      width: 48,
       opacity: opacity.value,
       height: LIST_ITEM_HEIGHT,
-      position: 'absolute',
-      right: 16,
-      top: translateY.value,
       justifyContent: 'center',
       alignItems: 'center',
     };
@@ -292,6 +290,32 @@ export const SkillIconButton = ({ children, translateY, onPress }: PressableProp
 
   return (
     <AnimatedPressable onPressIn={handlePressIn} onPressOut={handlePressOut} style={iconStyle} onPress={onPress}>
+      {children}
+    </AnimatedPressable>
+  );
+};
+
+export const GenericButton = ({ onPress, children, style, ...props }: PressableProps) => {
+  const opacity = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      justifyContent: 'center',
+      alignItems: 'center',
+    };
+  });
+
+  const handlePressIn = useCallback(() => {
+    opacity.value = withTiming(0.5, { duration: 80 });
+  }, []);
+
+  const handlePressOut = useCallback(() => {
+    opacity.value = withTiming(1, { duration: 80 });
+  }, []);
+
+  return (
+    <AnimatedPressable onPressIn={handlePressIn} onPressOut={handlePressOut} style={[animatedStyle, style]} onPress={onPress} {...props}>
       {children}
     </AnimatedPressable>
   );

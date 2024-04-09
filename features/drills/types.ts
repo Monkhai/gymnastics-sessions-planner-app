@@ -24,6 +24,7 @@ export type DrillOfDrillStation = {
   drill_id: number;
   drill_station_id: number;
   order: number;
+  user_id: string;
 };
 
 export type DrillType = DrillFromDBType & {

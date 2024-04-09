@@ -1,7 +1,7 @@
 import Colors from '@/Constants/Colors';
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
-import { StationType } from '@/features/stations/types';
-import useUpdateStation from '@/features/stations/useUpdateStation';
+import { DrillType } from '@/features/drills/types';
+import useUpdateDrill from '@/features/drills/useUpdateDrill';
 import { dbDurationToMinutes, minutesToString, stringToDuration } from '@/utils/durationFn';
 import { queryKeyFactory } from '@/utils/queryFactories';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -23,40 +23,38 @@ import {
   stationIconButtonStyle,
   stationTitleButtonStyle,
 } from './styles';
-import useCreateSkill from '@/features/skills/useCreateSkill';
 
 interface Props {
-  station: StationType;
+  drill: DrillType;
   onDelete: () => void;
-  onCreateSkill: () => void;
   drag: () => void;
   isActive: boolean;
 }
 
-const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }: Props) => {
+const DrillStationHeader = ({ drill, onDelete, drag, isActive }: Props) => {
   const colorScheme = useColorScheme();
 
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
 
-  const queryKey = queryKeyFactory.stations({ session_id });
+  const queryKey = queryKeyFactory.drills({ session_id, station_id: String(drill.station_id) });
 
-  const { mutate: updateStation } = useUpdateStation();
-  const { mutate: createSkill } = useCreateSkill();
+  const { mutate: updateDrill } = useUpdateDrill();
 
   const modalRef = React.useRef<BottomSheetModal>(null);
 
-  const [title, setTitle] = useState(station.name);
-
-  const [durationMinutes, setDurationMinutes] = useState(dbDurationToMinutes(station.duration));
-  const [showDuration, setShowDuration] = useState(station.show_duration ?? true);
-
+  const [title, setTitle] = useState(drill.name);
+  const [durationMinutes, setDurationMinutes] = useState(dbDurationToMinutes(drill.duration));
+  const [showDuration, setShowDuration] = useState(drill.show_duration ?? true);
+  const [showComments, setShowComments] = useState(drill.show_comments ?? true);
+  const [showMedia, setShowMedia] = useState(drill.show_media ?? false);
   const durationString = minutesToString(durationMinutes);
 
-  const isTitleChanged = title !== station.name;
-  const isDurationChanged = durationMinutes !== dbDurationToMinutes(station.duration);
-  const isShowDurationChanged = showDuration !== station.show_duration;
+  const isTitleChanged = title !== drill.name;
+  const isDurationChanged = durationMinutes !== dbDurationToMinutes(drill.duration);
+  const isShowDurationChanged = showDuration !== drill.show_duration;
+  const isShowCommentsChanged = showComments !== drill.show_comments;
 
-  const areSettingsTheSame = !isTitleChanged && !isDurationChanged && !isShowDurationChanged;
+  const areSettingsTheSame = !isTitleChanged && !isDurationChanged && !isShowDurationChanged && !isShowCommentsChanged;
 
   const toggleSettingsModal = () => {
     if (Keyboard.isVisible()) Keyboard.dismiss();
@@ -71,21 +69,28 @@ const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }
   const handleSave = () => {
     const newDuration = stringToDuration(durationMinutes);
 
-    updateStation({
-      station_id: station.id,
-      name: title,
-      duration: newDuration,
-      show_duration: showDuration,
-      order: station.order,
+    updateDrill({
       queryKey,
+      duration: newDuration,
+      name: title,
+      showComments,
+      showDuration,
+      drill_id: drill.id,
+      description: drill.description,
+      order: drill.order,
+      comments: drill.comments,
+      showMedia,
     });
+
     modalRef.current?.dismiss();
   };
 
   const resetSettings = () => {
-    setTitle(station.name);
-    setDurationMinutes(dbDurationToMinutes(station.duration));
-    setShowDuration(station.show_duration);
+    setTitle(drill.name);
+    setDurationMinutes(dbDurationToMinutes(drill.duration));
+    setShowDuration(drill.show_duration);
+    setShowMedia(drill.show_media);
+    setShowComments(drill.show_comments);
   };
   const handleCancel = () => {
     resetSettings();
@@ -127,7 +132,7 @@ const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }
         </StationIconButton>
         <StationTitleButton style={stationTitleButtonStyle} value={title} onPress={toggleSettingsModal} />
 
-        <TextButton style={{ marginRight: 16 }} label="Add Skill" onPress={onCreateSkill} />
+        <TextButton style={{ marginRight: 16 }} label="Add Drill" onPress={() => {}} />
 
         <StationIconButton style={stationIconButtonStyle} onPress={toggleSettingsModal}>
           <Ionicons name="ellipsis-horizontal-circle" size={32} color={'gray'} />
@@ -137,7 +142,7 @@ const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }
       {showDuration && <DurationButton style={durationButtonStyle} value={durationString} onPress={toggleSettingsModal} />}
 
       {/*  */}
-      <HalfModal onBackdropTouch={handleDismiss} modalRef={modalRef}>
+      <HalfModal snapPoints={[430]} onBackdropTouch={handleDismiss} modalRef={modalRef}>
         <ModalHeader
           label="Station Settings"
           handlePrimaryAction={handleSave}
@@ -158,6 +163,8 @@ const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }
 
         <View style={{ width: '100%' }}>
           <ToggleRow value={showDuration} onValueChange={setShowDuration} label="Show Duration" />
+          <ToggleRow value={showComments} onValueChange={setShowComments} label="Show Comments" />
+          <ToggleRow value={showMedia} onValueChange={setShowMedia} label="Show Media" />
 
           <View style={[{ borderTopColor: Colors[colorScheme ?? 'dark'].separetor }, settingsRowStyle]}>
             <TextButton label="Delete Station" onPress={handleDelete} danger />
@@ -168,7 +175,7 @@ const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }
   );
 };
 
-export default SkillStationHeader;
+export default DrillStationHeader;
 
 const styles = StyleSheet.create({
   container: {

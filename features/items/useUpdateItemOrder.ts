@@ -1,12 +1,15 @@
-import { ListItemType, ListTable } from '@/Components/Lists/Types';
+import { ListItemType, ListTable, MainTable } from '@/Components/Lists/Types';
 import { useMutation } from '@tanstack/react-query';
 import updateItemOrder from './updateItemOrder';
 import { queryClient } from '@/Providers/ReactQueryProvider';
 import { SecondaryTable } from './types';
+import { StationType } from '../stations/types';
+import { SkillType } from '../skills/types';
+import { DrillType } from '../drills/types';
 
 type Args = {
-  items: ListItemType[];
-  table: ListTable;
+  items: ListItemType[] | StationType[] | SkillType[] | DrillType[];
+  table: MainTable;
   queryKey: string[];
   secondaryTable?: SecondaryTable;
 };

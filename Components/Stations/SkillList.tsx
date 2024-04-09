@@ -10,13 +10,13 @@ import SkillRow from './SkillRow';
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 
 interface Props {
-  wide?: boolean;
   skills: SkillType[] | undefined;
   areItemsLoading: boolean;
   error: Error | null;
+  queryKey: string[];
 }
 
-const SkillList = ({ wide = false, skills, areItemsLoading, error }: Props) => {
+const SkillList = ({ skills, areItemsLoading, error, queryKey }: Props) => {
   if (error) {
     return null;
   }
@@ -69,7 +69,7 @@ const SkillList = ({ wide = false, skills, areItemsLoading, error }: Props) => {
           {skills.map((skill) => {
             const isLast = skills.indexOf(skill) === skills.length - 1;
             const isFirst = skills.indexOf(skill) === 0;
-            return <SkillRow key={skill.id} isFirst={isFirst} isLast={isLast} skill={skill} skills={skills} wide={wide} />;
+            return <SkillRow queryKey={queryKey} key={skill.id} isFirst={isFirst} isLast={isLast} skill={skill} skills={skills} />;
           })}
         </Animated.View>
       </View>

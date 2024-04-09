@@ -1,5 +1,4 @@
 import Colors from '@/Constants/Colors';
-import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 import { StationType } from '@/features/stations/types';
 import useUpdateStation from '@/features/stations/useUpdateStation';
 import { dbDurationToMinutes, minutesToString, stringToDuration } from '@/utils/durationFn';
@@ -9,7 +8,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Keyboard, StyleSheet, View, useColorScheme } from 'react-native';
+import { Alert, Keyboard, View, useColorScheme } from 'react-native';
 import { DurationButton, StationIconButton, StationTitleButton, TextButton } from '../GeneralComponents/Buttons';
 import HalfModal from '../GeneralComponents/HalfModal';
 import ModalHeader from '../GeneralComponents/ModalHeader';
@@ -23,17 +22,14 @@ import {
   stationIconButtonStyle,
   stationTitleButtonStyle,
 } from './styles';
-import useCreateSkill from '@/features/skills/useCreateSkill';
-
 interface Props {
   station: StationType;
   onDelete: () => void;
-  onCreateSkill: () => void;
   drag: () => void;
   isActive: boolean;
 }
 
-const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }: Props) => {
+const CircuitStationHeader = ({ station, onDelete, drag, isActive }: Props) => {
   const colorScheme = useColorScheme();
 
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
@@ -41,12 +37,10 @@ const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }
   const queryKey = queryKeyFactory.stations({ session_id });
 
   const { mutate: updateStation } = useUpdateStation();
-  const { mutate: createSkill } = useCreateSkill();
 
   const modalRef = React.useRef<BottomSheetModal>(null);
 
   const [title, setTitle] = useState(station.name);
-
   const [durationMinutes, setDurationMinutes] = useState(dbDurationToMinutes(station.duration));
   const [showDuration, setShowDuration] = useState(station.show_duration ?? true);
 
@@ -127,7 +121,7 @@ const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }
         </StationIconButton>
         <StationTitleButton style={stationTitleButtonStyle} value={title} onPress={toggleSettingsModal} />
 
-        <TextButton style={{ marginRight: 16 }} label="Add Skill" onPress={onCreateSkill} />
+        <TextButton style={{ marginRight: 16 }} label="Add Drill" onPress={() => {}} />
 
         <StationIconButton style={stationIconButtonStyle} onPress={toggleSettingsModal}>
           <Ionicons name="ellipsis-horizontal-circle" size={32} color={'gray'} />
@@ -135,7 +129,6 @@ const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }
       </View>
 
       {showDuration && <DurationButton style={durationButtonStyle} value={durationString} onPress={toggleSettingsModal} />}
-
       {/*  */}
       <HalfModal onBackdropTouch={handleDismiss} modalRef={modalRef}>
         <ModalHeader
@@ -157,7 +150,7 @@ const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }
         />
 
         <View style={{ width: '100%' }}>
-          <ToggleRow value={showDuration} onValueChange={setShowDuration} label="Show Duration" />
+          <ToggleRow value={showDuration} isFirst onValueChange={setShowDuration} label="Show Duration" />
 
           <View style={[{ borderTopColor: Colors[colorScheme ?? 'dark'].separetor }, settingsRowStyle]}>
             <TextButton label="Delete Station" onPress={handleDelete} danger />
@@ -168,23 +161,4 @@ const SkillStationHeader = ({ station, onDelete, drag, isActive, onCreateSkill }
   );
 };
 
-export default SkillStationHeader;
-
-const styles = StyleSheet.create({
-  container: {
-    height: 50,
-    flexDirection: 'column',
-    width: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  },
-  settingsRow: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    width: '100%',
-    height: LIST_ITEM_HEIGHT,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-  },
-});
+export default CircuitStationHeader;

@@ -1,23 +1,39 @@
-import * as DropdownMenu from 'zeego/dropdown-menu';
+import Colors from '@/Constants/Colors';
+import useUpdateItemOrder from '@/features/items/useUpdateItemOrder';
+import { StationType } from '@/features/stations/types';
 import useCreateStation from '@/features/stations/useCreateStation';
 import useGetStations from '@/features/stations/useGetStations';
 import { queryKeyFactory } from '@/utils/queryFactories';
-import React, { useRef } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Loader from '../GeneralComponents/Loader';
-import SkillStation from '../Stations/SkillStation';
-import { RectButton } from '../GeneralComponents/Buttons';
 import { useLocalSearchParams } from 'expo-router';
-import { useSharedValue } from 'react-native-reanimated';
-import { StationPositionObject, StationPositionsContext } from '@/context/StationPositionContext';
-import { usePositions } from '../Lists/usePositions';
+import React, { useEffect, useRef, useState } from 'react';
+import { RefreshControl, StyleSheet, Text, View, useColorScheme } from 'react-native';
+import DraggableFlatList, { NestableDraggableFlatList, NestableScrollContainer } from 'react-native-draggable-flatlist';
+import { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
+import * as DropdownMenu from 'zeego/dropdown-menu';
+import { RectButton } from '../GeneralComponents/Buttons';
+import Loader from '../GeneralComponents/Loader';
+import DrillStationHandler from '../Stations/DrillStationHandler';
+import SkillStation from '../Stations/SkillStation';
+import { FlatList } from 'react-native-gesture-handler';
+
+export const ScrollEnabledContext = React.createContext<{
+  scrollEnabled: boolean;
+  setScrollEnabled: (value: boolean) => void;
+}>({
+  scrollEnabled: true,
+  setScrollEnabled: () => {},
+});
 
 const SessionScreen = () => {
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
   const queryKey = queryKeyFactory.stations({ session_id });
+  const colorScheme = useColorScheme();
 
-  const { mutate: createStation } = useCreateStation();
   const { data: stations, error, isLoading, refetch } = useGetStations({ session_id, queryKey });
+  const { mutate: createStation } = useCreateStation();
+  const { mutate: updateStationsOrder } = useUpdateItemOrder();
+
+  const [mutableStations, setMutableStations] = useState<StationType[]>(stations ?? []);
 
   const createNewSkillStation = () => {
     createStation({ session_id, type: 'skillStation', lastOrder: stations?.length ?? 0, queryKey });
@@ -25,8 +41,14 @@ const SessionScreen = () => {
   const createNewDrillStation = () => {
     createStation({ session_id, type: 'drillStation', lastOrder: stations?.length ?? 0, queryKey });
   };
-  const { positions } = usePositions({ items: stations ?? [] });
-  const stationPositionObject = useSharedValue<StationPositionObject[]>([]);
+
+  const [scrollEnabled, setScrollEnabled] = useState(true);
+
+  useEffect(() => {
+    if (stations) {
+      setMutableStations(stations);
+    }
+  }, [stations]);
   if (error) {
     return <Text>Error loading stations</Text>;
   }
@@ -39,24 +61,42 @@ const SessionScreen = () => {
     );
   }
 
+  const onDragEnd = (data: StationType[]) => {
+    const newData = data
+      .map((station, index) => {
+        return { ...station, order: index + 1 };
+      })
+      .sort((a, b) => a.order - b.order);
+    setMutableStations(newData);
+    updateStationsOrder({ items: newData, queryKey, table: 'stations', secondaryTable: 'stations_of_sessions' });
+  };
+
   return (
-    <StationPositionsContext.Provider value={{ positions, stationPositions: stationPositionObject }}>
-      <ScrollView
-        refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
-        style={{ width: '100%', overflow: 'visible' }}
-        contentContainerStyle={{ width: '100%', minHeight: '100%', paddingBottom: 68, overflow: 'visible' }}
-      >
-        {stations &&
-          stations.map((station) => {
+    <View style={{ flex: 1, width: '100%' }}>
+      <NestableScrollContainer scrollEnabled={false} refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}>
+        <NestableDraggableFlatList
+          // scrollEnabled={scrollEnabled}
+          contentContainerStyle={{ paddingBottom: 110 }}
+          ItemSeparatorComponent={() => (
+            <View style={{ width: StyleSheet.hairlineWidth, borderColor: Colors[colorScheme ?? 'light'].separetor }} />
+          )}
+          keyExtractor={(item) => String(item.id + item.name)}
+          refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
+          onDragEnd={({ data }) => {
+            onDragEnd(data);
+          }}
+          data={mutableStations}
+          renderItem={({ item: station, drag, isActive }) => {
             if (station.type === 'skillStation') {
-              return <SkillStation stations={stations} key={station.id} station={station} />;
+              return <SkillStation drag={drag} isActive={isActive} station={station} />;
             } else {
-              return null;
+              return <DrillStationHandler key={station.id} station={station} drag={drag} isActive={isActive} />;
             }
-          })}
-      </ScrollView>
+          }}
+        />
+      </NestableScrollContainer>
       <CreateStationButton createNewDrillStation={createNewDrillStation} createNewSkillStation={createNewSkillStation} />
-    </StationPositionsContext.Provider>
+    </View>
   );
 };
 
@@ -77,7 +117,7 @@ const CreateStationButton = ({ createNewDrillStation, createNewSkillStation }: C
           <RectButton label="Create New Station" onPress={() => {}} />
         </DropdownMenu.Trigger>
 
-        <DropdownMenu.Content side="top">
+        <DropdownMenu.Content side="top" align="center">
           <DropdownMenu.Item key="drillStation" textValue="Create New Drill Station" onSelect={createNewDrillStation}>
             <Text>Create New Skill Station</Text>
           </DropdownMenu.Item>

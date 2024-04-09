@@ -1,11 +1,11 @@
-import { ListItemType, ListTable } from '@/Components/Lists/Types';
+import { ListItemType, ListTable, MainTable } from '@/Components/Lists/Types';
 import { supabase } from '@/config/initSupabase';
 import useUserId from '../auth/useUserId';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { SecondaryTable } from './types';
 
 type Args = {
-  table: ListTable;
+  table: MainTable;
   item_id: number;
   name: string;
   order: number;

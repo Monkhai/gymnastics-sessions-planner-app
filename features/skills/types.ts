@@ -1,7 +1,7 @@
 export type SkillFromDBType = {
   id: number;
   name: string;
-  repetitions: number;
+  repetitions: number | null;
   description: string;
   show_reps: boolean;
 };

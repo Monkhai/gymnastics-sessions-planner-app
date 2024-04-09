@@ -39,7 +39,7 @@ export default async ({ station_id }: Args) => {
 
       return { ...skill, order: skillOrder, skillOfStationId, station_id: Number(station_id) };
     });
-
+    skillsWithOrder.sort((a, b) => a.order - b.order);
     return skillsWithOrder;
   } catch (error) {
     throw error;

@@ -9,8 +9,9 @@ interface Props {
   modalRef: RefObject<BottomSheetModal>;
   children?: React.ReactNode;
   onBackdropTouch?: () => void;
+  snapPoints?: Array<string | number>;
 }
-const HalfModal = ({ modalRef, children, onBackdropTouch }: Props) => {
+const HalfModal = ({ modalRef, children, onBackdropTouch, snapPoints = ['50%'] }: Props) => {
   const colorScheme = useColorScheme();
   const handleColor = colorScheme === 'dark' ? Colors.dark.separetor : Colors.light.separetor;
   const bgColor = colorScheme === 'dark' ? Colors.dark.materials.thickUnderlay : Colors.light.bg.elevated;
@@ -18,6 +19,7 @@ const HalfModal = ({ modalRef, children, onBackdropTouch }: Props) => {
 
   return (
     <BottomSheetModal
+      topInset={60}
       android_keyboardInputMode="adjustPan"
       keyboardBehavior={'interactive'}
       handleIndicatorStyle={{ backgroundColor: handleColor }}
@@ -25,11 +27,11 @@ const HalfModal = ({ modalRef, children, onBackdropTouch }: Props) => {
       backgroundStyle={{ backgroundColor: bgColor, borderRadius: borderRadius * 2 }}
       backdropComponent={(p) => <CustomBackDrop props={p} onBackdropTouch={onBackdropTouch} />}
       keyboardBlurBehavior="restore"
-      snapPoints={['50%']}
+      snapPoints={snapPoints}
       ref={modalRef}
     >
       <BottomSheetView style={{ flex: 1, alignItems: 'center', backgroundColor: overlayColor }}>
-        <Pressable onPress={Keyboard.dismiss} style={{ flex: 1, width: '100%', alignItems: 'center', gap: 16 }}>
+        <Pressable onPress={Keyboard.dismiss} style={{ flex: 1, width: '100%', alignItems: 'center', gap: 8 }}>
           {children}
         </Pressable>
       </BottomSheetView>

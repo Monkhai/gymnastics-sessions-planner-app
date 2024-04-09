@@ -4,15 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 import getSkills from './getSkills';
 
 type Args = {
-  session_id: string;
   station_id: string;
+  queryKey: string[];
 };
 
-export default ({ session_id, station_id }: Args) => {
-  const queryKey = queryKeyFactory.skills({ session_id, station_id });
+export default ({ queryKey, station_id }: Args) => {
   return useQuery({
     queryKey,
-    queryFn: () => getSkills({ station_id }),
+    queryFn: async () => await getSkills({ station_id }),
     staleTime,
   });
 };
