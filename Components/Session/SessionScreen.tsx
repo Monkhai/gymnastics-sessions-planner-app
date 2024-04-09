@@ -42,7 +42,7 @@ const SessionScreen = () => {
     createStation({ session_id, type: 'drillStation', lastOrder: stations?.length ?? 0, queryKey });
   };
 
-  const [scrollEnabled, setScrollEnabled] = useState(true);
+  const [refetchTrigger, setRefetchTrigger] = useState(false);
 
   useEffect(() => {
     if (stations) {
@@ -61,6 +61,11 @@ const SessionScreen = () => {
     );
   }
 
+  const handleRefresh = () => {
+    refetch();
+    setRefetchTrigger(true);
+  };
+
   const onDragEnd = (data: StationType[]) => {
     const newData = data
       .map((station, index) => {
@@ -73,7 +78,7 @@ const SessionScreen = () => {
 
   return (
     <View style={{ flex: 1, width: '100%' }}>
-      <NestableScrollContainer scrollEnabled={false} refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}>
+      <NestableScrollContainer scrollEnabled={false} refreshControl={<RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />}>
         <NestableDraggableFlatList
           // scrollEnabled={scrollEnabled}
           contentContainerStyle={{ paddingBottom: 110 }}
@@ -88,7 +93,15 @@ const SessionScreen = () => {
           data={mutableStations}
           renderItem={({ item: station, drag, isActive }) => {
             if (station.type === 'skillStation') {
-              return <SkillStation drag={drag} isActive={isActive} station={station} />;
+              return (
+                <SkillStation
+                  refetchTrigger={refetchTrigger}
+                  setRefetchTrigger={setRefetchTrigger}
+                  drag={drag}
+                  isActive={isActive}
+                  station={station}
+                />
+              );
             } else {
               return <DrillStationHandler key={station.id} station={station} drag={drag} isActive={isActive} />;
             }

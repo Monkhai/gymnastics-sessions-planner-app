@@ -66,7 +66,6 @@ const renderSwipeableButton = ({ onPress, progressAnimatedValue, width }: Render
 //------------------------------------------------------------------------------------------------------------------------------------------------
 
 interface Props {
-  skills: SkillType[];
   skill: SkillType;
   isLast: boolean;
   isFirst: boolean;
@@ -75,13 +74,11 @@ interface Props {
   isActive: boolean;
 }
 
-const DraggableSkill = ({ skill, isFirst, isLast, skills, queryKey, drag, isActive }: Props) => {
+const DraggableSkill = ({ skill, isFirst, isLast, queryKey, drag, isActive }: Props) => {
   const colorScheme = useColorScheme();
 
   const { mutate: deleteSkill } = useDeleteSkill();
   const { mutate: updateSkill } = useUpdateSkill();
-  const { mutate: updateSkillOrder } = useUpdateItemOrder();
-  const { positions } = useContext(PositionsContext);
 
   const swipeableButtonWidth = useSharedValue(60);
 
@@ -92,19 +89,6 @@ const DraggableSkill = ({ skill, isFirst, isLast, skills, queryKey, drag, isActi
   const [showReps, setShowReps] = React.useState(skill.show_reps);
   const [description, setDescription] = React.useState(skill.description);
 
-  // const handleUpdateOrder = () => {
-  //   const updatedItems = skills.map((skill) => {
-  //     return { ...skill, order: positions.value[skill.order.toString()] + 1 };
-  //   });
-
-  //   updateSkillOrder({
-  //     items: updatedItems,
-  //     table: 'skills',
-  //     queryKey,
-  //     secondaryTable: 'skills_of_skill_stations',
-  //   });
-  // };
-
   const handleDeleteItem = () => {
     swipeableRef.current?.close();
     deleteSkill({ skill_id: skill.id, queryKey });
@@ -112,15 +96,15 @@ const DraggableSkill = ({ skill, isFirst, isLast, skills, queryKey, drag, isActi
 
   const handleUpdateSkill = () => {
     modalRef.current?.close();
-    if (
-      name === skill.name && reps
-        ? skill.repetitions
-          ? reps === skill.repetitions.toString()
-          : reps === ''
-        : !skill.repetitions && showReps === skill.show_reps && description === skill.description
-    ) {
-      return;
-    }
+    // if (
+    //   name === skill.name && reps
+    //     ? skill.repetitions
+    //       ? reps === skill.repetitions.toString()
+    //       : reps === ''
+    //     : !skill.repetitions && showReps === skill.show_reps && description === skill.description
+    // ) {
+    //   return;
+    // }
 
     updateSkill({
       name,
@@ -180,11 +164,10 @@ const DraggableSkill = ({ skill, isFirst, isLast, skills, queryKey, drag, isActi
   return (
     <ScaleDecorator>
       <ShadowDecorator>
-        <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
+        <Animated.View layout={LinearTransition} style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
           <AnimatedSwipeable
             containerStyle={styles.swipeableStyle}
-            exiting={SlideOutLeft}
-            layout={LinearTransition}
+            // layout={LinearTransition}
             ref={swipeableRef}
             overshootFriction={6}
             renderRightActions={(p) =>
@@ -208,6 +191,7 @@ const DraggableSkill = ({ skill, isFirst, isLast, skills, queryKey, drag, isActi
                 <Ionicons style={{ width: 32 }} name="reorder-three-sharp" size={32} color={'gray'} />
               </GenericButton>
               <TextInput
+                returnKeyType="done"
                 style={{
                   height: '100%',
                   color: Colors[colorScheme ?? 'light'].labels.primary,
@@ -263,7 +247,7 @@ const DraggableSkill = ({ skill, isFirst, isLast, skills, queryKey, drag, isActi
               onSubmitEditing={handleUpdateSkill}
             />
           </HalfModal>
-        </View>
+        </Animated.View>
       </ShadowDecorator>
     </ScaleDecorator>
   );

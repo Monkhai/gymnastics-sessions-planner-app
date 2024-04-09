@@ -15,54 +15,49 @@ export default () => {
       return await createSkill({ lastOrder, station_id });
     },
 
-    // onMutate: ({ lastOrder, queryKey, station_id }) => {
-    //   const prevSkills: SkillType[] = queryClient.getQueryData(queryKey) ?? [];
+    onMutate: ({ lastOrder, queryKey, station_id }) => {
+      const prevSkills: SkillType[] = queryClient.getQueryData(queryKey) ?? [];
 
-    //   const tempId = Math.random() * 10000;
+      const tempId = Math.random() * 10000;
 
-    //   const newSkill: SkillType = {
-    //     id: tempId,
-    //     description: '',
-    //     name: '',
-    //     order: lastOrder + 1,
-    //     repetitions: null,
-    //     show_reps: true,
-    //     skillOfStationId: tempId,
-    //     station_id,
-    //   };
+      const newSkill: SkillType = {
+        id: tempId,
+        description: '',
+        name: '',
+        order: lastOrder + 1,
+        repetitions: null,
+        show_reps: true,
+        skillOfStationId: tempId,
+        station_id,
+      };
 
-    //   const newSkills = [...prevSkills, newSkill].sort((a, b) => a.order - b.order);
+      const newSkills = [...prevSkills, newSkill].sort((a, b) => a.order - b.order);
 
-    //   queryClient.setQueryData(queryKey, newSkills);
+      queryClient.setQueryData(queryKey, newSkills);
 
-    //   return {
-    //     rollback: () => queryClient.setQueryData(queryKey, prevSkills),
-    //     idToReplace: tempId,
-    //     queryKey,
-    //   };
-    // },
+      return {
+        rollback: () => queryClient.setQueryData(queryKey, prevSkills),
+        idToReplace: tempId,
+      };
+    },
 
-    // onSuccess: (data, _, { idToReplace, queryKey }) => {
-    //   const prevSkills: SkillType[] = queryClient.getQueryData(queryKey) ?? [];
-
-    //   const newSkills = prevSkills.map((skill) => {
-    //     if (skill.id === idToReplace) return data;
-    //     return skill;
-    //   });
-
-    //   queryClient.setQueryData(queryKey, newSkills);
-    // },
-    onSuccess: (data, { queryKey }, _) => {
+    onSuccess: (data, { queryKey }, { idToReplace }) => {
       const prevSKills: SkillType[] = queryClient.getQueryData(queryKey) ?? [];
 
-      const newSkills = [...prevSKills, data].sort((a, b) => a.order - b.order);
+      const newSkills = prevSKills.map((skill) => {
+        if (skill.id === idToReplace) {
+          return data;
+        }
+
+        return skill;
+      });
 
       queryClient.setQueryData(queryKey, newSkills);
     },
     onError: (error, _, context) => {
       console.error(error);
 
-      // if (context) context.rollback();
+      if (context) context.rollback();
     },
   });
 };
