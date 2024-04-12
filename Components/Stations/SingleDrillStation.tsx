@@ -94,7 +94,7 @@ const SingleDrillStation = forwardRef<DrillStationRef, Props>(({ drag, drill, is
 
       <MediaComponent
         isMediaLoading={isMediaLoading}
-        // isRefetching={isMediaRefetching}
+        isMediaRefetching={isMediaRefetching}
         drill_id={drill.id}
         media={media}
         mediaQueryKey={mediaQueryKey}

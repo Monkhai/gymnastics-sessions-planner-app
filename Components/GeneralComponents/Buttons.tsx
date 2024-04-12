@@ -96,7 +96,17 @@ export const TextButton = ({ label, onPress, style, danger, ...props }: ButtonPr
 
   return (
     <AnimatedPressable style={[animatedStyle, style]} onPressIn={handlePressIn} {...props} onPressOut={handlePressOut} onPress={onPress}>
-      <BodyText style={{ color: danger ? Colors[colorScheme ?? 'light'].red : Colors[colorScheme ?? 'light'].blue }}>{label}</BodyText>
+      <BodyText
+        style={{
+          color: props.disabled
+            ? Colors[colorScheme ?? 'light'].labels.secondary
+            : danger
+              ? Colors[colorScheme ?? 'light'].red
+              : Colors[colorScheme ?? 'light'].blue,
+        }}
+      >
+        {label}
+      </BodyText>
     </AnimatedPressable>
   );
 };

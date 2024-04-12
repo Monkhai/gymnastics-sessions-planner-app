@@ -29,11 +29,12 @@ const alertButtonsArray: AlertButton[] = [
 interface Props {
   media: MediaObject[] | undefined;
   isMediaLoading: boolean;
+  isMediaRefetching: boolean;
   drill_id: number;
   mediaQueryKey: string[];
 }
 
-const MediaComponent = ({ media, drill_id, mediaQueryKey, isMediaLoading }: Props) => {
+const MediaComponent = ({ media, drill_id, mediaQueryKey, isMediaLoading, isMediaRefetching }: Props) => {
   const colorScheme = useColorScheme();
 
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
@@ -66,7 +67,12 @@ const MediaComponent = ({ media, drill_id, mediaQueryKey, isMediaLoading }: Prop
 
   return (
     <View style={styles.outerContainer}>
-      <TextButton disabled={isMediaLoading} label="Add Media" onPress={pickImage} style={styles.textButton} />
+      <TextButton
+        disabled={isMediaLoading || isMediaRefetching || (media && media.length > 1)}
+        label="Add Media"
+        onPress={pickImage}
+        style={styles.textButton}
+      />
       <View style={[styles.innerContainer, { backgroundColor: Colors[colorScheme ?? 'light'].bg.elevated }]}>
         {isMediaLoading ? (
           <Loader />
