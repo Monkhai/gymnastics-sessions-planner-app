@@ -1,9 +1,11 @@
 import React from 'react';
-import { KeyboardType, StyleSheet, View } from 'react-native';
+import { KeyboardType, StyleSheet, TextInput, View, useColorScheme } from 'react-native';
 
 import { CalloutText } from '../GeneralComponents/Texts';
 import { BSTextInput, ModalTextInput } from '../GeneralComponents/TextInput';
 import { TextButton } from '../GeneralComponents/Buttons';
+import Colors from '@/Constants/Colors';
+import { borderRadius } from '@/Constants/Randoms';
 
 interface BSProps {
   value: string | undefined;
@@ -38,4 +40,50 @@ export const LabeledModalTextInput = ({ value, onChangeText, label, onSubmitEdit
     </View>
   );
 };
-const styles = StyleSheet.create({});
+
+//------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------------
+
+interface LabeledTextInputProps {
+  value: string | undefined;
+  onChangeText: (text: string) => void;
+  label: string;
+  placeholder: string;
+  keyboardType?: KeyboardType;
+  secureTextEntry?: boolean;
+  onSubmitEditing?: () => void;
+}
+
+export const LabeledTextInput = ({
+  value,
+  onChangeText,
+  label,
+  placeholder,
+  keyboardType,
+  secureTextEntry,
+  onSubmitEditing,
+}: LabeledTextInputProps) => {
+  const colorScheme = useColorScheme();
+  return (
+    <View style={{ flexDirection: 'column', gap: 4, width: '90%', justifyContent: 'center', alignItems: 'flex-start' }}>
+      <CalloutText style={{ marginLeft: 8 }}>{label}</CalloutText>
+      <TextInput
+        onSubmitEditing={onSubmitEditing}
+        style={{
+          fontSize: 17,
+          color: Colors[colorScheme ?? 'light'].labels.primary,
+          width: '100%',
+          borderRadius: borderRadius,
+          padding: 8,
+          backgroundColor: Colors[colorScheme ?? 'light'].fills.textInput,
+        }}
+        placeholderTextColor={Colors[colorScheme ?? 'light'].labels.secondary}
+        keyboardType={keyboardType}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        secureTextEntry={secureTextEntry}
+      />
+    </View>
+  );
+};

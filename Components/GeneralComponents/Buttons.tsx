@@ -9,6 +9,7 @@ import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 export const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface ButtonProps extends PressableProps {
+  secondary?: boolean;
   wide?: boolean;
   label: string;
   onPress: () => void;
@@ -42,11 +43,25 @@ export const ContainerButton = ({ onPress, children, style }: PressableProps) =>
   );
 };
 
-export const RectButton = ({ label, wide, onPress, style }: ButtonProps) => {
+export const RectButton = ({ label, wide, onPress, style, secondary }: ButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => {
+    if (secondary) {
+      return {
+        opacity: opacity.value,
+        padding: 16,
+        borderRadius,
+        backgroundColor: 'transperant',
+        borderColor: Colors[colorScheme ?? 'light'].blue,
+        borderWidth: 2,
+        width: wide ? '80%' : undefined,
+        justifyContent: 'center',
+        alignItems: 'center',
+      };
+    }
+
     return {
       opacity: opacity.value,
       padding: 16,
@@ -68,7 +83,7 @@ export const RectButton = ({ label, wide, onPress, style }: ButtonProps) => {
 
   return (
     <AnimatedPressable onPressIn={handlePressIn} onPressOut={handlePressOut} style={[animatedStyle, style]} onPress={onPress}>
-      <EmphasizedBodyText style={{ color: 'white' }}>{label}</EmphasizedBodyText>
+      <EmphasizedBodyText style={{ color: secondary ? Colors[colorScheme ?? 'light'].blue : 'white' }}>{label}</EmphasizedBodyText>
     </AnimatedPressable>
   );
 };

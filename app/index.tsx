@@ -1,14 +1,34 @@
+import { RectButton } from '@/Components/GeneralComponents/Buttons';
+import { EmphasizedTitleText } from '@/Components/GeneralComponents/Texts';
+import { LabeledTextInput } from '@/Components/Lists/LabeledTextInput';
+import Colors from '@/Constants/Colors';
+import logo from '@/assets/logo/logo.png';
+import logoDark from '@/assets/logo/logo_dark.png';
 import { supabase } from '@/config/initSupabase';
+import { FasterImageView } from '@candlefinance/faster-image';
 import React from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, useColorScheme } from 'react-native';
+import { Image, StyleSheet, View, useColorScheme } from 'react-native';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
+
+const LOGO = Image.resolveAssetSource(logo).uri;
+const LOGO_DARK = Image.resolveAssetSource(logoDark).uri;
 
 const Login = () => {
-  const theme = useColorScheme();
+  GoogleSignin.configure({
+    scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+    //  webClientId: '<FROM DEVELOPER CONSOLE>',
+  });
+  const colorScheme = useColorScheme();
 
-  const [email, setEmail] = React.useState('yohaiwiener@gmail.com');
-  const [password, setPassword] = React.useState('12345678');
+  const [email, setEmail] = React.useState<string | undefined>();
+  const [password, setPassword] = React.useState<string | undefined>();
 
   const handleSignIn = async () => {
+    if (!email || !password) {
+      alert('Please enter email and password');
+      return;
+    }
+
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
@@ -17,6 +37,11 @@ const Login = () => {
   };
 
   const handleSingUp = async () => {
+    if (!email || !password) {
+      alert('Please enter email and password');
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({ email, password });
 
     if (error) {
@@ -25,26 +50,40 @@ const Login = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 24 }}>Login</Text>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 32,
+        backgroundColor: Colors[colorScheme ?? 'light'].bg.elevated,
+      }}
+    >
+      <View style={{ gap: 8, justifyContent: 'center', alignItems: 'center' }}>
+        <FasterImageView
+          source={{ url: colorScheme === 'dark' ? LOGO_DARK : LOGO, resizeMode: 'contain' }}
+          style={{ width: 180, height: 36 }}
+        />
+        <EmphasizedTitleText>Gymnastics Session Planner</EmphasizedTitleText>
+      </View>
 
-      <TextInput style={[{ color: 'black' }, styles.textInput]} onChangeText={setEmail} value={email} placeholder="Email" />
+      <View style={{ gap: 16, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+        <LabeledTextInput label="Email" value={email} onChangeText={setEmail} placeholder="Email" keyboardType="default" />
+        <LabeledTextInput
+          label="Password"
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Password"
+          keyboardType="default"
+          secureTextEntry
+        />
+      </View>
 
-      <TextInput
-        style={[{ color: 'black' }, styles.textInput]}
-        onChangeText={setPassword}
-        value={password}
-        placeholder="Password"
-        secureTextEntry
-      />
+      <View style={{ gap: 16, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+        <RectButton label="Login" wide onPress={handleSignIn} />
 
-      <TouchableOpacity onPress={handleSignIn} style={styles.loginButton}>
-        <Text style={{ color: 'white', fontSize: 17 }}>Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={handleSingUp} style={styles.signUpButton}>
-        <Text style={{ color: theme === 'dark' ? 'white' : 'black', fontSize: 17 }}>Create Account</Text>
-      </TouchableOpacity>
+        <RectButton secondary label="Create Acount" onPress={handleSingUp} wide />
+      </View>
     </View>
   );
 };
