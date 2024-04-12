@@ -7,22 +7,13 @@ import { queryKeyFactory } from '@/utils/queryFactories';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { RefreshControl, StyleSheet, Text, View, useColorScheme } from 'react-native';
-import DraggableFlatList, { NestableDraggableFlatList, NestableScrollContainer } from 'react-native-draggable-flatlist';
-import { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
+import { NestableDraggableFlatList, NestableScrollContainer } from 'react-native-draggable-flatlist';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 import { RectButton } from '../GeneralComponents/Buttons';
 import Loader from '../GeneralComponents/Loader';
 import DrillStationHandler from '../Stations/DrillStationHandler';
 import SkillStation from '../Stations/SkillStation';
-import { FlatList } from 'react-native-gesture-handler';
-
-export const ScrollEnabledContext = React.createContext<{
-  scrollEnabled: boolean;
-  setScrollEnabled: (value: boolean) => void;
-}>({
-  scrollEnabled: true,
-  setScrollEnabled: () => {},
-});
+import { DrillStationRef } from '../Stations/SingleDrillStation';
 
 const SessionScreen = () => {
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
@@ -49,6 +40,9 @@ const SessionScreen = () => {
       setMutableStations(stations);
     }
   }, [stations]);
+
+  const drillStationRef = useRef<DrillStationRef>(null);
+
   if (error) {
     return <Text>Error loading stations</Text>;
   }
@@ -63,6 +57,7 @@ const SessionScreen = () => {
 
   const handleRefresh = () => {
     refetch();
+    drillStationRef.current?.refreshMedia();
     setRefetchTrigger(true);
   };
 
@@ -103,7 +98,17 @@ const SessionScreen = () => {
                 />
               );
             } else {
-              return <DrillStationHandler key={station.id} station={station} drag={drag} isActive={isActive} />;
+              return (
+                <DrillStationHandler
+                  drillStationRef={drillStationRef}
+                  refetchTrigger={refetchTrigger}
+                  setRefetchTrigger={setRefetchTrigger}
+                  key={station.id}
+                  station={station}
+                  drag={drag}
+                  isActive={isActive}
+                />
+              );
             }
           }}
         />

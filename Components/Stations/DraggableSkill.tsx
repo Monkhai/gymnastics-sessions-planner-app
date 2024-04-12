@@ -1,24 +1,21 @@
-import * as Haptics from 'expo-haptics';
 import Colors from '@/Constants/Colors';
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 import { borderRadius } from '@/Constants/Randoms';
-import { PositionsContext } from '@/context/PositionsContext';
-import useUpdateItemOrder from '@/features/items/useUpdateItemOrder';
 import { SkillType } from '@/features/skills/types';
 import useDeleteSkill from '@/features/skills/useDeleteSkill';
 import useUpdateSkill from '@/features/skills/useUpdateSkill';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import React, { useContext, useRef } from 'react';
+import * as Haptics from 'expo-haptics';
+import React, { useRef } from 'react';
 import { Animated as RNA, StyleSheet, TextInput, View, useColorScheme } from 'react-native';
+import { ScaleDecorator, ShadowDecorator } from 'react-native-draggable-flatlist';
 import { Swipeable } from 'react-native-gesture-handler';
-import Animated, { LinearTransition, SharedValue, SlideOutLeft, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { LinearTransition, SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { GenericButton, IconButton, SkillIconButton } from '../GeneralComponents/Buttons';
 import HalfModal from '../GeneralComponents/HalfModal';
 import ModalHeader from '../GeneralComponents/ModalHeader';
 import ToggleRow from '../GeneralComponents/ToggleRow';
-import { ScaleDecorator, ShadowDecorator } from 'react-native-draggable-flatlist';
-import { ScrollEnabledContext } from '../Session/SessionScreen';
 
 const AnimatedSwipeable = Animated.createAnimatedComponent(Swipeable);
 
@@ -28,8 +25,6 @@ interface SwipeableButtonProps {
 }
 
 const DeleteButton = ({ width, onPress }: SwipeableButtonProps) => {
-  const { setScrollEnabled } = useContext(ScrollEnabledContext);
-
   const colorScheme = useColorScheme();
   const style = useAnimatedStyle(() => {
     return {

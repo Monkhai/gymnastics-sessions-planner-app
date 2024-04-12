@@ -27,9 +27,10 @@ interface Props {
   onDelete: () => void;
   drag: () => void;
   isActive: boolean;
+  onCreateDrill: () => void;
 }
 
-const CircuitStationHeader = ({ station, onDelete, drag, isActive }: Props) => {
+const CircuitStationHeader = ({ station, onDelete, drag, isActive, onCreateDrill }: Props) => {
   const colorScheme = useColorScheme();
 
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
@@ -121,7 +122,7 @@ const CircuitStationHeader = ({ station, onDelete, drag, isActive }: Props) => {
         </StationIconButton>
         <StationTitleButton style={stationTitleButtonStyle} value={title} onPress={toggleSettingsModal} />
 
-        <TextButton style={{ marginRight: 16 }} label="Add Drill" onPress={() => {}} />
+        <TextButton style={{ marginRight: 16 }} label="Add Drill" onPress={onCreateDrill} />
 
         <StationIconButton style={stationIconButtonStyle} onPress={toggleSettingsModal}>
           <Ionicons name="ellipsis-horizontal-circle" size={32} color={'gray'} />

@@ -36,7 +36,7 @@ const createDrillOfDrillStation = async (user_id: string, drill_id: number, last
         user_id: user_id,
         drill_id: drill_id,
         drill_station_id: station_id,
-        order: lastOrder,
+        order: lastOrder + 1,
       },
     ])
     .select();

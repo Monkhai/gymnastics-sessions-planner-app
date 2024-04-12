@@ -1,45 +1,70 @@
-import {
-  Keyboard,
-  NativeSyntheticEvent,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  TextInputChangeEventData,
-  View,
-  useColorScheme,
-} from 'react-native';
-import React, { useRef, useState } from 'react';
-import DrillStationHeader from './DrillStationHeader';
-import { DrillType } from '@/features/drills/types';
-import { stationContainerStyle } from './styles';
+import * as ContextMenu from 'zeego/context-menu';
+
+import { FasterImageView } from '@candlefinance/faster-image';
 import Colors from '@/Constants/Colors';
 import { borderRadius } from '@/Constants/Randoms';
-import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
+import { DrillType } from '@/features/drills/types';
+import useCreateDrill from '@/features/drills/useCreateDrill';
+import useGetDrillMedia from '@/features/drills/useGetDrillMedia';
 import useUpdateDrill from '@/features/drills/useUpdateDrill';
 import { queryKeyFactory } from '@/utils/queryFactories';
-import { useLocalSearchParams } from 'expo-router';
-import useDeleteDrill from '@/features/drills/useDeleteDrill';
+import { Link, router, useLocalSearchParams } from 'expo-router';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import { Alert, Image, Keyboard, Linking, Pressable, StyleSheet, View, useColorScheme } from 'react-native';
+import { TextButton } from '../GeneralComponents/Buttons';
+import DrillStationHeader from './DrillStationHeader';
+import { SingleDrillTextField } from './DrillTextField';
+import { stationContainerStyle } from './styles';
+import * as ImagePicker from 'expo-image-picker';
+import { MediaPermissionType } from './MediaHelpers';
+import Animated from 'react-native-reanimated';
+import MediaComponent from './MediaComponent';
 
 interface Props {
   drill: DrillType;
   drag: () => void;
   isActive: boolean;
+  onDeleteStation: () => void;
 }
 
-const SingleDrillStation = ({ drag, drill, isActive }: Props) => {
+export type DrillStationRef = {
+  refreshMedia: () => void;
+};
+
+const SingleDrillStation = forwardRef<DrillStationRef, Props>(({ drag, drill, isActive, onDeleteStation }, ref) => {
+  useImperativeHandle(ref, () => ({
+    refreshMedia: () => {
+      refetch();
+    },
+  }));
+  const colorScheme = useColorScheme();
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
   const queryKey = queryKeyFactory.drills({ station_id: String(drill.station_id), session_id });
+  const mediaQueryKey = queryKeyFactory.drillMedia({ drill_id: drill.id, session_id });
 
+  const { mutate: createDrill } = useCreateDrill();
   const { mutate: updateDrill } = useUpdateDrill();
-  const { mutate: deleteDrill } = useDeleteDrill();
+  const {
+    data: media,
+    error: mediaError,
+    isLoading: isMediaLoading,
+    isRefetching: isMediaRefetching,
+    refetch,
+  } = useGetDrillMedia({ queryKey: mediaQueryKey, drill_id: drill.id });
 
   const [description, setDescription] = useState(drill.description);
   const [comments, setComments] = useState(drill.comments);
 
+  const handleCreateDrill = () => {
+    createDrill({
+      lastOrder: drill.order,
+      queryKey,
+      station_id: drill.station_id,
+    });
+  };
+
   const handleSubmit = () => {
     if (description !== drill.description || comments !== drill.comments) {
-      console.log('update');
       updateDrill({
         drill_id: drill.id,
         description,
@@ -55,63 +80,27 @@ const SingleDrillStation = ({ drag, drill, isActive }: Props) => {
     }
   };
 
-  const handleDelete = () => {
-    deleteDrill({ queryKey, drill_id: drill.id });
-  };
-
-  const colorScheme = useColorScheme();
   return (
     <Pressable
       onPress={() => Keyboard.dismiss()}
       style={[stationContainerStyle, { borderColor: Colors[colorScheme ?? 'light'].separetor }]}
     >
-      <DrillStationHeader drag={drag} drill={drill} isActive={isActive} onDelete={handleDelete} />
+      <DrillStationHeader drag={drag} drill={drill} isActive={isActive} onDelete={onDeleteStation} onCreateDrill={handleCreateDrill} />
 
-      <View style={[styles.textFieldContainer, { backgroundColor: Colors[colorScheme ?? 'dark'].bg.elevated }]}>
-        <TextInput
-          multiline
-          value={description}
-          onChangeText={setDescription}
-          placeholder="Description"
-          style={[styles.textInput, { color: Colors[colorScheme ?? 'light'].labels.primary }]}
-          onBlur={handleSubmit}
-          onSubmitEditing={handleSubmit}
-          textAlignVertical="top"
-          placeholderTextColor={Colors[colorScheme ?? 'light'].labels.secondary}
-        />
-      </View>
+      <SingleDrillTextField placeholder="Description" onSubmit={handleSubmit} value={description} setValue={setDescription} />
       {drill.show_comments && (
-        <View style={[styles.textFieldContainer, { backgroundColor: Colors[colorScheme ?? 'dark'].bg.elevated }]}>
-          <TextInput
-            multiline
-            value={comments}
-            onChangeText={setComments}
-            placeholder="Comments"
-            style={[styles.textInput, { color: Colors[colorScheme ?? 'light'].labels.primary }]}
-            onBlur={handleSubmit}
-            onSubmitEditing={handleSubmit}
-            textAlignVertical="top"
-            placeholderTextColor={Colors[colorScheme ?? 'light'].labels.secondary}
-          />
-        </View>
+        <SingleDrillTextField placeholder="Comments" onSubmit={handleSubmit} setValue={setComments} value={comments} />
       )}
+
+      <MediaComponent
+        isMediaLoading={isMediaLoading}
+        // isRefetching={isMediaRefetching}
+        drill_id={drill.id}
+        media={media}
+        mediaQueryKey={mediaQueryKey}
+      />
     </Pressable>
   );
-};
+});
 
 export default SingleDrillStation;
-
-const styles = StyleSheet.create({
-  textFieldContainer: {
-    marginTop: 16,
-    borderRadius: borderRadius,
-    padding: 16,
-    width: '90%',
-    alignSelf: 'center',
-    justifyContent: 'center',
-  },
-  textInput: {
-    fontSize: 17,
-    lineHeight: 17,
-  },
-});

@@ -1,23 +1,19 @@
+import Colors from '@/Constants/Colors';
+import { queryClient } from '@/Providers/ReactQueryProvider';
+import useUpdateItemOrder from '@/features/items/useUpdateItemOrder';
+import { SkillType } from '@/features/skills/types';
+import useCreateSkill from '@/features/skills/useCreateSkill';
 import useGetSkills from '@/features/skills/useGetSkills';
 import { StationType } from '@/features/stations/types';
 import useDeleteStation from '@/features/stations/useDeleteStation';
 import { queryKeyFactory } from '@/utils/queryFactories';
 import { useLocalSearchParams } from 'expo-router';
-import React, { Dispatch, RefObject, SetStateAction, useEffect, useState } from 'react';
-import { RefreshControl, Text, View, useColorScheme } from 'react-native';
-import DraggableFlatList, { NestableDraggableFlatList, NestableScrollContainer, ScaleDecorator } from 'react-native-draggable-flatlist';
-import SkillList from './SkillList';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Text, View, useColorScheme } from 'react-native';
+import { NestableDraggableFlatList, ScaleDecorator } from 'react-native-draggable-flatlist';
+import DraggableSkill from './DraggableSkill';
 import SkillStationHeader from './SkillStationHeader';
 import { stationContainerStyle } from './styles';
-import Colors from '@/Constants/Colors';
-import useCreateSkill from '@/features/skills/useCreateSkill';
-import DraggableSkill from './DraggableSkill';
-import { FlatList, Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { SharedValue, scrollTo } from 'react-native-reanimated';
-import { IconConfigKeys } from 'react-native-ios-context-menu';
-import { SkillType } from '@/features/skills/types';
-import useUpdateItemOrder from '@/features/items/useUpdateItemOrder';
-import { queryClient } from '@/Providers/ReactQueryProvider';
 
 interface Props {
   station: StationType;
@@ -90,7 +86,6 @@ const SkillStation = ({ station, drag, isActive, refetchTrigger, setRefetchTrigg
 
         {/* {isLoading ? null : <SkillList queryKey={skillsQueryKey} skills={skills} areItemsLoading={isLoading} error={error} />} */}
         <NestableDraggableFlatList
-          refreshControl={<RefreshControl refreshing={isLoading} onRefresh={() => console.log('first')} />}
           onDragEnd={({ data }) => handleReorder(data)}
           containerStyle={{ marginTop: 16 }}
           style={{ overflow: 'visible' }}

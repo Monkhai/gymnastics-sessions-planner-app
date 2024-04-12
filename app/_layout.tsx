@@ -7,11 +7,10 @@ import { ThemeProvider } from '@react-navigation/native';
 import 'expo-dev-client';
 import * as Font from 'expo-font';
 import { Slot, SplashScreen, useRouter, useSegments } from 'expo-router';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import { useEffect } from 'react';
-import { Platform, StatusBar, useColorScheme } from 'react-native';
+import { I18nManager, useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { I18nManager } from 'react-native';
-import Colors, { darkNavBarBG } from '@/Constants/Colors';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,7 +19,6 @@ I18nManager.forceRTL(false);
 I18nManager.allowRTL(false);
 
 const InitialRoot = () => {
-  const colorScheme = useColorScheme();
   const { session, initialized } = useAuth();
   const segments = useSegments();
   const router = useRouter();
@@ -37,7 +35,8 @@ const InitialRoot = () => {
 
   useEffect(() => {
     if (!initialized) return;
-    const inAuthGroup = segments[0] === '(auth)';
+
+    const inAuthGroup = segments[0] === '(groups)';
 
     if (session && !inAuthGroup) {
       router.replace('/(groups)/');
@@ -45,13 +44,6 @@ const InitialRoot = () => {
       router.replace('/');
     }
   }, [session, initialized]);
-
-  // useEffect(() => {
-  //   if (Platform.OS === 'android') {
-  //     StatusBar.setBackgroundColor(colorScheme === 'dark' ? darkNavBarBG : Colors.light.bg.elevated);
-  //     StatusBar.setBarStyle('light-content');
-  //   }
-  // }, []);
 
   return (
     <ReactQueryProvider>

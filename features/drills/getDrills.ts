@@ -1,6 +1,7 @@
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { DrillFromDBType, DrillOfDrillStation, DrillType } from './types';
 import { supabase } from '@/config/initSupabase';
+import useUserId from '../auth/useUserId';
 
 type Args = {
   station_id: number;
@@ -8,11 +9,12 @@ type Args = {
 
 export default async ({ station_id }: Args) => {
   try {
+    const user_id = useUserId();
     const { data: drillsOfDrillStation, error }: PostgrestSingleResponse<DrillOfDrillStation[]> = await supabase
       .from('drills_of_drill_stations')
-      .select('*')
-      .eq('drill_station_id', station_id);
-
+      .select()
+      .eq('drill_station_id', station_id)
+      .eq('user_id', user_id);
     if (error) throw error;
     if (!drillsOfDrillStation) throw new Error('no drillsOfDrillStation from getDrills');
 
@@ -21,7 +23,8 @@ export default async ({ station_id }: Args) => {
     const { data: drillsFromDB, error: drillsError }: PostgrestSingleResponse<DrillFromDBType[]> = await supabase
       .from('drills')
       .select()
-      .in('id', ids);
+      .in('id', ids)
+      .eq('user_id', user_id);
 
     if (drillsError) throw drillsError;
     if (!drillsFromDB) throw new Error('no drills from getDrills');

@@ -4,8 +4,9 @@ import { Stack } from 'expo-router';
 
 const _layout = () => {
   return (
-    <Stack>
+    <Stack screenOptions={{ orientation: 'portrait_up' }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="ImageModal" options={{ headerShown: false, presentation: 'transparentModal', animation: 'fade' }} />
     </Stack>
   );
 };

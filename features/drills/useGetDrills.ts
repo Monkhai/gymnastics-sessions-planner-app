@@ -11,8 +11,8 @@ const useGetDrills = ({ queryKey, station_id }: Args) => {
   return useQuery({
     queryKey,
     queryFn: async () => await getDrills({ station_id }),
-    staleTime,
-    retry: 3,
+    // staleTime,
+    retry: 10,
   });
 };
 

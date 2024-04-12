@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.yohaiwiener.gymnastics-sessions-planner-app"
@@ -32,6 +30,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photoPremission": "The app access your media to let you describe your drills better."
+        }
+      ],
       "expo-router",
       "expo-secure-store"
     ],

@@ -1,9 +1,7 @@
 export type MediaDimensions = { height: number; width: number };
 
-export type SignedUrls = {
-  url: string;
-  type: string;
-  dimensions: MediaDimensions;
+export type MediaObject = {
+  uri: string;
   name: string;
 };
 

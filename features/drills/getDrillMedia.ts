@@ -1,7 +1,6 @@
 import { supabase } from '@/config/initSupabase';
 import useUserId from '../auth/useUserId';
-import { SignedUrls } from './types';
-import { getImageDimensions, getVideoDimensions } from './getMediaDimensions';
+import { MediaObject } from './types';
 
 const getAllMediaFromStation = async (station_id: number) => {
   const user_id = useUserId();
@@ -23,56 +22,58 @@ const getAllMediaFromStation = async (station_id: number) => {
 };
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
-export default async (station_id: number): Promise<SignedUrls[]> => {
+type Args = {
+  station_id: number;
+};
+export default async ({ station_id }: Args) => {
   try {
     const user_id = useUserId();
     const fileList = await getAllMediaFromStation(station_id);
 
-    const signedUrls: SignedUrls[] = await Promise.all(
+    const media: Array<MediaObject | null> = await Promise.all(
       fileList.map(async (file) => {
-        const { data: signedUrl, error } = await supabase.storage
+        if (file.name === '.emptyFolderPlaceholder') {
+          return null;
+        }
+
+        const { data, error } = await supabase.storage
           .from('user-media')
-          .createSignedUrl(`${user_id}/drills/${station_id}/${file.name}`, 120);
+          .createSignedUrl(`${user_id}/drills/${station_id}/${file.name}`, 600);
 
-        if (error) {
-          console.error(error, 'error getting signed url');
-          return {} as SignedUrls;
+        if (error || !data) {
+          console.error(error, 'error getting media');
+          return null;
         }
 
-        if (file.metadata.mimetype.split('/')[0] === 'image') {
-          try {
-            const dimensions = await getImageDimensions(signedUrl.signedUrl);
-            const fileType: string = file.metadata.mimetype.split('/')[0];
-            return {
-              url: signedUrl.signedUrl,
-              type: fileType,
-              dimensions: dimensions,
-              name: file.name,
-            };
-          } catch (error) {
-            console.error(error, 'error getting image dimensions');
-            return {} as SignedUrls;
-          }
-        } else {
-          try {
-            const dimenstions = await getVideoDimensions(signedUrl.signedUrl);
+        return { uri: data.signedUrl, name: file.name };
+        // return new Promise<string | null>(async (resolve, reject) => {
+        //   const { data, error } = await supabase.storage.from('user-media').download(`${user_id}/drills/${station_id}/${file.name}`);
 
-            const fileType: string = file.metadata.mimetype.split('/')[0];
-            return {
-              url: signedUrl.signedUrl,
-              type: fileType,
-              dimensions: dimenstions,
-              name: file.name,
-            };
-          } catch (error) {
-            console.error(error, 'error getting video dimensions');
-            return {} as SignedUrls;
-          }
-        }
+        //   if (error) {
+        //     console.error(error, 'error getting media');
+        //     resolve(null);
+        //     return;
+        //   }
+
+        //   if (file.name === '.emptyFolderPlaceholder') {
+        //     resolve(null);
+        //   }
+
+        //   const fr = new FileReader();
+        //   fr.readAsDataURL(data);
+        //   fr.onload = () => {
+        //     resolve(fr.result as string);
+        //   };
+        //   fr.onerror = (error) => {
+        //     console.error('Error reading file:', error);
+        //     resolve(null);
+        //   };
+        // });
       })
     );
-
-    return signedUrls.filter((url) => url !== undefined) as SignedUrls[];
+    // Filter out any null values
+    const uris = media.filter((item) => item !== null) as MediaObject[];
+    return uris;
   } catch (error) {
     throw error;
   }

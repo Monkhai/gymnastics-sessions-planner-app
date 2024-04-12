@@ -14,8 +14,7 @@ export default async ({ station_id }: Args) => {
     }: PostgrestSingleResponse<{ id: number; skill_id: number; order: number }[]> = await supabase
       .from('skills_of_skill_stations')
       .select('id, skill_id, order')
-      .eq('skill_station_id', station_id)
-      .order('order', { ascending: true });
+      .eq('skill_station_id', station_id);
 
     if (skillsOfStationError) throw skillsOfStationError;
     if (!skillsOfStation) throw new Error('No data returned from database');

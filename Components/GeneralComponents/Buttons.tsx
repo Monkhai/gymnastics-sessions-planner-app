@@ -73,7 +73,7 @@ export const RectButton = ({ label, wide, onPress, style }: ButtonProps) => {
   );
 };
 
-export const TextButton = ({ label, onPress, style, danger }: ButtonProps) => {
+export const TextButton = ({ label, onPress, style, danger, ...props }: ButtonProps) => {
   const colorScheme = useColorScheme();
   const opacity = useSharedValue(1);
 
@@ -95,7 +95,7 @@ export const TextButton = ({ label, onPress, style, danger }: ButtonProps) => {
   }, []);
 
   return (
-    <AnimatedPressable style={[animatedStyle, style]} onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress}>
+    <AnimatedPressable style={[animatedStyle, style]} onPressIn={handlePressIn} {...props} onPressOut={handlePressOut} onPress={onPress}>
       <BodyText style={{ color: danger ? Colors[colorScheme ?? 'light'].red : Colors[colorScheme ?? 'light'].blue }}>{label}</BodyText>
     </AnimatedPressable>
   );
