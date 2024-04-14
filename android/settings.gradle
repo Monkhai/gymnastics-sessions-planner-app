@@ -1,4 +1,4 @@
-rootProject.name = 'gymnastics-sessions-planner-app'
+rootProject.name = 'FlexiPlan'
 
 dependencyResolutionManagement {
   versionCatalogs {

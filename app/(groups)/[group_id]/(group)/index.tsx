@@ -1,6 +1,7 @@
 import { RectButton } from '@/Components/GeneralComponents/Buttons';
 import CreateListItemModal from '@/Components/Lists/CreateListItemModal';
 import List from '@/Components/Lists/List';
+import Colors from '@/Constants/Colors';
 import { GroupContext } from '@/context/GroupContext';
 import { ListContext } from '@/context/TableContext';
 import useCreateAthlete from '@/features/athletes/useCreateAthlete';
@@ -9,11 +10,13 @@ import useGetAthletes from '@/features/athletes/useGetAthletes';
 import { DeleteItemArgs, UpdateItemArgs } from '@/features/items/types';
 import useUpdateListItem from '@/features/items/useUpdateListItem';
 import { queryKeyFactory } from '@/utils/queryFactories';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router, useGlobalSearchParams } from 'expo-router';
 import React, { useContext, useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, useColorScheme } from 'react-native';
 
 const index = () => {
+  const colorScheme = useColorScheme();
   const { setGroup_id, setAthleteName } = useContext(GroupContext);
   const { group_id } = useGlobalSearchParams<{ group_id: string }>();
   const queryKey = queryKeyFactory.athletes({ group_id: group_id });
@@ -63,6 +66,7 @@ const index = () => {
         secondaryTable: 'athletes_of_groups',
       }}
     >
+      <LinearGradient style={{ ...StyleSheet.absoluteFillObject }} colors={Colors[colorScheme ?? 'light'].bg.gradient} />
       <View style={styles.container}>
         <List
           items={athletes}

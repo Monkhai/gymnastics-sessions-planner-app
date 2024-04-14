@@ -1,7 +1,7 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { RectButton } from '@/Components/GeneralComponents/Buttons';
 import CreateListItemModal from '@/Components/Lists/CreateListItemModal';
 import List from '@/Components/Lists/List';
-import SessionScreen from '@/Components/Session/SessionScreen';
 import { GroupContext } from '@/context/GroupContext';
 import { ListContext } from '@/context/TableContext';
 import useCreateGroup from '@/features/groups/useCreateGroup';
@@ -12,10 +12,12 @@ import useUpdateListItem from '@/features/items/useUpdateListItem';
 import { queryKeyFactory } from '@/utils/queryFactories';
 import { router } from 'expo-router';
 import React, { useContext, useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
-import { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
+import { Platform, StyleSheet, View, useColorScheme } from 'react-native';
+import { useAnimatedStyle } from 'react-native-reanimated';
+import Colors from '@/Constants/Colors';
 
 const index = () => {
+  const colorScheme = useColorScheme();
   const queryKey = queryKeyFactory.groups();
   const { data: groups, isLoading, error, refetch } = useGetItems({ table: 'groups', queryKey });
   const { mutate: createGroup } = useCreateGroup();
@@ -55,6 +57,7 @@ const index = () => {
 
   return (
     <ListContext.Provider value={{ table: 'groups', queryKey, updateItem, deleteItem }}>
+      <LinearGradient style={{ ...StyleSheet.absoluteFillObject }} colors={Colors[colorScheme ?? 'light'].bg.gradient} />
       <View style={styles.container}>
         <List
           refetchItems={refetch}

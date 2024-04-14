@@ -75,7 +75,8 @@ export const LabeledTextInput = ({
           width: '100%',
           borderRadius: borderRadius,
           padding: 8,
-          backgroundColor: Colors[colorScheme ?? 'light'].fills.textInput,
+          backgroundColor: Colors[colorScheme ?? 'light'].fills.specialTextInput,
+          // backgroundColor: 'white',
         }}
         placeholderTextColor={Colors[colorScheme ?? 'light'].labels.secondary}
         keyboardType={keyboardType}

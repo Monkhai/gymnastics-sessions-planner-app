@@ -1,6 +1,7 @@
 import { RectButton } from '@/Components/GeneralComponents/Buttons';
 import CreateListItemModal from '@/Components/Lists/CreateListItemModal';
 import List from '@/Components/Lists/List';
+import Colors from '@/Constants/Colors';
 import { GroupContext } from '@/context/GroupContext';
 import { ListContext } from '@/context/TableContext';
 import { DeleteItemArgs, UpdateItemArgs } from '@/features/items/types';
@@ -9,11 +10,13 @@ import useCreateSession from '@/features/sessions/useCreateSession';
 import useDeleteSession from '@/features/sessions/useDeleteSession';
 import useGetSessions from '@/features/sessions/useGetSessions';
 import { queryKeyFactory } from '@/utils/queryFactories';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router, useGlobalSearchParams } from 'expo-router';
 import React, { useContext, useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, useColorScheme } from 'react-native';
 
 const GroupSessions = () => {
+  const colorScheme = useColorScheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { setGroup_id, setSessionName } = useContext(GroupContext);
   const { group_id } = useGlobalSearchParams<{ group_id: string }>();
@@ -63,6 +66,7 @@ const GroupSessions = () => {
         updateItem: handleUpdateSession,
       }}
     >
+      <LinearGradient style={{ ...StyleSheet.absoluteFillObject }} colors={Colors[colorScheme ?? 'light'].bg.gradient} />
       <View style={styles.container}>
         <List
           items={groupSessions}

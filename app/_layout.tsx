@@ -17,13 +17,14 @@ SplashScreen.preventAutoHideAsync();
 //cancel RTL layouts. Force LTR
 I18nManager.forceRTL(false);
 I18nManager.allowRTL(false);
+I18nManager.isRTL = false;
 
 const InitialRoot = () => {
   const { session, initialized } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-  //load icons and fonts before rendering
-  const [loaded, error] = Font.useFonts({
+
+  const [loaded] = Font.useFonts({
     ...Ionicons.font,
   });
 
@@ -35,7 +36,6 @@ const InitialRoot = () => {
 
   useEffect(() => {
     if (!initialized) return;
-
     const inAuthGroup = segments[0] === '(groups)';
 
     if (session && !inAuthGroup) {
@@ -43,7 +43,7 @@ const InitialRoot = () => {
     } else if (!session && inAuthGroup) {
       router.replace('/');
     }
-  }, [session, initialized]);
+  }, [session, initialized, segments]);
 
   return (
     <ReactQueryProvider>

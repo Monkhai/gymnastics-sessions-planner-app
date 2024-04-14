@@ -14,13 +14,16 @@ export default {
     bg: {
       base: '#F2F2F7',
       elevated: '#fff',
+      gradient: ['#F1F3F5', '#D2DFE2'],
     },
     fills: {
+      specialTextInput: 'rgba(255, 255, 255, 0.5)',
       textInput: 'rgba(118, 118, 128, 0.12)',
       settingsGray: '#AEAEB2',
       backdrop: 'rgba(123, 123,123,0.2)',
     },
   },
+
   dark: {
     blue: '#0A84FF',
     red: '#FF453A',
@@ -33,8 +36,10 @@ export default {
     bg: {
       base: '#000',
       elevated: '#1C1C1E',
+      gradient: ['#000', '#2C3E50'],
     },
     fills: {
+      specialTextInput: 'rgba(118, 118, 128, 0.24)',
       textInput: 'rgba(118, 118, 128, 0.24)',
       settingsGray: '#636366',
       backdrop: 'rgba(0, 0,0,0.6)',

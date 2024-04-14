@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "gymnastics-sessions-planner-app",
+    "name": "FlexiPlan",
     "slug": "gymnastics-sessions-planner-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,13 +14,45 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "splash": {
+        "image": "./assets/images/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "image": "./assets/images/splash_dark.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#000000"
+        }
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.yohaiwiener.gymnastics-sessions-planner-app"
     },
     "android": {
+      "splash": {
+        "image": "./assets/images/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "ldpi": "./assets/images/splash.png",
+        "mdpi": "./assets/images/splash.png",
+        "hdpi": "./assets/images/splash.png",
+        "xhdpi": "./assets/images/splash.png",
+        "xxhdpi": "./assets/images/splash.png",
+        "xxxhdpi": "./assets/images/splash.png",
+        "dark": {
+          "image": "./assets/images/splash_dark.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#000000",
+          "ldpi": "./assets/images/splash_dark.png",
+          "mdpi": "./assets/images/splash_dark.png",
+          "hdpi": "./assets/images/splash_dark.png",
+          "xhdpi": "./assets/images/splash_dark.png",
+          "xxhdpi": "./assets/images/splash_dark.png",
+          "xxxhdpi": "./assets/images/splash_dark.png"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.yohaiwiener.gymnasticssessionsplannerapp"
     },

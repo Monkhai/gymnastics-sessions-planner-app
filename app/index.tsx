@@ -1,19 +1,21 @@
-import { jwtDecode } from 'jwt-decode';
-import { AnimatedPressable, RectButton } from '@/Components/GeneralComponents/Buttons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { AnimatedPressable, ContainerButton, RectButton } from '@/Components/GeneralComponents/Buttons';
 import { EmphasizedTitleText } from '@/Components/GeneralComponents/Texts';
 import { LabeledTextInput } from '@/Components/Lists/LabeledTextInput';
 import Colors from '@/Constants/Colors';
+import signInWIthGoogle from '@/assets/logo/Sign-in-with-Google.png';
 import logo from '@/assets/logo/logo.png';
 import logoDark from '@/assets/logo/logo_dark.png';
 import { supabase } from '@/config/initSupabase';
 import { FasterImageView } from '@candlefinance/faster-image';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import React from 'react';
-import { Image, Keyboard, StyleSheet, View, useColorScheme } from 'react-native';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import { Alert, Image, Keyboard, StyleSheet, View, useColorScheme } from 'react-native';
+import { FadeIn } from 'react-native-reanimated';
 
 const LOGO = Image.resolveAssetSource(logo).uri;
 const LOGO_DARK = Image.resolveAssetSource(logoDark).uri;
+const SIGN_IN_WITH_GOOGLE = Image.resolveAssetSource(signInWIthGoogle).uri;
 
 const Login = () => {
   GoogleSignin.configure({
@@ -52,106 +54,90 @@ const Login = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+
+      if (userInfo.idToken) {
+        const { data, error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: userInfo.idToken,
+        });
+
+        if (error) {
+          throw error;
+        }
+      } else {
+        Alert.alert('Something went wrong', 'Please try again later', [{ text: 'OK' }], { cancelable: false });
+      }
+    } catch (error: any) {
+      if (error.cod === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('cancelled', error);
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        Alert.alert('Something went wrong', 'Please try again later', [{ text: 'OK' }], { cancelable: false });
+        console.log('in progress', error);
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        Alert.alert('Something went wrong', 'Please try again later', [{ text: 'OK' }], { cancelable: false });
+        console.log('play services not available or outdated', error);
+      } else {
+        Alert.alert('Something went wrong', 'Please try again later', [{ text: 'OK' }], { cancelable: false });
+        console.log('error', error);
+      }
+    }
+  };
+
   return (
-    <AnimatedPressable
-      onPress={() => Keyboard.dismiss()}
-      entering={FadeIn.duration(500)}
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 32,
-        backgroundColor: Colors[colorScheme ?? 'light'].bg.elevated,
-      }}
-    >
-      <View style={{ gap: 8, justifyContent: 'center', alignItems: 'center' }}>
-        <FasterImageView
-          source={{ url: colorScheme === 'dark' ? LOGO_DARK : LOGO, resizeMode: 'contain' }}
-          style={{ width: 180, height: 36 }}
-        />
-        <EmphasizedTitleText>Gymnastics Session Planner</EmphasizedTitleText>
-      </View>
+    <>
+      <LinearGradient style={{ ...StyleSheet.absoluteFillObject }} colors={Colors[colorScheme ?? 'light'].bg.gradient} />
+      <AnimatedPressable onPress={() => Keyboard.dismiss()} entering={FadeIn.duration(500)} style={styles.container}>
+        <View style={styles.groupContainer}>
+          <FasterImageView source={{ url: colorScheme === 'dark' ? LOGO_DARK : LOGO, resizeMode: 'contain' }} style={styles.logo} />
+          <EmphasizedTitleText>FlexiPlan</EmphasizedTitleText>
+        </View>
 
-      <View style={{ gap: 16, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-        <GoogleSigninButton
-          size={GoogleSigninButton.Size.Wide}
-          color={colorScheme === 'dark' ? GoogleSigninButton.Color.Dark : GoogleSigninButton.Color.Light}
-          onPress={async () => {
-            try {
-              await GoogleSignin.hasPlayServices();
-              const userInfo = await GoogleSignin.signIn();
+        <ContainerButton onPress={handleGoogleSignIn} delay={false} style={styles.groupContainer}>
+          <FasterImageView source={{ url: SIGN_IN_WITH_GOOGLE, resizeMode: 'contain' }} style={{ width: 300, height: 54 }} />
+        </ContainerButton>
 
-              if (userInfo.idToken) {
-                const { data, error } = await supabase.auth.signInWithIdToken({
-                  provider: 'google',
-                  token: userInfo.idToken,
-                });
-                console.log('data: ', data);
-                console.log('error: ', error);
-              } else {
-                console.log('no id token');
-              }
-            } catch (error: any) {
-              if (error.cod === statusCodes.SIGN_IN_CANCELLED) {
-                // user cancelled the login flow
-                console.log('cancelled');
-              } else if (error.code === statusCodes.IN_PROGRESS) {
-                console.log('in progress');
-              } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                console.log('play services not available or outdated');
-              } else {
-                console.log('error', error);
-              }
-            }
-          }}
-        />
-      </View>
+        <View style={styles.groupContainer}>
+          <LabeledTextInput label="Email" value={email} onChangeText={setEmail} placeholder="Email" keyboardType="default" />
+          <LabeledTextInput
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Password"
+            keyboardType="default"
+            secureTextEntry
+          />
+        </View>
 
-      <View style={{ gap: 16, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-        <LabeledTextInput label="Email" value={email} onChangeText={setEmail} placeholder="Email" keyboardType="default" />
-        <LabeledTextInput
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Password"
-          keyboardType="default"
-          secureTextEntry
-        />
-      </View>
-
-      <View style={{ gap: 16, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-        <RectButton label="Login" wide onPress={handleSignIn} />
-        <RectButton secondary label="Create Acount" onPress={handleSingUp} wide />
-      </View>
-    </AnimatedPressable>
+        <View style={styles.groupContainer}>
+          <RectButton label="Login" wide onPress={handleSignIn} />
+          <RectButton secondary label="Create Acount" onPress={handleSingUp} wide />
+        </View>
+      </AnimatedPressable>
+    </>
   );
 };
 
 export default Login;
 
 const styles = StyleSheet.create({
-  textInput: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    width: '70%',
-    margin: 10,
-    padding: 10,
-  },
-  loginButton: {
-    backgroundColor: 'blue',
-    width: '70%',
-    padding: 10,
-    margin: 10,
+  groupContainer: {
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 16,
   },
-
-  signUpButton: {
-    backgroundColor: 'transparent',
-    width: '70%',
-    padding: 10,
-    margin: 10,
+  container: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 32,
+  },
+  logo: {
+    width: 100,
+    height: 100,
   },
 });

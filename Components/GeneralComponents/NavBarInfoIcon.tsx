@@ -1,9 +1,8 @@
+import Colors from '@/Constants/Colors';
 import { useAuth } from '@/context/AuthProvidor';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React from 'react';
 import { Alert, useColorScheme } from 'react-native';
-import { IconButton } from './Buttons';
-import Colors from '@/Constants/Colors';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 import { BodyText } from './Texts';
 

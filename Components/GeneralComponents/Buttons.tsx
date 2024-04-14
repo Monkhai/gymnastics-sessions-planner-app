@@ -18,7 +18,7 @@ interface ButtonProps extends PressableProps {
   danger?: boolean;
 }
 
-export const ContainerButton = ({ onPress, children, style }: PressableProps) => {
+export const ContainerButton = ({ onPress, children, style, delay = true }: PressableProps & { delay?: boolean }) => {
   const opacity = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -28,8 +28,11 @@ export const ContainerButton = ({ onPress, children, style }: PressableProps) =>
   });
 
   const handlePressIn = useCallback(() => {
-    opacity.value = withDelay(100, withTiming(0.5, { duration: 150 }));
-    // opacity.value = withTiming(0.5, { duration: 80 });
+    if (delay) {
+      opacity.value = withDelay(100, withTiming(0.5, { duration: 150 }));
+    } else {
+      opacity.value = withTiming(0.5, { duration: 150 });
+    }
   }, []);
 
   const handlePressOut = useCallback(() => {

@@ -15,9 +15,6 @@ const _layout = () => {
       <Stack
         screenOptions={{
           headerRight: NavBarInfoIcon,
-          // navigationBarHidden: Platform.OS === 'android' ? true : false,
-          // statusBarColor: darkNavBarBG,
-          // statusBarTranslucent: true,
         }}
       >
         <Stack.Screen name="index" options={{ title: 'Groups' }} />
