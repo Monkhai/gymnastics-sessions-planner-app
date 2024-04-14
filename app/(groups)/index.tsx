@@ -15,8 +15,10 @@ import React, { useContext, useState } from 'react';
 import { Platform, StyleSheet, View, useColorScheme } from 'react-native';
 import { useAnimatedStyle } from 'react-native-reanimated';
 import Colors from '@/Constants/Colors';
+import useUserId from '@/features/auth/useUserId';
 
 const index = () => {
+  // console.log(user_id);
   const colorScheme = useColorScheme();
   const queryKey = queryKeyFactory.groups();
   const { data: groups, isLoading, error, refetch } = useGetItems({ table: 'groups', queryKey });

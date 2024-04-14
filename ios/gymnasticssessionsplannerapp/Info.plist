@@ -30,20 +30,20 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>myapp</string>
-          <string>com.yohaiwiener.gymnastics-sessions-planner-app</string>
+          <string>com.yohaiwiener.flexiplan-gymnastics</string>
         </array>
       </dict>
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>exp+gymnastics-sessions-planner-app</string>
+          <string>exp+flexiplan-gymnastics</string>
         </array>
       </dict>
     </array>
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>GIDClientID</key>
-    <string>903093166492-vvrddauiobk4ovsp7lk3irl8vs56er63.apps.googleusercontent.com</string>
+    <string>453151625874-vgh6ht3lpuci3258n4m3ii287iorgj9s.apps.googleusercontent.com</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSAppTransportSecurity</key>
@@ -65,6 +65,8 @@
     <string>Allow $(PRODUCT_NAME) to access your photos</string>
     <key>NSUserActivityTypes</key>
     <array>
+      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
+      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
@@ -97,15 +99,15 @@
     <string>Automatic</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
-    <!--  -->
+        <!--  -->
     <key>GIDClientID</key>
-<string>453151625874-vgh6ht3lpuci3258n4m3ii287iorgj9s.apps.googleusercontent.com</string>
-<key>CFBundleURLTypes</key>
-<array>
-  <dict>
+    <string>453151625874-vgh6ht3lpuci3258n4m3ii287iorgj9s.apps.googleusercontent.com</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+    <dict>
     <key>CFBundleURLSchemes</key>
     <array>
-      <string>com.googleusercontent.apps.453151625874-vgh6ht3lpuci3258n4m3ii287iorgj9s</string>
+    <string>com.googleusercontent.apps.453151625874-vgh6ht3lpuci3258n4m3ii287iorgj9s</string>
     </array>
   </dict>
 </array>

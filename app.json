@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "FlexiPlan",
-    "slug": "gymnastics-sessions-planner-app",
+    "slug": "flexiplan-Gymnastics",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "splash": {
         "image": "./assets/images/splash.png",
@@ -26,7 +28,7 @@
       },
       "usesAppleSignIn": true,
       "supportsTablet": true,
-      "bundleIdentifier": "com.yohaiwiener.gymnastics-sessions-planner-app"
+      "bundleIdentifier": "com.yohaiwiener.flexiplan-gymnastics"
     },
     "android": {
       "splash": {
@@ -55,7 +57,10 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.yohaiwiener.gymnasticssessionsplannerapp"
+      "package": "com.yohaiwiener.gymnasticssessionsplannerapp",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -86,7 +91,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "2a061b39-7a68-4f39-b9db-ea509df2ea2c"
+        "projectId": "228f04b7-0b25-4e4e-bddb-3bbdad853026"
       }
     }
   }

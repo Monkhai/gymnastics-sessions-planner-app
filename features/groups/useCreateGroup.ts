@@ -62,12 +62,12 @@ const useCreateGroup = () => {
       queryClient.setQueryData(queryKey, newGroups);
     },
 
-    onError: (_, __, context) => {
+    onError: (error, __, context) => {
       if (context) {
         context.rollback();
       }
 
-      console.error('Error creating group');
+      console.error(error);
     },
   });
 };
