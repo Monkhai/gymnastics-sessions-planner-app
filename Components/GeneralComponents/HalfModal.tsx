@@ -20,7 +20,7 @@ const HalfModal = ({ modalRef, children, onBackdropTouch, snapPoints = ['50%'] }
   return (
     <BottomSheetModal
       topInset={60}
-      android_keyboardInputMode="adjustPan"
+      android_keyboardInputMode="adjustResize"
       keyboardBehavior={'interactive'}
       handleIndicatorStyle={{ backgroundColor: handleColor }}
       handleStyle={{ backgroundColor: overlayColor, borderTopLeftRadius: borderRadius * 2, borderTopRightRadius: borderRadius * 2 }}

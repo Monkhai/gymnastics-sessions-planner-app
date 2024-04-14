@@ -7,7 +7,6 @@ import { ThemeProvider } from '@react-navigation/native';
 import 'expo-dev-client';
 import * as Font from 'expo-font';
 import { Slot, SplashScreen, useRouter, useSegments } from 'expo-router';
-import * as ScreenOrientation from 'expo-screen-orientation';
 import { useEffect } from 'react';
 import { I18nManager, useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';

@@ -1,7 +1,17 @@
 import Colors from '@/Constants/Colors';
 import { borderRadius } from '@/Constants/Randoms';
-import React, { useCallback } from 'react';
-import { GestureResponderEvent, Pressable, PressableProps, View, ViewProps, ViewStyle, useColorScheme } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import {
+  GestureResponderEvent,
+  Keyboard,
+  Platform,
+  Pressable,
+  PressableProps,
+  View,
+  ViewProps,
+  ViewStyle,
+  useColorScheme,
+} from 'react-native';
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import { BodyText, DurationText, EmphasizedBodyText, StationTitleText } from './Texts';
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
@@ -64,7 +74,6 @@ export const RectButton = ({ label, wide, onPress, style, secondary }: ButtonPro
         alignItems: 'center',
       };
     }
-
     return {
       opacity: opacity.value,
       padding: 16,
@@ -83,6 +92,26 @@ export const RectButton = ({ label, wide, onPress, style, secondary }: ButtonPro
   const handlePressOut = useCallback(() => {
     opacity.value = withTiming(1, { duration: 80 });
   }, []);
+
+  const [keyboardVisible, setKeyboardVisible] = React.useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true); // or some other action
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false); // or some other action
+    });
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  });
+
+  if (keyboardVisible && Platform.OS === 'android') {
+    return null;
+  }
 
   return (
     <AnimatedPressable onPressIn={handlePressIn} onPressOut={handlePressOut} style={[animatedStyle, style]} onPress={onPress}>
