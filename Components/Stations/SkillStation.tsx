@@ -33,7 +33,7 @@ const SkillStation = ({ station, drag, isActive, refetchTrigger, setRefetchTrigg
   const { data: skills, isLoading, error, refetch } = useGetSkills({ queryKey: skillsQueryKey, station_id: String(station.id) });
   const { mutate: deleteStation } = useDeleteStation();
   const { mutate: createSkill } = useCreateSkill();
-  const { mutate: updateStationsOrder } = useUpdateItemOrder();
+  const { mutate: updateSkillsOrder } = useUpdateItemOrder();
 
   const [mutableSkills, setMutableSkills] = useState<SkillType[]>(skills ?? []);
 
@@ -70,7 +70,7 @@ const SkillStation = ({ station, drag, isActive, refetchTrigger, setRefetchTrigg
     const newData = data.map((item, index) => ({ ...item, order: index + 1 }));
     queryClient.setQueryData(skillsQueryKey, newData);
     setMutableSkills(newData);
-    updateStationsOrder({ items: newData, queryKey: skillsQueryKey, table: 'skills', secondaryTable: 'skills_of_skill_stations' });
+    updateSkillsOrder({ items: newData, queryKey: skillsQueryKey, table: 'skills', secondaryTable: 'skills_of_skill_stations' });
   };
 
   return (

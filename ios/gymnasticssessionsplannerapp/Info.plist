@@ -94,5 +94,16 @@
     <string>Automatic</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
+    <key>GIDClientID</key>
+<string>903093166492-vvrddauiobk4ovsp7lk3irl8vs56er63.apps.googleusercontent.com</string>
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>com.googleusercontent.apps.903093166492-vvrddauiobk4ovsp7lk3irl8vs56er63</string>
+    </array>
+  </dict>
+</array>
   </dict>
 </plist>

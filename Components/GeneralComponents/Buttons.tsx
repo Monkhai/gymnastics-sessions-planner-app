@@ -13,7 +13,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
-import { BodyText, DurationText, EmphasizedBodyText, StationTitleText } from './Texts';
+import { BodyText, DurationText, EmphasizedBodyText, CircuitTitleText, StationTitleText } from './Texts';
 import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 
 export const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -320,6 +320,37 @@ export const StationTitleButton = ({ onPress, style, value }: StationHeaderButto
       >
         {value || 'Station Name'}
       </StationTitleText>
+    </AnimatedPressable>
+  );
+};
+
+export const CircuitTitleButton = ({ onPress, style, value }: StationHeaderButtonProps) => {
+  const colorScheme = useColorScheme();
+  const opacity = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+    };
+  });
+
+  const handlePressIn = useCallback(() => {
+    opacity.value = withTiming(0.5, { duration: 80 });
+  }, []);
+
+  const handlePressOut = useCallback(() => {
+    opacity.value = withTiming(1, { duration: 80 });
+  }, []);
+
+  return (
+    <AnimatedPressable style={[animatedStyle, style]} onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress}>
+      <CircuitTitleText
+        style={{ color: value ? Colors[colorScheme ?? 'light'].labels.primary : Colors[colorScheme ?? 'light'].labels.secondary }}
+      >
+        {value || 'Station Name'}
+      </CircuitTitleText>
     </AnimatedPressable>
   );
 };

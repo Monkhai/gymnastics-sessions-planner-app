@@ -73,51 +73,45 @@ const SessionScreen = () => {
   };
 
   return (
-    <>
-      <LinearGradient style={{ ...StyleSheet.absoluteFillObject }} colors={Colors[colorScheme ?? 'light'].bg.gradient} />
-      <View style={{ flex: 1, width: '100%' }}>
-        <NestableScrollContainer scrollEnabled={false} refreshControl={<RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />}>
-          <NestableDraggableFlatList
-            contentContainerStyle={{ paddingBottom: 110 }}
-            ItemSeparatorComponent={() => (
-              <View style={{ width: StyleSheet.hairlineWidth, borderColor: Colors[colorScheme ?? 'light'].separetor }} />
-            )}
-            keyExtractor={(item) => String(item.id + item.name)}
-            refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
-            onDragEnd={({ data }) => {
-              onDragEnd(data);
-            }}
-            data={mutableStations}
-            renderItem={({ item: station, drag, isActive }) => {
-              if (station.type === 'skillStation') {
-                return (
-                  <SkillStation
-                    refetchTrigger={refetchTrigger}
-                    setRefetchTrigger={setRefetchTrigger}
-                    drag={drag}
-                    isActive={isActive}
-                    station={station}
-                  />
-                );
-              } else {
-                return (
-                  <DrillStationHandler
-                    drillStationRef={drillStationRef}
-                    refetchTrigger={refetchTrigger}
-                    setRefetchTrigger={setRefetchTrigger}
-                    key={station.id}
-                    station={station}
-                    drag={drag}
-                    isActive={isActive}
-                  />
-                );
-              }
-            }}
-          />
-        </NestableScrollContainer>
-        <CreateStationButton createNewDrillStation={createNewDrillStation} createNewSkillStation={createNewSkillStation} />
-      </View>
-    </>
+    <View style={{ flex: 1, width: '100%' }}>
+      <NestableScrollContainer scrollEnabled={false} refreshControl={<RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />}>
+        <NestableDraggableFlatList
+          contentContainerStyle={{ paddingBottom: 110 }}
+          keyExtractor={(item) => String(item.id + item.name)}
+          refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
+          onDragEnd={({ data }) => {
+            onDragEnd(data);
+          }}
+          data={mutableStations}
+          renderItem={({ item: station, drag, isActive }) => {
+            if (station.type === 'skillStation') {
+              return (
+                <SkillStation
+                  refetchTrigger={refetchTrigger}
+                  setRefetchTrigger={setRefetchTrigger}
+                  drag={drag}
+                  isActive={isActive}
+                  station={station}
+                />
+              );
+            } else {
+              return (
+                <DrillStationHandler
+                  drillStationRef={drillStationRef}
+                  refetchTrigger={refetchTrigger}
+                  setRefetchTrigger={setRefetchTrigger}
+                  key={station.id}
+                  station={station}
+                  drag={drag}
+                  isActive={isActive}
+                />
+              );
+            }
+          }}
+        />
+      </NestableScrollContainer>
+      <CreateStationButton createNewDrillStation={createNewDrillStation} createNewSkillStation={createNewSkillStation} />
+    </View>
   );
 };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { KeyboardType, StyleSheet, TextInput, View, useColorScheme } from 'react-native';
 
 import { CalloutText } from '../GeneralComponents/Texts';
@@ -52,6 +52,8 @@ interface LabeledTextInputProps {
   keyboardType?: KeyboardType;
   secureTextEntry?: boolean;
   onSubmitEditing?: () => void;
+  textInputRef?: RefObject<TextInput>;
+  textContentType?: 'emailAddress' | 'password';
 }
 
 export const LabeledTextInput = ({
@@ -62,12 +64,15 @@ export const LabeledTextInput = ({
   keyboardType,
   secureTextEntry,
   onSubmitEditing,
+  textInputRef,
+  textContentType,
 }: LabeledTextInputProps) => {
   const colorScheme = useColorScheme();
   return (
     <View style={{ flexDirection: 'column', gap: 4, width: '90%', justifyContent: 'center', alignItems: 'flex-start' }}>
       <CalloutText style={{ marginLeft: 8 }}>{label}</CalloutText>
       <TextInput
+        ref={textInputRef}
         onSubmitEditing={onSubmitEditing}
         style={{
           fontSize: 17,
@@ -78,12 +83,14 @@ export const LabeledTextInput = ({
           backgroundColor: Colors[colorScheme ?? 'light'].fills.specialTextInput,
           // backgroundColor: 'white',
         }}
+        textContentType={textContentType}
         placeholderTextColor={Colors[colorScheme ?? 'light'].labels.secondary}
         keyboardType={keyboardType}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
+        clearButtonMode="while-editing"
       />
     </View>
   );

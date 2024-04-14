@@ -8,12 +8,16 @@ interface Props {
   setValue: Dispatch<SetStateAction<string>>;
   onSubmit: () => void;
   placeholder: string;
+  wide?: boolean;
 }
 
-export const SingleDrillTextField = ({ placeholder, onSubmit, setValue, value }: Props) => {
+export const SingleDrillTextField = ({ placeholder, onSubmit, setValue, value, wide = true }: Props) => {
   const colorScheme = useColorScheme();
+
+  const width = wide ? '90%' : '45%';
+
   return (
-    <View style={[styles.textFieldContainer, { backgroundColor: Colors[colorScheme ?? 'dark'].bg.elevated }]}>
+    <View style={[styles.textFieldContainer, { width, backgroundColor: Colors[colorScheme ?? 'dark'].bg.elevated }]}>
       <TextInput
         multiline
         value={value}
@@ -22,7 +26,6 @@ export const SingleDrillTextField = ({ placeholder, onSubmit, setValue, value }:
         style={[styles.textInput, { color: Colors[colorScheme ?? 'light'].labels.primary }]}
         onBlur={onSubmit}
         onSubmitEditing={onSubmit}
-        textAlignVertical="top"
         placeholderTextColor={Colors[colorScheme ?? 'light'].labels.secondary}
       />
     </View>
@@ -31,10 +34,8 @@ export const SingleDrillTextField = ({ placeholder, onSubmit, setValue, value }:
 
 const styles = StyleSheet.create({
   textFieldContainer: {
-    marginTop: 16,
     borderRadius: borderRadius,
     padding: 16,
-    width: '90%',
     alignSelf: 'center',
     justifyContent: 'center',
   },

@@ -2,13 +2,16 @@ import { LIST_ITEM_HEIGHT } from '@/Constants/ListSizes';
 import { StyleSheet } from 'react-native';
 
 const {
+  circuitDurationButtonStyle,
   stationContainerStyle,
   durationButtonStyle,
   headerContainerStyle,
+  circuitHeaderContainerStyle,
   rowOneContainerStyle,
   settingsRowStyle,
   stationIconButtonStyle,
   stationTitleButtonStyle,
+  circuitDrillContainerStyle,
 } = StyleSheet.create({
   stationContainerStyle: {
     width: '100%',
@@ -19,10 +22,27 @@ const {
     paddingVertical: 16,
   },
 
+  circuitDrillContainerStyle: {
+    width: '100%',
+    overflow: 'visible',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    paddingVertical: 16,
+  },
+
   headerContainerStyle: {
     height: 50,
     flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     width: '100%',
+  },
+
+  circuitHeaderContainerStyle: {
+    alignSelf: 'center',
+    width: '95%',
+    height: 50,
+    flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },
@@ -40,6 +60,10 @@ const {
 
   durationButtonStyle: {
     marginLeft: 40,
+  },
+
+  circuitDurationButtonStyle: {
+    marginRight: 8,
   },
 
   stationIconButtonStyle: {
@@ -66,4 +90,7 @@ export {
   stationIconButtonStyle,
   stationContainerStyle,
   stationTitleButtonStyle,
+  circuitDrillContainerStyle,
+  circuitHeaderContainerStyle,
+  circuitDurationButtonStyle,
 };

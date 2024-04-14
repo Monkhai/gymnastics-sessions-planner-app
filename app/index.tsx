@@ -10,7 +10,7 @@ import { supabase } from '@/config/initSupabase';
 import { FasterImageView } from '@candlefinance/faster-image';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import React from 'react';
-import { Alert, Image, Keyboard, StyleSheet, View, useColorScheme } from 'react-native';
+import { Alert, Image, Keyboard, KeyboardAvoidingView, StyleSheet, TextInput, View, useColorScheme } from 'react-native';
 import { FadeIn } from 'react-native-reanimated';
 
 const LOGO = Image.resolveAssetSource(logo).uri;
@@ -28,6 +28,7 @@ const Login = () => {
   const [email, setEmail] = React.useState<string | undefined>();
   const [password, setPassword] = React.useState<string | undefined>();
 
+  const passwordRef = React.useRef<TextInput>(null);
   const handleSignIn = async () => {
     if (!email || !password) {
       alert('Please enter email and password');
@@ -96,13 +97,19 @@ const Login = () => {
           <EmphasizedTitleText>FlexiPlan</EmphasizedTitleText>
         </View>
 
-        <ContainerButton onPress={handleGoogleSignIn} delay={false} style={styles.groupContainer}>
-          <FasterImageView source={{ url: SIGN_IN_WITH_GOOGLE, resizeMode: 'contain' }} style={{ width: 300, height: 54 }} />
-        </ContainerButton>
-
-        <View style={styles.groupContainer}>
-          <LabeledTextInput label="Email" value={email} onChangeText={setEmail} placeholder="Email" keyboardType="default" />
+        <KeyboardAvoidingView style={styles.groupContainer}>
           <LabeledTextInput
+            textContentType="emailAddress"
+            onSubmitEditing={() => passwordRef.current?.focus()}
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Email"
+            keyboardType="default"
+          />
+          <LabeledTextInput
+            textContentType="password"
+            textInputRef={passwordRef}
             label="Password"
             value={password}
             onChangeText={setPassword}
@@ -110,11 +117,14 @@ const Login = () => {
             keyboardType="default"
             secureTextEntry
           />
-        </View>
+        </KeyboardAvoidingView>
 
         <View style={styles.groupContainer}>
           <RectButton label="Login" wide onPress={handleSignIn} />
           <RectButton secondary label="Create Acount" onPress={handleSingUp} wide />
+          <ContainerButton onPress={handleGoogleSignIn} delay={false} style={[styles.groupContainer, { width: 'auto' }]}>
+            <FasterImageView source={{ url: SIGN_IN_WITH_GOOGLE, resizeMode: 'contain' }} style={{ width: 300, height: 54 }} />
+          </ContainerButton>
         </View>
       </AnimatedPressable>
     </>

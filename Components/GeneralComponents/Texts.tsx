@@ -25,6 +25,9 @@ export const TitleText = (props: TextProps) => {
 export const StationTitleText = (props: TextProps) => {
   return <Text {...props} style={[{ fontSize: 20, fontWeight: '600' }, props.style]} />;
 };
+export const CircuitTitleText = (props: TextProps) => {
+  return <Text {...props} style={[{ fontSize: 18, fontWeight: '500' }, props.style]} />;
+};
 
 export const EmphasizedTitleText = (props: TextProps) => {
   const colorScheme = useColorScheme();

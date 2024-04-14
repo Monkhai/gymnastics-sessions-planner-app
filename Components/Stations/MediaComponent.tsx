@@ -177,6 +177,9 @@ const ImageComponent = ({ image, onDeleteImage }: ImageProps) => {
       <ContextMenu.Trigger asChild>
         <Pressable style={{ borderRadius, overflow: 'hidden' }} onPress={handleImagePress} onLongPress={() => {}}>
           <AnimatedImage
+            onError={() => {
+              Alert.alert('Error', 'Image could not be loaded');
+            }}
             sharedTransitionTag={image.uri + 'image'}
             onSuccess={({ nativeEvent: { height, width } }) => {
               setNewImageDimensions(width, height);
