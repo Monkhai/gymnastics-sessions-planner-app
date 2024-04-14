@@ -17,11 +17,12 @@ const LOGO = Image.resolveAssetSource(logo).uri;
 const LOGO_DARK = Image.resolveAssetSource(logoDark).uri;
 const SIGN_IN_WITH_GOOGLE = Image.resolveAssetSource(signInWIthGoogle).uri;
 
+const webClientId = process.env.SUPABASE_WEB_CLIENT_ID;
+const iosClientId = process.env.SUPABASE_IOS_CLIENT_ID;
 const Login = () => {
   GoogleSignin.configure({
-    // scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
-    webClientId: '903093166492-gc7ql9a3j34n5mi8sfv436oqjf9jvdi1.apps.googleusercontent.com',
-    iosClientId: '903093166492-vvrddauiobk4ovsp7lk3irl8vs56er63.apps.googleusercontent.com',
+    webClientId: '453151625874-tha6pnf6uvkgn76rc873ver29vsk04tu.apps.googleusercontent.com',
+    iosClientId: '453151625874-vgh6ht3lpuci3258n4m3ii287iorgj9s.apps.googleusercontent.com',
   });
   const colorScheme = useColorScheme();
 
