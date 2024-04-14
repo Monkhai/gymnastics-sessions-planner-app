@@ -24,6 +24,7 @@
           "backgroundColor": "#000000"
         }
       },
+      "usesAppleSignIn": true,
       "supportsTablet": true,
       "bundleIdentifier": "com.yohaiwiener.gymnastics-sessions-planner-app"
     },

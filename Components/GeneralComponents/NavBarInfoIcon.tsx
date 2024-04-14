@@ -16,7 +16,7 @@ const NavBarInfoIcon = () => {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
-        <DropdownMenu.Item key="feedback" textValue="Provide Feedback" onSelect={() => Alert.alert('InsertFeedback stuff here')}>
+        {/* <DropdownMenu.Item key="feedback" textValue="Provide Feedback" onSelect={() => Alert.alert('InsertFeedback stuff here')}>
           <DropdownMenu.ItemTitle>Provide Feedback</DropdownMenu.ItemTitle>
           <DropdownMenu.ItemIcon
             ios={{
@@ -27,7 +27,7 @@ const NavBarInfoIcon = () => {
               },
             }}
           />
-        </DropdownMenu.Item>
+        </DropdownMenu.Item> */}
 
         <DropdownMenu.Item destructive key="signout" textValue="Signout" onSelect={signOut}>
           <DropdownMenu.ItemTitle>

@@ -1,3 +1,4 @@
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable, ContainerButton, RectButton } from '@/Components/GeneralComponents/Buttons';
 import { EmphasizedTitleText } from '@/Components/GeneralComponents/Texts';
@@ -10,15 +11,13 @@ import { supabase } from '@/config/initSupabase';
 import { FasterImageView } from '@candlefinance/faster-image';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import React from 'react';
-import { Alert, Image, Keyboard, KeyboardAvoidingView, StyleSheet, TextInput, View, useColorScheme } from 'react-native';
+import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View, useColorScheme } from 'react-native';
 import { FadeIn } from 'react-native-reanimated';
 
 const LOGO = Image.resolveAssetSource(logo).uri;
 const LOGO_DARK = Image.resolveAssetSource(logoDark).uri;
 const SIGN_IN_WITH_GOOGLE = Image.resolveAssetSource(signInWIthGoogle).uri;
 
-const webClientId = process.env.SUPABASE_WEB_CLIENT_ID;
-const iosClientId = process.env.SUPABASE_IOS_CLIENT_ID;
 const Login = () => {
   GoogleSignin.configure({
     webClientId: '453151625874-tha6pnf6uvkgn76rc873ver29vsk04tu.apps.googleusercontent.com',
@@ -56,6 +55,10 @@ const Login = () => {
     }
   };
 
+  const somethingWentWrongAlert = () => {
+    Alert.alert('Something went wrong', 'Please try again later', [{ text: 'OK' }], { cancelable: false });
+  };
+
   const handleGoogleSignIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -71,20 +74,47 @@ const Login = () => {
           throw error;
         }
       } else {
-        Alert.alert('Something went wrong', 'Please try again later', [{ text: 'OK' }], { cancelable: false });
+        somethingWentWrongAlert();
       }
     } catch (error: any) {
       if (error.cod === statusCodes.SIGN_IN_CANCELLED) {
         console.log('cancelled', error);
       } else if (error.code === statusCodes.IN_PROGRESS) {
-        Alert.alert('Something went wrong', 'Please try again later', [{ text: 'OK' }], { cancelable: false });
+        somethingWentWrongAlert();
         console.log('in progress', error);
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        Alert.alert('Something went wrong', 'Please try again later', [{ text: 'OK' }], { cancelable: false });
+        somethingWentWrongAlert();
         console.log('play services not available or outdated', error);
       } else {
-        Alert.alert('Something went wrong', 'Please try again later', [{ text: 'OK' }], { cancelable: false });
+        somethingWentWrongAlert();
         console.log('error', error);
+      }
+    }
+  };
+
+  const handleAppleSignIn = async () => {
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [AppleAuthentication.AppleAuthenticationScope.FULL_NAME, AppleAuthentication.AppleAuthenticationScope.EMAIL],
+      });
+      // Sign in via Supabase Auth.
+      if (credential.identityToken) {
+        const { error } = await supabase.auth.signInWithIdToken({
+          provider: 'apple',
+          token: credential.identityToken,
+        });
+        if (error) {
+          throw error;
+        }
+      } else {
+        throw new Error('No identityToken.');
+      }
+    } catch (e: any) {
+      if (e.code === 'ERR_REQUEST_CANCELED') {
+        // handle that the user canceled the sign-in flow
+      } else {
+        console.log(e);
+        somethingWentWrongAlert();
       }
     }
   };
@@ -126,6 +156,15 @@ const Login = () => {
           <ContainerButton onPress={handleGoogleSignIn} delay={false} style={[styles.groupContainer, { width: 'auto' }]}>
             <FasterImageView source={{ url: SIGN_IN_WITH_GOOGLE, resizeMode: 'contain' }} style={{ width: 300, height: 54 }} />
           </ContainerButton>
+          {Platform.OS === 'ios' && (
+            <AppleAuthentication.AppleAuthenticationButton
+              onPress={handleAppleSignIn}
+              buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
+              buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+              cornerRadius={5}
+              style={{ width: 280, height: 54 }}
+            />
+          )}
         </View>
       </AnimatedPressable>
     </>
