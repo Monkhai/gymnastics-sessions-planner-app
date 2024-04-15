@@ -1,4 +1,4 @@
-package com.yohaiwiener.gymnasticssessionsplannerapp
+package com.yohaiwiener.flexiplangymnastics
 
 import android.app.Application
 import android.content.res.Configuration

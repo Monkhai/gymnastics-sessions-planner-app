@@ -30,6 +30,7 @@
         <data android:scheme="com.yohaiwiener.gymnasticssessionsplannerapp"/>
         <data android:scheme="exp+gymnastics-sessions-planner-app"/>
         <data android:scheme="exp+flexiplan-gymnastics"/>
+        <data android:scheme="com.yohaiwiener.flexiplangymnastics"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

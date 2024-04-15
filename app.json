@@ -56,7 +56,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.yohaiwiener.gymnasticssessionsplannerapp",
+      "package": "com.yohaiwiener.flexiplangymnastics",
       "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
@@ -73,12 +73,7 @@
       ],
       "expo-router",
       "expo-secure-store",
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.903093166492-vvrddauiobk4ovsp7lk3irl8vs56er63"
-        }
-      ]
+      ["@react-native-google-signin/google-signin"]
     ],
     "experiments": {
       "typedRoutes": true

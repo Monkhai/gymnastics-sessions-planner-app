@@ -6,15 +6,20 @@ import useGetStations from '@/features/stations/useGetStations';
 import { queryKeyFactory } from '@/utils/queryFactories';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { RefreshControl, StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { Image, RefreshControl, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { NestableDraggableFlatList, NestableScrollContainer } from 'react-native-draggable-flatlist';
 import * as DropdownMenu from 'zeego/dropdown-menu';
-import { RectButton } from '../GeneralComponents/Buttons';
+import { ContainerButton, RectButton } from '../GeneralComponents/Buttons';
 import Loader from '../GeneralComponents/Loader';
 import DrillStationHandler from '../Stations/DrillStationHandler';
 import SkillStation from '../Stations/SkillStation';
 import { DrillStationRef } from '../Stations/SingleDrillStation';
 import { LinearGradient } from 'expo-linear-gradient';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import plus from '@/assets/icons/plus.png';
+import { FasterImageView } from '@candlefinance/faster-image';
+
+const PLUS_ICON = Image.resolveAssetSource(plus).uri;
 
 const SessionScreen = () => {
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
@@ -126,10 +131,18 @@ interface CreateStationButtonProps {
 
 const CreateStationButton = ({ createNewDrillStation, createNewSkillStation }: CreateStationButtonProps) => {
   return (
-    <View style={{ position: 'absolute', bottom: 48, alignSelf: 'center' }}>
+    <View
+      style={{
+        position: 'absolute',
+        bottom: 38,
+        alignSelf: 'center',
+      }}
+    >
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <RectButton label="Create New Station" onPress={() => {}} />
+          <ContainerButton delay={false} onPress={() => {}}>
+            <FasterImageView source={{ url: PLUS_ICON }} style={{ width: 48, height: 48 }} />
+          </ContainerButton>
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Content side="top" align="center">
