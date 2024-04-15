@@ -86,12 +86,12 @@ const SingleDrillStation = forwardRef<DrillStationRef, Props>(({ drag, drill, is
       style={[stationContainerStyle, { borderColor: Colors[colorScheme ?? 'light'].separetor }]}
     >
       <DrillStationHeader drag={drag} drill={drill} isActive={isActive} onDelete={onDeleteStation} onCreateDrill={handleCreateDrill} />
-
-      <SingleDrillTextField placeholder="Description" onSubmit={handleSubmit} value={description} setValue={setDescription} />
-      {drill.show_comments && (
-        <SingleDrillTextField placeholder="Comments" onSubmit={handleSubmit} setValue={setComments} value={comments} />
-      )}
-
+      <View style={{ width: '100%', gap: 16, marginTop: 16 }}>
+        <SingleDrillTextField placeholder="Description" onSubmit={handleSubmit} value={description} setValue={setDescription} />
+        {drill.show_comments && (
+          <SingleDrillTextField placeholder="Comments" onSubmit={handleSubmit} setValue={setComments} value={comments} />
+        )}
+      </View>
       <MediaComponent
         isMediaLoading={isMediaLoading}
         isMediaRefetching={isMediaRefetching}

@@ -12,10 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "buildNumber": "3",
       "splash": {
         "image": "./assets/images/splash.png",
         "resizeMode": "contain",
@@ -58,9 +57,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.yohaiwiener.gymnasticssessionsplannerapp",
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+      "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
       "bundler": "metro",
