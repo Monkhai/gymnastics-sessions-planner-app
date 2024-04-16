@@ -36,7 +36,6 @@ interface Props {
 
 const MediaComponent = ({ media, drill_id, mediaQueryKey, isMediaLoading, isMediaRefetching }: Props) => {
   const colorScheme = useColorScheme();
-
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
 
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
@@ -75,7 +74,7 @@ const MediaComponent = ({ media, drill_id, mediaQueryKey, isMediaLoading, isMedi
       />
       <View style={[styles.innerContainer, { backgroundColor: Colors[colorScheme ?? 'light'].bg.elevated }]}>
         {isMediaLoading ? (
-          <Loader />
+          <Loader key={'loader'} />
         ) : (
           media &&
           media.map((image) => {
@@ -135,7 +134,6 @@ interface ImageProps {
 }
 
 const ImageComponent = ({ image, onDeleteImage }: ImageProps) => {
-  const colorScheme = useColorScheme();
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
 
   const imageDimensions = useSharedValue({ width: 0, height: 0 });
@@ -154,11 +152,11 @@ const ImageComponent = ({ image, onDeleteImage }: ImageProps) => {
     }
   };
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
+  const { imageStyle } = StyleSheet.create({
+    imageStyle: {
       width: imageDimensions.value.width ?? 120,
       height: imageDimensions.value.height ?? 80,
-    };
+    },
   });
 
   const handleImagePress = () => {
@@ -188,7 +186,7 @@ const ImageComponent = ({ image, onDeleteImage }: ImageProps) => {
               url: image.uri,
               resizeMode: 'contain',
             }}
-            style={[styles.image, animatedStyle]}
+            style={[styles.image, imageStyle]}
           />
         </Pressable>
       </ContextMenu.Trigger>

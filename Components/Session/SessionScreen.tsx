@@ -1,30 +1,26 @@
-import Colors from '@/Constants/Colors';
+import plus from '@/assets/icons/plus.png';
 import useUpdateItemOrder from '@/features/items/useUpdateItemOrder';
 import { StationType } from '@/features/stations/types';
 import useCreateStation from '@/features/stations/useCreateStation';
 import useGetStations from '@/features/stations/useGetStations';
 import { queryKeyFactory } from '@/utils/queryFactories';
+import { FasterImageView } from '@candlefinance/faster-image';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, RefreshControl, StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { Image, KeyboardAvoidingView, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { NestableDraggableFlatList, NestableScrollContainer } from 'react-native-draggable-flatlist';
 import * as DropdownMenu from 'zeego/dropdown-menu';
-import { ContainerButton, RectButton } from '../GeneralComponents/Buttons';
+import { ContainerButton } from '../GeneralComponents/Buttons';
 import Loader from '../GeneralComponents/Loader';
 import DrillStationHandler from '../Stations/DrillStationHandler';
-import SkillStation from '../Stations/SkillStation';
 import { DrillStationRef } from '../Stations/SingleDrillStation';
-import { LinearGradient } from 'expo-linear-gradient';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import plus from '@/assets/icons/plus.png';
-import { FasterImageView } from '@candlefinance/faster-image';
+import SkillStation from '../Stations/SkillStation';
 
 const PLUS_ICON = Image.resolveAssetSource(plus).uri;
 
 const SessionScreen = () => {
   const { session_id } = useLocalSearchParams<{ session_id: string }>();
   const queryKey = queryKeyFactory.stations({ session_id });
-  const colorScheme = useColorScheme();
 
   const { data: stations, error, isLoading, refetch } = useGetStations({ session_id, queryKey });
   const { mutate: createStation } = useCreateStation();
@@ -78,7 +74,7 @@ const SessionScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, width: '100%' }}>
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, width: '100%' }}>
       <NestableScrollContainer scrollEnabled={false} refreshControl={<RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />}>
         <NestableDraggableFlatList
           contentContainerStyle={{ paddingBottom: 110 }}
@@ -116,7 +112,7 @@ const SessionScreen = () => {
         />
       </NestableScrollContainer>
       <CreateStationButton createNewDrillStation={createNewDrillStation} createNewSkillStation={createNewSkillStation} />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

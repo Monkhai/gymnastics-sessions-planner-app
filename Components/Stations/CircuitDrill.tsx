@@ -36,7 +36,6 @@ const CircuitDrill = forwardRef<DrillStationRef, Props>(({ drag, drill, isActive
   const queryKey = queryKeyFactory.drills({ station_id: String(drill.station_id), session_id });
   const mediaQueryKey = queryKeyFactory.drillMedia({ drill_id: drill.id, session_id });
 
-  const { mutate: createDrill } = useCreateDrill();
   const { mutate: updateDrill } = useUpdateDrill();
   const {
     data: media,
@@ -48,14 +47,6 @@ const CircuitDrill = forwardRef<DrillStationRef, Props>(({ drag, drill, isActive
 
   const [description, setDescription] = useState(drill.description);
   const [comments, setComments] = useState(drill.comments);
-
-  const handleCreateDrill = () => {
-    createDrill({
-      lastOrder: drill.order,
-      queryKey,
-      station_id: drill.station_id,
-    });
-  };
 
   const handleSubmit = () => {
     if (description !== drill.description || comments !== drill.comments) {
@@ -92,7 +83,7 @@ const CircuitDrill = forwardRef<DrillStationRef, Props>(({ drag, drill, isActive
           }}
         >
           <SingleDrillTextField
-            wide={false}
+            wide={drill.show_comments ? false : true}
             placeholder="Description"
             onSubmit={handleSubmit}
             value={description}
@@ -102,13 +93,16 @@ const CircuitDrill = forwardRef<DrillStationRef, Props>(({ drag, drill, isActive
             <SingleDrillTextField wide={false} placeholder="Comments" onSubmit={handleSubmit} setValue={setComments} value={comments} />
           )}
         </View>
-        <MediaComponent
-          isMediaLoading={isMediaLoading}
-          isMediaRefetching={isMediaRefetching}
-          drill_id={drill.id}
-          media={media}
-          mediaQueryKey={mediaQueryKey}
-        />
+
+        {drill.show_media && (
+          <MediaComponent
+            isMediaLoading={isMediaLoading}
+            isMediaRefetching={isMediaRefetching}
+            drill_id={drill.id}
+            media={media}
+            mediaQueryKey={mediaQueryKey}
+          />
+        )}
       </Pressable>
     </ScaleDecorator>
   );

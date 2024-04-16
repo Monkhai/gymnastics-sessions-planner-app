@@ -55,8 +55,10 @@ const CircuitDrillHeader = ({ drill, onDelete, drag, isActive }: Props) => {
   const isDurationChanged = durationMinutes !== dbDurationToMinutes(drill.duration);
   const isShowDurationChanged = showDuration !== drill.show_duration;
   const isShowCommentsChanged = showComments !== drill.show_comments;
+  const isShowMediaChanged = showMedia !== drill.show_media;
 
-  const areSettingsTheSame = !isTitleChanged && !isDurationChanged && !isShowDurationChanged && !isShowCommentsChanged;
+  const areSettingsTheSame =
+    !isTitleChanged && !isDurationChanged && !isShowDurationChanged && !isShowCommentsChanged && !isShowMediaChanged;
 
   const toggleSettingsModal = () => {
     if (Keyboard.isVisible()) Keyboard.dismiss();

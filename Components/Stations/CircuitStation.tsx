@@ -1,5 +1,5 @@
 import { Keyboard, Pressable, StyleSheet, Text, View, useColorScheme } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StationType } from '@/features/stations/types';
 import { DrillType } from '@/features/drills/types';
 import { stationContainerStyle } from './styles';
@@ -37,11 +37,16 @@ const CircuitStation = ({ drag, drills, isActive, onDeleteStation, station }: Pr
       station_id: station.id,
     });
   };
+
+  useEffect(() => {
+    setMutableDrills(drills);
+  }, [drills]);
+
   const handleReorder = (data: DrillType[]) => {
     const newData = data.map((item, index) => ({ ...item, order: index + 1 }));
     queryClient.setQueryData(queryKey, newData);
     setMutableDrills(newData);
-    updateDrillOrder({ items: newData, queryKey: queryKey, table: 'skills', secondaryTable: 'skills_of_skill_stations' });
+    updateDrillOrder({ items: newData, queryKey: queryKey, table: 'drills', secondaryTable: 'drills_of_drill_stations' });
   };
   return (
     <Pressable
