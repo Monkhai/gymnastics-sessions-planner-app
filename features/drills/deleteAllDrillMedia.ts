@@ -10,7 +10,7 @@ type Args = {
 export default async ({ station_id }: Args) => {
   try {
     const user_id = useUserId();
-    const allMedia = await getDrillMedia(station_id);
+    const allMedia = await getDrillMedia({ station_id });
 
     if (allMedia.length > 0) {
       allMedia.forEach(async (media) => {
